@@ -5,10 +5,10 @@
         <item
             android:id="@+id/nav_contacts"
             android:icon="@drawable/ic_menu_contacts"
-            android:title="@string/Contacts" />
+            android:title="@string/menu_contacts" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_menu_profile"
-            android:title="@string/Profile" />
+            android:title="@string/menu_profile" />
     </group>
 </menu>
