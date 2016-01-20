@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,8 +23,10 @@ import com.slava.chat.fragments.FragmentProfile;
 public class MainActivity extends AppCompatActivity
         implements FragmentContacts.OnFragmentInteractionListener, FragmentProfile.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "myLogs";
     FragmentContacts fcontacts;
     FragmentProfile fprofile;
+    ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -62,6 +65,8 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        toggle.setDrawerIndicatorEnabled(true);
     }
 
     @Override
@@ -81,6 +86,9 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == android.R.id.home) {
+            Log.d(TAG, "нажата кнопка android.R.id.home");
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -99,18 +107,17 @@ public class MainActivity extends AppCompatActivity
             //create new fragment fcontacts in content_main
             fragmentTransaction.replace(R.id.content_main, fcontacts)
                     .addToBackStack(null);
-            //returns the previous state of the stack
-            fragmentManager.popBackStack();
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         } else if (id == R.id.nav_profile) {
             //create new fragment fprofile in content_main
             fragmentTransaction.replace(R.id.content_main, fprofile)
                     .addToBackStack(null);
-            //returns the previous state of the stack
-            fragmentManager.popBackStack();
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        //hide the Navigation Drawer image
+        toggle.setDrawerIndicatorEnabled(false);
+        //to enable the < in the actionbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //returns the previous state of the stack
+        fragmentManager.popBackStack();
         fragmentTransaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
