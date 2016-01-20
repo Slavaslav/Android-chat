@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -91,13 +92,24 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         if (id == R.id.nav_contacts) {
-            fragmentTransaction.replace(R.id.content_main, fcontacts);
+            //create new fragment fcontacts in content_main
+            fragmentTransaction.replace(R.id.content_main, fcontacts)
+                    .addToBackStack(null);
+            //returns the previous state of the stack
+            fragmentManager.popBackStack();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         } else if (id == R.id.nav_profile) {
-            fragmentTransaction.replace(R.id.content_main, fprofile);
+            //create new fragment fprofile in content_main
+            fragmentTransaction.replace(R.id.content_main, fprofile)
+                    .addToBackStack(null);
+            //returns the previous state of the stack
+            fragmentManager.popBackStack();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         fragmentTransaction.commit();
 
