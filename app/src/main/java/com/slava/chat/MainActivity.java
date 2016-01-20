@@ -15,13 +15,15 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.slava.chat.fragments.FragmentContacts;
+import com.slava.chat.fragments.FragmentMain;
 import com.slava.chat.fragments.FragmentProfile;
 
 public class MainActivity extends AppCompatActivity
-        implements FragmentContacts.OnFragmentInteractionListener, FragmentProfile.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener {
+        implements FragmentMain.OnFragmentInteractionListener, FragmentContacts.OnFragmentInteractionListener, FragmentProfile.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener {
 
     FragmentContacts fcontacts;
     FragmentProfile fprofile;
+    FragmentMain fmain;
     ActionBarDrawerToggle toggle;
 
     @Override
@@ -50,6 +52,12 @@ public class MainActivity extends AppCompatActivity
 
         fcontacts = new FragmentContacts();
         fprofile = new FragmentProfile();
+        fmain = new FragmentMain();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_main, fmain)
+                .commit();
     }
 
     @Override
