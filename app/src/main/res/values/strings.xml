@@ -12,5 +12,8 @@
     <string name="fragment_profile">My profile</string>
     <string name="fragment_main">Recent chats</string>
     <string name="fragment_login">Login</string>
+
+    <string name="editText_phone">Enter phone number</string>
+    <string name="editText_password">Enter password</string>
     <string name="button_sign_up">Sign up/in</string>
 </resources>
