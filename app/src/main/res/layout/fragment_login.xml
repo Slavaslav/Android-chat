@@ -2,34 +2,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.slava.chat.fragments.FragmentLogin"
+    android:layout_margin="@dimen/fragment_margin"
     android:orientation="vertical"
-    android:layout_margin="@dimen/fragment_margin">
+    tools:context="com.slava.chat.fragments.FragmentLogin">
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:ems="10"
         android:id="@+id/editText_phone"
-        android:hint="@string/editText_phone"/>
-
-    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
         android:ems="10"
+        android:hint="@string/editText_phone"
+        android:inputType="phone" />
+
+    <EditText
         android:id="@+id/editText_password"
-        android:hint="@string/editText_password"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/editText_password"
+        android:inputType="textPassword" />
 
     <Button
+        android:id="@+id/button_sign_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_sign_up"
-        android:id="@+id/button_sign_up" />
-
-
-
+        android:text="@string/button_sign_up" />
 
 
 </LinearLayout>
