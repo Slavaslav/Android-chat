@@ -110,11 +110,11 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_contacts) {
             //create new fragment fcontacts in content_main
-            fragmentTransaction.add(R.id.content_main, fcontacts)
+            fragmentTransaction.replace(R.id.content_main, fcontacts)
                     .addToBackStack(null);
         } else if (id == R.id.nav_profile) {
             //create new fragment fprofile in content_main
-            fragmentTransaction.add(R.id.content_main, fprofile)
+            fragmentTransaction.replace(R.id.content_main, fprofile)
                     .addToBackStack(null);
         }
         //hide the Navigation Drawer image
