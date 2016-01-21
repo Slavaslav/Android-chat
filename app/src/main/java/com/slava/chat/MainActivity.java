@@ -54,10 +54,7 @@ public class MainActivity extends AppCompatActivity
         fprofile = new FragmentProfile();
         fmain = new FragmentMain();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_main, fmain)
-                .commit();
+        loadingFragments();
     }
 
     @Override
@@ -123,6 +120,14 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void loadingFragments() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_main, fmain)
+                .commit();
+    }
+
 
     public void onFragmentInteraction(Uri uri) {
         //this method could be use to communicate between fragments
