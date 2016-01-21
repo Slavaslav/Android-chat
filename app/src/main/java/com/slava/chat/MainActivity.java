@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity
     FragmentMain fmain;
     FragmentLogin flogin;
     ActionBarDrawerToggle toggle;
+    DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -130,6 +131,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadingFragmentLogin() {
+        getSupportActionBar().hide();
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.content_main, flogin)
@@ -137,6 +140,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadingFragmentContentMain() {
+        getSupportActionBar().show();
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.content_main, fmain)
