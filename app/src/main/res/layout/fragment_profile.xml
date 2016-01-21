@@ -10,10 +10,41 @@
         android:layout_height="@dimen/fragment_profile_top"
         android:background="@color/colorPrimary"
         android:orientation="vertical">
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/fragment_profile"
-            android:textSize="@dimen/fragment_text_size" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+            <LinearLayout
+                android:layout_width="@dimen/fragment_profile_top"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView2"
+                    android:src="@drawable/ic_menu_contacts"
+                    android:baselineAlignBottom="false" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/size_0dp"
+                    android:text="@string/fragment_profile_name"
+                    android:textSize="12sp"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/size_0dp"
+                    android:text="@string/fragment_profile_phone"
+                    android:textSize="12sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
