@@ -139,12 +139,12 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
-    private void loadingFragmentContentMain() {
+    public void loadingFragmentContentMain() {
         getSupportActionBar().show();
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.content_main, fmain)
+        fragmentTransaction.replace(R.id.content_main, fmain)
                 .commit();
     }
 
