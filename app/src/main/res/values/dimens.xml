@@ -8,5 +8,5 @@
     <dimen name="fragment_margin">16dp</dimen>
     <dimen name="fragment_text_size">30sp</dimen>
     <dimen name="fragment_profile_top">80dp</dimen>
-    <dimen name="app_bar_elevation">0dp</dimen>
+    <dimen name="size_0dp">0dp</dimen>
 </resources>
