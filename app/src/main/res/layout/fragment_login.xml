@@ -2,12 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.slava.chat.fragments.FragmentMain">
+    tools:context="com.slava.chat.fragments.FragmentLogin">
 
+    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/fragment_main"
-        android:textSize="@dimen/fragment_text_size"/>
+        android:text="@string/fragment_login" />
 
 </FrameLayout>

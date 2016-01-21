@@ -15,15 +15,17 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.slava.chat.fragments.FragmentContacts;
+import com.slava.chat.fragments.FragmentLogin;
 import com.slava.chat.fragments.FragmentMain;
 import com.slava.chat.fragments.FragmentProfile;
 
 public class MainActivity extends AppCompatActivity
-        implements FragmentMain.OnFragmentInteractionListener, FragmentContacts.OnFragmentInteractionListener, FragmentProfile.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener {
+        implements FragmentLogin.OnFragmentInteractionListener, FragmentMain.OnFragmentInteractionListener, FragmentContacts.OnFragmentInteractionListener, FragmentProfile.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener {
 
     FragmentContacts fcontacts;
     FragmentProfile fprofile;
     FragmentMain fmain;
+    FragmentLogin flogin;
     ActionBarDrawerToggle toggle;
 
     @Override
@@ -53,8 +55,14 @@ public class MainActivity extends AppCompatActivity
         fcontacts = new FragmentContacts();
         fprofile = new FragmentProfile();
         fmain = new FragmentMain();
+        flogin = new FragmentLogin();
 
-        loadingFragments();
+        if (true) {
+            loadingFragmentLogin();
+        } else {
+            loadingFragmentContentMain();
+        }
+
     }
 
     @Override
@@ -101,11 +109,11 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_contacts) {
             //create new fragment fcontacts in content_main
-            fragmentTransaction.replace(R.id.content_main, fcontacts)
+            fragmentTransaction.add(R.id.content_main, fcontacts)
                     .addToBackStack(null);
         } else if (id == R.id.nav_profile) {
             //create new fragment fprofile in content_main
-            fragmentTransaction.replace(R.id.content_main, fprofile)
+            fragmentTransaction.add(R.id.content_main, fprofile)
                     .addToBackStack(null);
         }
         //hide the Navigation Drawer image
@@ -121,10 +129,17 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void loadingFragments() {
+    private void loadingFragmentLogin() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_main, fmain)
+        fragmentTransaction.add(R.id.content_main, flogin)
+                .commit();
+    }
+
+    private void loadingFragmentContentMain() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.content_main, fmain)
                 .commit();
     }
 

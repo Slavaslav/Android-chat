@@ -10,6 +10,6 @@
 
     <string name="fragment_contacts">Contacts</string>
     <string name="fragment_profile">My profile</string>
-
-    <string name="hello_blank_fragment">recent chats</string>
+    <string name="fragment_main">Recent chats</string>
+    <string name="fragment_login">Login</string>
 </resources>
