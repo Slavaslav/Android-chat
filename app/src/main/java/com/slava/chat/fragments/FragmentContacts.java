@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.slava.chat.R;
 
@@ -64,8 +66,12 @@ public class FragmentContacts extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contacts, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
+        String[] str = {"Contact1","Contact2","Contact3","Contact4","Contact5","Contact6","Contact7","Contact8","Contact9","Contact10",};
+        ListView lvContacts = (ListView) rootView.findViewById(R.id.listViewContacts);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_list_item_1, str);
+        lvContacts.setAdapter(adapter);
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
