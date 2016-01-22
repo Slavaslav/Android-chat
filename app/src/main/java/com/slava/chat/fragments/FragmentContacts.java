@@ -1,8 +1,5 @@
 package com.slava.chat.fragments;
 
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,6 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,41 +33,18 @@ public class FragmentContacts extends Fragment implements
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-
-    public FragmentContacts() {
-        // Required empty public constructor
-    }
-
-
-
-
-    ListView mContactsList;
-    long mContactId;
-    String mContactKey;
-    Uri mContactUri;
-    private SimpleCursorAdapter mCursorAdapter;
     private static final String TAG = "myLogs";
     private static final int CONTACT_ID_INDEX = 0;
     private static final int LOOKUP_KEY_INDEX = 1;
-    private String mSearchString;
-    private String[] mSelectionArgs = { mSearchString };
-
     private final static String[] FROM_COLUMNS = {
             Build.VERSION.SDK_INT
                     >= Build.VERSION_CODES.HONEYCOMB ?
                     ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
                     ContactsContract.Contacts.DISPLAY_NAME
     };
-
     private final static int[] TO_IDS = {
             android.R.id.text1
     };
-
     private static final String[] PROJECTION =
             {
                     ContactsContract.Contacts._ID,
@@ -78,15 +55,24 @@ public class FragmentContacts extends Fragment implements
                             ContactsContract.Contacts.DISPLAY_NAME
 
             };
-
     private static final String SELECTION =
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
                     ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " LIKE ?" :
                     ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?";
+    ListView mContactsList;
+    long mContactId;
+    String mContactKey;
+    Uri mContactUri;
+    private String mParam1;
+    private String mParam2;
+    private OnFragmentInteractionListener mListener;
+    private SimpleCursorAdapter mCursorAdapter;
+    private String mSearchString;
+    private String[] mSelectionArgs = {mSearchString};
 
-
-
-
+    public FragmentContacts() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
