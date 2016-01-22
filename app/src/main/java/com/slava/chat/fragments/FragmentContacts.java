@@ -1,13 +1,20 @@
 package com.slava.chat.fragments;
 
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.slava.chat.R;
@@ -20,13 +27,13 @@ import com.slava.chat.R;
  * Use the {@link FragmentContacts#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentContacts extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
+public class FragmentContacts extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor>,
+        AdapterView.OnItemClickListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -36,6 +43,51 @@ public class FragmentContacts extends Fragment {
         // Required empty public constructor
     }
 
+
+
+
+    ListView mContactsList;
+    long mContactId;
+    String mContactKey;
+    Uri mContactUri;
+    private SimpleCursorAdapter mCursorAdapter;
+    private static final String TAG = "myLogs";
+    private static final int CONTACT_ID_INDEX = 0;
+    private static final int LOOKUP_KEY_INDEX = 1;
+    private String mSearchString;
+    private String[] mSelectionArgs = { mSearchString };
+
+    private final static String[] FROM_COLUMNS = {
+            Build.VERSION.SDK_INT
+                    >= Build.VERSION_CODES.HONEYCOMB ?
+                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
+                    ContactsContract.Contacts.DISPLAY_NAME
+    };
+
+    private final static int[] TO_IDS = {
+            android.R.id.text1
+    };
+
+    private static final String[] PROJECTION =
+            {
+                    ContactsContract.Contacts._ID,
+                    ContactsContract.Contacts.LOOKUP_KEY,
+                    Build.VERSION.SDK_INT
+                            >= Build.VERSION_CODES.HONEYCOMB ?
+                            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
+                            ContactsContract.Contacts.DISPLAY_NAME
+
+            };
+
+    private static final String SELECTION =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
+                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " LIKE ?" :
+                    ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?";
+
+
+
+
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -44,7 +96,6 @@ public class FragmentContacts extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment FragmentContacts.
      */
-    // TODO: Rename and change types and number of parameters
     public static FragmentContacts newInstance(String param1, String param2) {
         FragmentContacts fragment = new FragmentContacts();
         Bundle args = new Bundle();
@@ -66,15 +117,26 @@ public class FragmentContacts extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
-        String[] str = {"Contact1","Contact2","Contact3","Contact4","Contact5","Contact6","Contact7","Contact8","Contact9","Contact10",};
-        ListView lvContacts = (ListView) rootView.findViewById(R.id.listViewContacts);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), R.layout.fragment_contacts_list_item, str);
-        lvContacts.setAdapter(adapter);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_contacts, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mContactsList = (ListView) getActivity().findViewById(R.id.listViewContacts);
+        mContactsList.setOnItemClickListener(this);
+        mCursorAdapter = new SimpleCursorAdapter(
+                getActivity(),
+                R.layout.fragment_contacts_list_item,
+                null,
+                FROM_COLUMNS, TO_IDS,
+                0);
+        mContactsList.setAdapter(mCursorAdapter);
+
+        getLoaderManager().initLoader(0, null, this);
+
+    }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -98,6 +160,36 @@ public class FragmentContacts extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        mSelectionArgs[0] = "%" + mSearchString + "%";
+        // Starts the query
+        return new CursorLoader(
+                getActivity(),
+                ContactsContract.Contacts.CONTENT_URI,
+                PROJECTION,
+                SELECTION,
+                mSelectionArgs,
+                null
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mCursorAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mCursorAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -109,11 +201,7 @@ public class FragmentContacts extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
-    private void getContacts() {
-
-    }
 }
