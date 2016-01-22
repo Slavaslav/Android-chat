@@ -69,7 +69,7 @@ public class FragmentContacts extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
         String[] str = {"Contact1","Contact2","Contact3","Contact4","Contact5","Contact6","Contact7","Contact8","Contact9","Contact10",};
         ListView lvContacts = (ListView) rootView.findViewById(R.id.listViewContacts);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_list_item_1, str);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), R.layout.fragment_contacts_list_item, str);
         lvContacts.setAdapter(adapter);
         return rootView;
     }
@@ -111,5 +111,9 @@ public class FragmentContacts extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void getContacts() {
+
     }
 }
