@@ -33,42 +33,22 @@ public class FragmentContacts extends Fragment implements
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final String TAG = "myLogs";
-    private static final int CONTACT_ID_INDEX = 0;
-    private static final int LOOKUP_KEY_INDEX = 1;
-    private final static String[] FROM_COLUMNS = {
-            Build.VERSION.SDK_INT
-                    >= Build.VERSION_CODES.HONEYCOMB ?
-                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
-                    ContactsContract.Contacts.DISPLAY_NAME
+    private static final String[] FROM_COLUMNS = { ContactsContract.Contacts.DISPLAY_NAME_PRIMARY };
+    private static final int[] TO_IDS = { android.R.id.text1 };
+    // columns requested from the database
+    private static final String[] PROJECTION = {
+            ContactsContract.Contacts._ID, // _ID is always required
+            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY // that's what we want to display
     };
-    private final static int[] TO_IDS = {
-            android.R.id.text1
-    };
-    private static final String[] PROJECTION =
-            {
-                    ContactsContract.Contacts._ID,
-                    ContactsContract.Contacts.LOOKUP_KEY,
-                    Build.VERSION.SDK_INT
-                            >= Build.VERSION_CODES.HONEYCOMB ?
-                            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
-                            ContactsContract.Contacts.DISPLAY_NAME
-
-            };
     private static final String SELECTION =
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
                     ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " LIKE ?" :
                     ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?";
     ListView mContactsList;
-    long mContactId;
-    String mContactKey;
-    Uri mContactUri;
     private String mParam1;
     private String mParam2;
     private OnFragmentInteractionListener mListener;
     private SimpleCursorAdapter mCursorAdapter;
-    private String mSearchString;
-    private String[] mSelectionArgs = {mSearchString};
 
     public FragmentContacts() {
         // Required empty public constructor
@@ -94,10 +74,14 @@ public class FragmentContacts extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        // create adapter once
+        mCursorAdapter = new SimpleCursorAdapter(
+                getActivity(),
+                android.R.layout.simple_list_item_1,
+                null,
+                FROM_COLUMNS,
+                TO_IDS,
+                0);
     }
 
     @Override
@@ -109,18 +93,13 @@ public class FragmentContacts extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mContactsList = (ListView) getActivity().findViewById(R.id.listViewContacts);
-        mContactsList.setOnItemClickListener(this);
-        mCursorAdapter = new SimpleCursorAdapter(
-                getActivity(),
-                R.layout.fragment_contacts_list_item,
-                null,
-                FROM_COLUMNS, TO_IDS,
-                0);
+        mContactsList = (ListView) getActivity().findViewById(R.id.contacts_list);
+//        mContactsList.setOnItemClickListener(this);
+
+        // each time we are started use our listadapter
         mContactsList.setAdapter(mCursorAdapter);
-
+        // and tell loader manager to start loading
         getLoaderManager().initLoader(0, null, this);
-
     }
 
     public void onButtonPressed(Uri uri) {
@@ -149,25 +128,27 @@ public class FragmentContacts extends Fragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        mSelectionArgs[0] = "%" + mSearchString + "%";
-        // Starts the query
+        // no sub-selection, no sort order, simply every row
+        // projection says we want just the _id and the name column
         return new CursorLoader(
                 getActivity(),
                 ContactsContract.Contacts.CONTENT_URI,
                 PROJECTION,
-                SELECTION,
-                mSelectionArgs,
+                null,
+                null,
                 null
         );
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Once cursor is loaded, give it to adapter
         mCursorAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        // on reset take any old cursor away
         mCursorAdapter.swapCursor(null);
     }
 
