@@ -1,13 +1,16 @@
 package com.slava.chat.fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -34,23 +37,18 @@ public class FragmentContacts extends Fragment implements
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final String[] FROM_COLUMNS = { ContactsContract.Contacts.DISPLAY_NAME_PRIMARY };
-    private static final int[] TO_IDS = { android.R.id.text1 };
+    private static final String[] FROM_COLUMNS = {ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
+    private static final int[] TO_IDS = {android.R.id.text1};
     // columns requested from the database
     private static final String[] PROJECTION = {
             ContactsContract.Contacts._ID, // _ID is always required
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY // that's what we want to display
     };
-    private static final String SELECTION =
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
-                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " LIKE ?" :
-                    ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?";
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
+    private static final String TAG = "myLogs";
     ListView mContactsList;
-    private String mParam1;
-    private String mParam2;
     private OnFragmentInteractionListener mListener;
     private SimpleCursorAdapter mCursorAdapter;
-    private static final String TAG = "myLogs";
 
     public FragmentContacts() {
         // Required empty public constructor
@@ -90,21 +88,26 @@ public class FragmentContacts extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "oncreateview");
+        Log.d(TAG, "onCreateView");
         return inflater.inflate(R.layout.fragment_contacts, container, false);
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.d(TAG, "onavtivitycreated");
+        Log.d(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
-
-        mContactsList = (ListView) getActivity().findViewById(R.id.contacts_list);
-//        mContactsList.setOnItemClickListener(this);
+        mContactsList = (ListView) getView().findViewById(R.id.contacts_list);
+        mContactsList.setOnItemClickListener(this);
 
         // each time we are started use our listadapter
         mContactsList.setAdapter(mCursorAdapter);
-        // and tell loader manager to start loading
-        getLoaderManager().initLoader(0, null, this);
+
+        if (ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this.getActivity(),
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+        } else {
+            getLoaderManager().initLoader(0, null, this);
+        }
     }
 
     public void onButtonPressed(Uri uri) {
@@ -134,7 +137,7 @@ public class FragmentContacts extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.d(TAG, "cursorloaderstart");
+        Log.d(TAG, "onCreateLoader");
 
         // no sub-selection, no sort order, simply every row
         // projection says we want just the _id and the name column
@@ -150,16 +153,34 @@ public class FragmentContacts extends Fragment implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d(TAG, "loadfinished");
+        Log.d(TAG, "onLoadFinished");
         // Once cursor is loaded, give it to adapter
         mCursorAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        Log.d(TAG, "loadreset");
+        Log.d(TAG, "onLoaderReset");
         // on reset take any old cursor away
         mCursorAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    // tell loader manager to start loading
+                    getLoaderManager().initLoader(0, null, this);
+                }
+                return;
+            }
+        }
     }
 
     @Override
