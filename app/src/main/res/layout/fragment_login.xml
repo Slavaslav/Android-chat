@@ -22,11 +22,25 @@
         android:hint="@string/editText_password"
         android:inputType="textPassword" />
 
-    <Button
-        android:id="@+id/button_sign_up"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_sign_up" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_log_in"
+            android:layout_width="@dimen/size_0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/button_log_in" />
+
+        <Button
+            android:id="@+id/button_sign_up"
+            android:layout_width="@dimen/size_0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/button_sign_up" />
+    </LinearLayout>
 
 
 </LinearLayout>

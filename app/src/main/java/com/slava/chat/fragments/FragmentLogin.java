@@ -67,14 +67,25 @@ public class FragmentLogin extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+
+        Button btnLogIn = (Button) rootView.findViewById(R.id.button_log_in);
         Button btnSignUp = (Button) rootView.findViewById(R.id.button_sign_up);
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
+
+        View.OnClickListener pressBtn = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).loadingFragment("fragmentMain");
+                switch (v.getId()) {
+                    case R.id.button_log_in:
+                        ((MainActivity) getActivity()).loadingFragment("fragmentMain");
+                        break;
+                    case R.id.button_sign_up:
+                        ((MainActivity) getActivity()).loadingFragment("fragmentProfile");
+                        break;
+                }
             }
-        });
-
+        };
+        btnLogIn.setOnClickListener(pressBtn);
+        btnSignUp.setOnClickListener(pressBtn);
 
         return rootView;
     }
@@ -108,7 +119,7 @@ public class FragmentLogin extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

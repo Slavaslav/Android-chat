@@ -16,5 +16,6 @@
 
     <string name="editText_phone">Enter phone number</string>
     <string name="editText_password">Enter password</string>
-    <string name="button_sign_up">Sign up/in</string>
+    <string name="button_log_in">Log in</string>
+    <string name="button_sign_up">Sign up</string>
 </resources>
