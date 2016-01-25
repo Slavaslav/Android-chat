@@ -46,7 +46,7 @@ public class FragmentContacts extends Fragment implements
     };
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
     private static final String TAG = "myLogs";
-    ListView mContactsList;
+    private ListView mContactsList;
     private OnFragmentInteractionListener mListener;
     private SimpleCursorAdapter mCursorAdapter;
 

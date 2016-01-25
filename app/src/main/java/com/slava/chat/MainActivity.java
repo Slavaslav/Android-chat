@@ -19,20 +19,25 @@ import com.slava.chat.fragments.FragmentLogin;
 import com.slava.chat.fragments.FragmentMain;
 import com.slava.chat.fragments.FragmentProfile;
 
-public class MainActivity extends AppCompatActivity
-        implements FragmentLogin.OnFragmentInteractionListener, FragmentMain.OnFragmentInteractionListener, FragmentContacts.OnFragmentInteractionListener, FragmentProfile.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements
+        FragmentLogin.OnFragmentInteractionListener,
+        FragmentMain.OnFragmentInteractionListener,
+        FragmentContacts.OnFragmentInteractionListener,
+        FragmentProfile.OnFragmentInteractionListener,
+        NavigationView.OnNavigationItemSelectedListener {
 
-    FragmentContacts fcontacts;
-    FragmentProfile fprofile;
-    FragmentMain fmain;
-    FragmentLogin flogin;
-    ActionBarDrawerToggle toggle;
-    DrawerLayout drawer;
+    private FragmentContacts fcontacts;
+    private FragmentProfile fprofile;
+    private FragmentMain fmain;
+    private FragmentLogin flogin;
+    private ActionBarDrawerToggle toggle;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -59,16 +64,16 @@ public class MainActivity extends AppCompatActivity
         flogin = new FragmentLogin();
 
         if (true) {
-            loadingFragmentLogin();
+            loadingFragment("fragmentLogin");
         } else {
-            loadingFragmentContentMain();
+            loadingFragment("fragmentMain");
         }
 
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -105,49 +110,57 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
         if (id == R.id.nav_contacts) {
-            //create new fragment fcontacts in content_main
-            fragmentTransaction.replace(R.id.content_main, fcontacts)
-                    .addToBackStack(null);
+            loadingFragment("fragmentContacts");
         } else if (id == R.id.nav_profile) {
-            //create new fragment fprofile in content_main
-            fragmentTransaction.replace(R.id.content_main, fprofile)
-                    .addToBackStack(null);
+            loadingFragment("fragmentProfile");
         }
-        //hide the Navigation Drawer image
-        toggle.setDrawerIndicatorEnabled(false);
-        //to enable the < in the actionbar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //returns the previous state of the stack
-        fragmentManager.popBackStack();
-        fragmentTransaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private void loadingFragmentLogin() {
-        getSupportActionBar().hide();
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    public void loadingFragment(String s) {
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.content_main, flogin)
-                .commit();
-    }
 
-    public void loadingFragmentContentMain() {
-        getSupportActionBar().show();
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_main, fmain)
-                .commit();
+        switch (s) {
+            case "fragmentContacts": {
+                toggle.setDrawerIndicatorEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                fragmentManager.popBackStack();
+                fragmentTransaction.replace(R.id.content_main, fcontacts)
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            }
+            case "fragmentLogin": {
+                getSupportActionBar().hide();
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                fragmentTransaction.add(R.id.content_main, flogin)
+                        .commit();
+                break;
+            }
+            case "fragmentMain": {
+                getSupportActionBar().show();
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                fragmentTransaction.replace(R.id.content_main, fmain)
+                        .commit();
+                break;
+            }
+            case "fragmentProfile": {
+                toggle.setDrawerIndicatorEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                fragmentManager.popBackStack();
+                fragmentTransaction.replace(R.id.content_main, fprofile)
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            }
+        }
     }
-
 
     public void onFragmentInteraction(Uri uri) {
         //this method could be use to communicate between fragments
