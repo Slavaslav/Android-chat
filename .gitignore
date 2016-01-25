@@ -41,7 +41,6 @@ proguard/
 captures/
 
 .idea/
-build.gradle
 gradle.properties
 gradle/
 gradlew
