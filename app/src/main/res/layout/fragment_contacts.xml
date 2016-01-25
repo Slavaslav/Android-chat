@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/fragment_margin_16dp"
     android:orientation="vertical"
-    android:layout_margin="@dimen/fragment_margin"
     tools:context="com.slava.chat.fragments.FragmentContacts">
 
     <TextView
@@ -12,9 +12,9 @@
         android:text="@string/fragment_contacts"
         android:textSize="@dimen/fragment_text_size" />
     <ListView
+        android:id="@+id/contacts_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/contacts_list"
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

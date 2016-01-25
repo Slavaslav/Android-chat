@@ -18,18 +18,21 @@ import com.slava.chat.fragments.FragmentContacts;
 import com.slava.chat.fragments.FragmentLogin;
 import com.slava.chat.fragments.FragmentMain;
 import com.slava.chat.fragments.FragmentProfile;
+import com.slava.chat.fragments.FragmentRegistration;
 
 public class MainActivity extends AppCompatActivity implements
+        FragmentContacts.OnFragmentInteractionListener,
         FragmentLogin.OnFragmentInteractionListener,
         FragmentMain.OnFragmentInteractionListener,
-        FragmentContacts.OnFragmentInteractionListener,
         FragmentProfile.OnFragmentInteractionListener,
+        FragmentRegistration.OnFragmentInteractionListener,
         NavigationView.OnNavigationItemSelectedListener {
 
     private FragmentContacts fcontacts;
-    private FragmentProfile fprofile;
-    private FragmentMain fmain;
     private FragmentLogin flogin;
+    private FragmentMain fmain;
+    private FragmentProfile fprofile;
+    private FragmentRegistration freg;
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawer;
 
@@ -59,9 +62,10 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         fcontacts = new FragmentContacts();
-        fprofile = new FragmentProfile();
-        fmain = new FragmentMain();
         flogin = new FragmentLogin();
+        fmain = new FragmentMain();
+        fprofile = new FragmentProfile();
+        freg = new FragmentRegistration();
 
         if (true) {
             loadingFragment("fragmentLogin");
@@ -155,6 +159,15 @@ public class MainActivity extends AppCompatActivity implements
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 fragmentManager.popBackStack();
                 fragmentTransaction.replace(R.id.content_main, fprofile)
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            }
+            case "fragmentReg": {
+                getSupportActionBar().hide();
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                fragmentManager.popBackStack();
+                fragmentTransaction.replace(R.id.content_main, freg)
                         .addToBackStack(null)
                         .commit();
                 break;

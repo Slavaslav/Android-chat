@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:layout_margin="@dimen/fragment_margin_16dp"
     android:orientation="vertical"
-    tools:context="com.slava.chat.fragments.FragmentLogin">
+    tools:context="com.slava.chat.fragments.FragmentRegistration">
 
     <EditText
-        android:id="@+id/editText_phone"
+        android:id="@+id/editText_phone_reg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -15,32 +15,26 @@
         android:inputType="phone" />
 
     <EditText
-        android:id="@+id/editText_password"
+        android:id="@+id/editText_password_reg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/editText_password"
         android:inputType="textPassword" />
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/editText_password_reg1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:ems="10"
+        android:hint="@string/editText_passwordRe"
+        android:inputType="textPassword" />
 
-        <Button
-            android:id="@+id/button_log_in"
-            android:layout_width="@dimen/size_0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/button_log_in" />
-
-        <Button
-            android:id="@+id/button_sign_up"
-            android:layout_width="@dimen/size_0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/button_sign_up" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/button_log_in_reg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_sign_up_reg" />
 
 
 </LinearLayout>
