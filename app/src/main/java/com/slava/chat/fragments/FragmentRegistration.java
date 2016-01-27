@@ -7,7 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
+import com.slava.chat.Account;
 import com.slava.chat.R;
 
 /**
@@ -19,12 +22,10 @@ import com.slava.chat.R;
  * create an instance of this fragment.
  */
 public class FragmentRegistration extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -42,7 +43,6 @@ public class FragmentRegistration extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment FragmentRegistration.
      */
-    // TODO: Rename and change types and number of parameters
     public static FragmentRegistration newInstance(String param1, String param2) {
         FragmentRegistration fragment = new FragmentRegistration();
         Bundle args = new Bundle();
@@ -68,7 +68,11 @@ public class FragmentRegistration extends Fragment {
         return inflater.inflate(R.layout.fragment_registration, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        signUp();
+    }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -92,6 +96,26 @@ public class FragmentRegistration extends Fragment {
         mListener = null;
     }
 
+    private void signUp() {
+        final EditText textPhone = (EditText) getView().findViewById(R.id.editText_phone_reg);
+        final EditText textPassword = (EditText) getView().findViewById(R.id.editText_password_reg);
+        Button btnSignUp = (Button) getView().findViewById(R.id.button_log_in_reg);
+        final Account account = new Account();
+
+
+        View.OnClickListener pressBtn = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.button_log_in_reg:
+                        account.signUp(textPhone.getText().toString(), textPassword.getText().toString());
+                        break;
+                }
+            }
+        };
+        btnSignUp.setOnClickListener(pressBtn);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -103,7 +127,6 @@ public class FragmentRegistration extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

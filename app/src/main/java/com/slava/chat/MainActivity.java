@@ -15,9 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 import com.slava.chat.fragments.FragmentContacts;
 import com.slava.chat.fragments.FragmentLogin;
 import com.slava.chat.fragments.FragmentMain;
@@ -43,33 +41,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        // example create new user
-        Parse.initialize(this, "78vxcrQI4qOuwsNDMOWNovUqGOaGNREHGGMSChUL", "jXJXeTKSURpgqijsqkfAhgGQkDJbwxMNgEFusFwE");
-
-        ParseUser user = new ParseUser();
-        user.setUsername("my name");
-        user.setPassword("my pass");
-        user.setEmail("email@example.com");
-
-// other fields can be set just like with ParseObject
-        user.put("phone", "650-555-0000");
-
-        user.signUpInBackground(new SignUpCallback() {
-            public void done(ParseException e) {
-                if (e == null) {
-                    // Hooray! Let them use the app now.
-                } else {
-                    // Sign up didn't succeed. Look at the ParseException
-                    // to figure out what went wrong
-                }
-            }
-        });
-
-
-
         setContentView(R.layout.activity_main);
+
+        Parse.initialize(this, "78vxcrQI4qOuwsNDMOWNovUqGOaGNREHGGMSChUL", "jXJXeTKSURpgqijsqkfAhgGQkDJbwxMNgEFusFwE");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -97,10 +71,11 @@ public class MainActivity extends AppCompatActivity implements
         fprofile = new FragmentProfile();
         freg = new FragmentRegistration();
 
-        if (true) {
-            loadingFragment("fragmentLogin");
-        } else {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
             loadingFragment("fragmentMain");
+        } else {
+            loadingFragment("fragmentLogin");
         }
 
     }
