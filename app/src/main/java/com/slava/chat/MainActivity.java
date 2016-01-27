@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.parse.Parse;
-import com.parse.ParseUser;
 import com.slava.chat.fragments.FragmentContacts;
 import com.slava.chat.fragments.FragmentLogin;
 import com.slava.chat.fragments.FragmentMain;
@@ -71,8 +70,7 @@ public class MainActivity extends AppCompatActivity implements
         fprofile = new FragmentProfile();
         freg = new FragmentRegistration();
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser != null) {
+        if (new Account().getCurrentUser()) {
             loadingFragment("fragmentMain");
         } else {
             loadingFragment("fragmentLogin");
@@ -148,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements
             case "fragmentLogin": {
                 getSupportActionBar().hide();
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                fragmentTransaction.add(R.id.content_main, flogin)
+                fragmentTransaction.replace(R.id.content_main, flogin)
                         .commit();
                 break;
             }

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.slava.chat.Account;
+import com.slava.chat.MainActivity;
 import com.slava.chat.R;
 
 /**
@@ -98,14 +99,13 @@ public class FragmentProfile extends Fragment {
     private void logOut() {
         Button btnLogOut = (Button) getView().findViewById(R.id.button_log_out);
 
-        final Account account = new Account();
-
         View.OnClickListener pressBtn = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.button_log_out:
-                        account.logOut();
+                        if (new Account().logOut())
+                            ((MainActivity) getActivity()).loadingFragment("fragmentLogin");
                         break;
                 }
             }

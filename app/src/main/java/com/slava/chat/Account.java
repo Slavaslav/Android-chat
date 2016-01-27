@@ -5,9 +5,6 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
-/**
- * Created by Home on 27.01.2016.
- */
 public class Account {
     public void signUp(String login, String password) {
         ParseUser user = new ParseUser();
@@ -40,7 +37,16 @@ public class Account {
 
     }
 
-    public void logOut() {
+    public boolean getCurrentUser() {
+        if (ParseUser.getCurrentUser() != null)
+            return true;
+        return false;
+    }
+
+    public boolean logOut() {
         ParseUser.logOut();
+        if (!(getCurrentUser()))
+            return true;
+        return false;
     }
 }
