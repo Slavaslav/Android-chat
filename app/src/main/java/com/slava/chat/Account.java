@@ -39,4 +39,8 @@ public class Account {
         });
 
     }
+
+    public void logOut() {
+        ParseUser.logOut();
+    }
 }
