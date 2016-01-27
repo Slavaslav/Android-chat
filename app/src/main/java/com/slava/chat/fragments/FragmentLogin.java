@@ -110,7 +110,7 @@ public class FragmentLogin extends Fragment {
                 switch (v.getId()) {
                     case R.id.button_log_in:
                         account.logIn(textPhone.getText().toString(), textPassword.getText().toString());
-                        if (account.getCurrentUser())
+                        if (!account.getCurrentUser())
                             ((MainActivity) getActivity()).loadingFragment("fragmentMain");
                         break;
                     case R.id.button_sign_up:
