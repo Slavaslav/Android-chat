@@ -1,5 +1,6 @@
 package com.slava.chat.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -83,10 +84,17 @@ public class FragmentLogin extends Fragment {
             public void onClick(View v) {
                 String login = txtPhone.getText().toString();
                 String pwd = txtPwd.getText().toString();
+                Account acc = new Account();
+                ProgressDialog pd = new ProgressDialog(getActivity());
+                pd.setMessage("Loading...");
+                pd.setIndeterminate(false);
+                pd.setCancelable(false);
+                pd.show();
+
                 switch (v.getId()) {
                     case R.id.btnLog:
-                        new Account().logIn(login, pwd);
-//                        if (!new Account().getCurrentUser())
+                        acc.logIn(login, pwd);
+                        pd.dismiss();
                         ((MainActivity) getActivity()).loadingFragment("fragmentMain");
                         break;
                     case R.id.btnReg:
