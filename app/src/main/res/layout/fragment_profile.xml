@@ -38,21 +38,21 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/size_0dp"
+                    android:layout_height="@dimen/_0dp"
                     android:layout_weight="1"
                     android:gravity="bottom"
                     android:text="@string/fragment_profile_name"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/fragment_profile_name"
+                    android:textSize="@dimen/txt_17sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/size_0dp"
+                    android:layout_height="@dimen/_0dp"
                     android:layout_weight="1"
                     android:text="@string/fragment_profile_phone"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/fragment_profile_phone" />
+                    android:textSize="@dimen/txt_12sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

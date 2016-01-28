@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/fragment_margin_16dp"
+    android:layout_margin="@dimen/marg_16dp"
     android:orientation="vertical"
     tools:context="com.slava.chat.fragments.FragmentLogin">
 
@@ -29,14 +29,14 @@
 
         <Button
             android:id="@+id/button_log_in"
-            android:layout_width="@dimen/size_0dp"
+            android:layout_width="@dimen/_0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/button_log_in" />
 
         <Button
             android:id="@+id/button_sign_up"
-            android:layout_width="@dimen/size_0dp"
+            android:layout_width="@dimen/_0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/button_sign_up" />
