@@ -81,11 +81,13 @@ public class FragmentLogin extends Fragment {
         View.OnClickListener pressBtn = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String login = txtPhone.getText().toString();
+                String pwd = txtPwd.getText().toString();
                 switch (v.getId()) {
                     case R.id.btnLog:
-                        new Account().logIn(txtPhone.getText().toString(), txtPwd.getText().toString());
-                        if (!new Account().getCurrentUser())
-                            ((MainActivity) getActivity()).loadingFragment("fragmentMain");
+                        new Account().logIn(login, pwd);
+//                        if (!new Account().getCurrentUser())
+                        ((MainActivity) getActivity()).loadingFragment("fragmentMain");
                         break;
                     case R.id.btnReg:
                         ((MainActivity) getActivity()).loadingFragment("fragmentReg");
