@@ -26,10 +26,12 @@ public class FragmentLogin extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    EditText txtPhone;
+    EditText txtPwd;
+    Button btnLog;
+    Button btnReg;
     private String mParam1;
     private String mParam2;
-
     private OnFragmentInteractionListener mListener;
 
     public FragmentLogin() {
@@ -70,7 +72,29 @@ public class FragmentLogin extends Fragment {
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        logIn();
+
+        txtPhone = (EditText) getView().findViewById(R.id.txtPhone);
+        txtPwd = (EditText) getView().findViewById(R.id.txtPwd);
+        btnLog = (Button) getView().findViewById(R.id.btnLog);
+        btnReg = (Button) getView().findViewById(R.id.btnReg);
+
+        View.OnClickListener pressBtn = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btnLog:
+                        new Account().logIn(txtPhone.getText().toString(), txtPwd.getText().toString());
+                        if (!new Account().getCurrentUser())
+                            ((MainActivity) getActivity()).loadingFragment("fragmentMain");
+                        break;
+                    case R.id.btnReg:
+                        ((MainActivity) getActivity()).loadingFragment("fragmentReg");
+                        break;
+                }
+            }
+        };
+        btnLog.setOnClickListener(pressBtn);
+        btnReg.setOnClickListener(pressBtn);
     }
 
     public void onButtonPressed(Uri uri) {
@@ -94,33 +118,6 @@ public class FragmentLogin extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    private void logIn() {
-        final EditText textPhone = (EditText) getView().findViewById(R.id.editText_phone);
-        final EditText textPassword = (EditText) getView().findViewById(R.id.editText_password);
-        Button btnLogIn = (Button) getView().findViewById(R.id.button_log_in);
-        Button btnSignUp = (Button) getView().findViewById(R.id.button_sign_up);
-
-        final Account account = new Account();
-
-        View.OnClickListener pressBtn = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.button_log_in:
-                        account.logIn(textPhone.getText().toString(), textPassword.getText().toString());
-                        if (!account.getCurrentUser())
-                            ((MainActivity) getActivity()).loadingFragment("fragmentMain");
-                        break;
-                    case R.id.button_sign_up:
-                        ((MainActivity) getActivity()).loadingFragment("fragmentReg");
-                        break;
-                }
-            }
-        };
-        btnLogIn.setOnClickListener(pressBtn);
-        btnSignUp.setOnClickListener(pressBtn);
     }
 
     /**

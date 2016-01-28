@@ -7,7 +7,7 @@
     tools:context="com.slava.chat.fragments.FragmentLogin">
 
     <EditText
-        android:id="@+id/editText_phone"
+        android:id="@+id/txtPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -15,7 +15,7 @@
         android:inputType="phone" />
 
     <EditText
-        android:id="@+id/editText_password"
+        android:id="@+id/txtPwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -28,14 +28,14 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button_log_in"
+            android:id="@+id/btnLog"
             android:layout_width="@dimen/_0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/button_log_in" />
 
         <Button
-            android:id="@+id/button_sign_up"
+            android:id="@+id/btnReg"
             android:layout_width="@dimen/_0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
