@@ -2,13 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFF"
     android:orientation="vertical"
     tools:context="com.slava.chat.fragments.FragmentMain">
 
-    <TextView
+    <ListView
+        android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/fragment_main"
-        android:textSize="@dimen/txt_17sp" />
+        android:layout_height="wrap_content"
+        android:divider="@color/color_black"
+        android:dividerHeight="@dimen/_1dp"
+        tools:listitem="@layout/chat_item">
+
+    </ListView>
 
 </LinearLayout>

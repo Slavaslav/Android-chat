@@ -10,9 +10,9 @@
     <dimen name="txt_30sp">30sp</dimen>
 
     <dimen name="_0dp">0dp</dimen>
+    <dimen name="_1dp">1dp</dimen>
 
     <dimen name="marg_16dp">16dp</dimen>
-    <dimen name="marg_64dp">64dp</dimen>
 
     <dimen name="pad_10dp">10dp</dimen>
 
