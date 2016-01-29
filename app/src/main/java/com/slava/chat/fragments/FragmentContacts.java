@@ -14,7 +14,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +72,7 @@ public class FragmentContacts extends Fragment implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "oncreate");
+
         super.onCreate(savedInstanceState);
         // create adapter once
         mCursorAdapter = new SimpleCursorAdapter(
@@ -88,12 +87,10 @@ public class FragmentContacts extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
         return inflater.inflate(R.layout.fragment_contacts, container, false);
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.d(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
         mContactsList = (ListView) getView().findViewById(R.id.contacts_list);
         mContactsList.setOnItemClickListener(this);
@@ -118,7 +115,6 @@ public class FragmentContacts extends Fragment implements
 
     @Override
     public void onAttach(Context context) {
-        Log.d(TAG, "onattach");
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -130,14 +126,13 @@ public class FragmentContacts extends Fragment implements
 
     @Override
     public void onDetach() {
-        Log.d(TAG, "ondetach");
         super.onDetach();
         mListener = null;
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.d(TAG, "onCreateLoader");
+
 
         // no sub-selection, no sort order, simply every row
         // projection says we want just the _id and the name column
@@ -153,14 +148,14 @@ public class FragmentContacts extends Fragment implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d(TAG, "onLoadFinished");
+
         // Once cursor is loaded, give it to adapter
         mCursorAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        Log.d(TAG, "onLoaderReset");
+
         // on reset take any old cursor away
         mCursorAdapter.swapCursor(null);
     }

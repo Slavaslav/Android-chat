@@ -3,13 +3,12 @@ package com.slava.chat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -86,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             super.onBackPressed();
         }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        toggle.setDrawerIndicatorEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        //toggle.setDrawerIndicatorEnabled(true);
     }
 
     @Override
@@ -116,12 +115,18 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Log.d("mylog", "ItemSelected first " + getSupportFragmentManager().getBackStackEntryCount());
+
+        //getSupportFragmentManager().popBackStack();
+        //toggle.setDrawerIndicatorEnabled(false);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (id == R.id.nav_contacts) {
             loadingFragment("fragmentContacts");
         } else if (id == R.id.nav_profile) {
             loadingFragment("fragmentProfile");
         }
+        Log.d("mylog", "ItemSelected second " + getSupportFragmentManager().getBackStackEntryCount());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -129,50 +134,34 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void loadingFragment(String s) {
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
+        Log.d("mylog", "loadingFragment first " + getSupportFragmentManager().getBackStackEntryCount());
         switch (s) {
+            case "fragmentMain": {
+                Log.d("mylog", "loadingFragment second " + getSupportFragmentManager().getBackStackEntryCount());
+                getSupportActionBar().show();
+                //toggle.setDrawerIndicatorEnabled(true);
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fmain).commit();
+                break;
+            }
             case "fragmentContacts": {
-                toggle.setDrawerIndicatorEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                fragmentManager.popBackStack();
-                fragmentTransaction.replace(R.id.content_main, fcontacts)
-                        .addToBackStack(null)
-                        .commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fcontacts).addToBackStack(null).commit();
+                break;
+            }
+            case "fragmentProfile": {
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fprofile).addToBackStack(null).commit();
                 break;
             }
             case "fragmentLogin": {
                 getSupportActionBar().hide();
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                fragmentTransaction.replace(R.id.content_main, flogin)
-                        .commit();
-                break;
-            }
-            case "fragmentMain": {
-                getSupportActionBar().show();
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                fragmentTransaction.replace(R.id.content_main, fmain)
-                        .commit();
-                break;
-            }
-            case "fragmentProfile": {
-                toggle.setDrawerIndicatorEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                fragmentManager.popBackStack();
-                fragmentTransaction.replace(R.id.content_main, fprofile)
-                        .addToBackStack(null)
-                        .commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, flogin).commit();
                 break;
             }
             case "fragmentReg": {
                 getSupportActionBar().hide();
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                fragmentManager.popBackStack();
-                fragmentTransaction.replace(R.id.content_main, freg)
-                        .addToBackStack(null)
-                        .commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, freg).addToBackStack(null).commit();
                 break;
             }
         }
