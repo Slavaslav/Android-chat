@@ -30,7 +30,7 @@ public class Account {
             public void done(ParseUser user, ParseException e) {
                 if (user != null) {
                     // Hooray! The user is logged in.
-                    callBack.execute(true);
+                    callBack.loggedIn();
                 } else {
                     // Signup failed. Look at the ParseException to see what happened.
                 }

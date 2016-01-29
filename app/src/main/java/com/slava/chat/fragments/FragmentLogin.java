@@ -36,6 +36,7 @@ public class FragmentLogin extends Fragment {
     private String mParam1;
     private String mParam2;
     private OnFragmentInteractionListener mListener;
+
     public FragmentLogin() {
         // Required empty public constructor
     }
@@ -94,28 +95,17 @@ public class FragmentLogin extends Fragment {
 
                 switch (v.getId()) {
                     case R.id.btnLog:
-
                         acc.logIn(login, pwd, new MyCallback() {
+                            @Override
+                            public void loggedIn() {
+                                pd.dismiss();
+                                ((MainActivity) getActivity()).loadingFragment("fragmentMain");
+                            }
 
                             @Override
-                            public void execute(boolean b) {
-                                if (b) {
-                                    pd.dismiss();
-                                    ((MainActivity) getActivity()).loadingFragment("fragmentMain");
-                                }
+                            public void e() {
                             }
                         });
-
-                        /*acc.logIn(login, pwd, new Runnable() {
-                            @Override
-                            public void run() {
-                                ((MainActivity) getActivity()).loadingFragment("fragmentMain");
-                                pd.dismiss();
-                            }
-                        });*/
-
-
-
                         break;
                     case R.id.btnReg:
                         ((MainActivity) getActivity()).loadingFragment("fragmentReg");
@@ -150,9 +140,6 @@ public class FragmentLogin extends Fragment {
         mListener = null;
     }
 
-    public interface MyCallback {
-        void execute(boolean b);
-    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -164,6 +151,14 @@ public class FragmentLogin extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
+
+    public interface MyCallback {
+        void loggedIn();
+
+        void e();
+
+    }
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
