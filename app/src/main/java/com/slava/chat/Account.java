@@ -33,6 +33,7 @@ public class Account {
                     callBack.loggedIn();
                 } else {
                     // Signup failed. Look at the ParseException to see what happened.
+                    callBack.e(e.getMessage());
                 }
             }
         });

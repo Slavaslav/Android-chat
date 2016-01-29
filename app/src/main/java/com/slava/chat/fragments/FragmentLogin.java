@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.slava.chat.Account;
 import com.slava.chat.MainActivity;
@@ -103,7 +104,9 @@ public class FragmentLogin extends Fragment {
                             }
 
                             @Override
-                            public void e() {
+                            public void e(String s) {
+                                pd.dismiss();
+                                Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
                             }
                         });
                         break;
@@ -155,7 +158,7 @@ public class FragmentLogin extends Fragment {
     public interface MyCallback {
         void loggedIn();
 
-        void e();
+        void e(String s);
 
     }
 
