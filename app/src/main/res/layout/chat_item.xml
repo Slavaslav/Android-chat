@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/textView2"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:drawablePadding="@dimen/pad_10dp"
-    android:drawableRight="@drawable/ic_chevron_right"
-    android:padding="@dimen/pad_10dp"
-    android:text="TextView"
-    android:textSize="@dimen/txt_18sp" />
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/_10dp"
+        android:paddingLeft="@dimen/_20dp"
+        android:paddingTop="@dimen/_10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="@dimen/txt_18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Text"
+            android:textSize="@dimen/txt_14sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_10dp"
+        android:text="12:35"
+        android:textSize="@dimen/txt_10sp" />
+
+</LinearLayout>
 
