@@ -56,28 +56,23 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+        //when press button HomeAsUp
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
                 if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    toggle.setDrawerIndicatorEnabled(false);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                    //getSupportFragmentManager().popBackStack();
-                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onBackPressed();
-                        }
-                    });
                 } else {
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                    toggle.syncState();
-                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            drawer.openDrawer(GravityCompat.START);
-                        }
-                    });
+                    toggle.setDrawerIndicatorEnabled(true);
                 }
             }
         });
@@ -134,8 +129,10 @@ public class MainActivity extends AppCompatActivity implements
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        //getSupportFragmentManager().popBackStack();
-
+        // do not to create a duplicate
+        if (toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
 
         if (id == R.id.nav_contacts) {
             loadingFragment("fragmentContacts");

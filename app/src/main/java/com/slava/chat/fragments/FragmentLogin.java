@@ -24,6 +24,7 @@ import com.slava.chat.R;
  * create an instance of this fragment.
  */
 public class FragmentLogin extends Fragment {
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -31,10 +32,10 @@ public class FragmentLogin extends Fragment {
     EditText txtPwd;
     Button btnLog;
     Button btnReg;
+    ProgressDialog pd;
     private String mParam1;
     private String mParam2;
     private OnFragmentInteractionListener mListener;
-
     public FragmentLogin() {
         // Required empty public constructor
     }
@@ -85,7 +86,7 @@ public class FragmentLogin extends Fragment {
                 String login = txtPhone.getText().toString();
                 String pwd = txtPwd.getText().toString();
                 Account acc = new Account();
-                ProgressDialog pd = new ProgressDialog(getActivity());
+                pd = new ProgressDialog(getActivity());
                 pd.setMessage("Loading...");
                 pd.setIndeterminate(false);
                 pd.setCancelable(false);
@@ -93,9 +94,28 @@ public class FragmentLogin extends Fragment {
 
                 switch (v.getId()) {
                     case R.id.btnLog:
-                        acc.logIn(login, pwd);
-                        pd.dismiss();
-                        ((MainActivity) getActivity()).loadingFragment("fragmentMain");
+
+                        acc.logIn(login, pwd, new MyCallback() {
+
+                            @Override
+                            public void execute(boolean b) {
+                                if (b) {
+                                    pd.dismiss();
+                                    ((MainActivity) getActivity()).loadingFragment("fragmentMain");
+                                }
+                            }
+                        });
+
+                        /*acc.logIn(login, pwd, new Runnable() {
+                            @Override
+                            public void run() {
+                                ((MainActivity) getActivity()).loadingFragment("fragmentMain");
+                                pd.dismiss();
+                            }
+                        });*/
+
+
+
                         break;
                     case R.id.btnReg:
                         ((MainActivity) getActivity()).loadingFragment("fragmentReg");
@@ -128,6 +148,10 @@ public class FragmentLogin extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public interface MyCallback {
+        void execute(boolean b);
     }
 
     /**
