@@ -1,6 +1,5 @@
 package com.slava.chat.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -76,17 +75,10 @@ public class FragmentProfile extends Fragment {
         View.OnClickListener pressBtn = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProgressDialog pd = new ProgressDialog(getActivity());
-                pd.setMessage(getString(R.string.progress_wait));
-                pd.setIndeterminate(false);
-                pd.setCancelable(false);
                 switch (v.getId()) {
                     case R.id.button_log_out:
-                        pd.show();
-                        if (new Account().logOut()) {
-                            pd.dismiss();
-                            ((MainActivity) getActivity()).loadingFragment("fragmentLogin");
-                        }
+                        new Account().logOut();
+                        ((MainActivity) getActivity()).loadingFragment("fragmentLogin");
                         break;
                 }
             }

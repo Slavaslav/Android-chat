@@ -46,10 +46,7 @@ public class Account {
         return false;
     }
 
-    public boolean logOut() {
+    public void logOut() {
         ParseUser.logOut();
-        if (!getCurrentUser())
-            return true;
-        return false;
     }
 }
