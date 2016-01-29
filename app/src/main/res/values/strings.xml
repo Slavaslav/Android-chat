@@ -22,4 +22,5 @@
     <string name="button_sign_up_reg">Create an account</string>
     <string name="logOut">Log out</string>
     <string name="progress_wait">Loading...</string>
+    <string name="msg">Type message</string>
 </resources>
