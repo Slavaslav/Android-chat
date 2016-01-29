@@ -3,12 +3,12 @@ package com.slava.chat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements
     private FragmentRegistration freg;
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawer;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Parse.initialize(this, "78vxcrQI4qOuwsNDMOWNovUqGOaGNREHGGMSChUL", "jXJXeTKSURpgqijsqkfAhgGQkDJbwxMNgEFusFwE");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -55,13 +56,32 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //when press button HomeAsUp
-        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+
             @Override
-            public void onClick(View v) {
-                onBackPressed();
+            public void onBackStackChanged() {
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    //getSupportFragmentManager().popBackStack();
+                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onBackPressed();
+                        }
+                    });
+                } else {
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                    toggle.syncState();
+                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            drawer.openDrawer(GravityCompat.START);
+                        }
+                    });
+                }
             }
         });
+
 
         fcontacts = new FragmentContacts();
         flogin = new FragmentLogin();
@@ -85,8 +105,6 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             super.onBackPressed();
         }
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        //toggle.setDrawerIndicatorEnabled(true);
     }
 
     @Override
@@ -115,18 +133,15 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Log.d("mylog", "ItemSelected first " + getSupportFragmentManager().getBackStackEntryCount());
 
         //getSupportFragmentManager().popBackStack();
-        //toggle.setDrawerIndicatorEnabled(false);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         if (id == R.id.nav_contacts) {
             loadingFragment("fragmentContacts");
         } else if (id == R.id.nav_profile) {
             loadingFragment("fragmentProfile");
         }
-        Log.d("mylog", "ItemSelected second " + getSupportFragmentManager().getBackStackEntryCount());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -134,12 +149,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void loadingFragment(String s) {
-        Log.d("mylog", "loadingFragment first " + getSupportFragmentManager().getBackStackEntryCount());
         switch (s) {
             case "fragmentMain": {
-                Log.d("mylog", "loadingFragment second " + getSupportFragmentManager().getBackStackEntryCount());
                 getSupportActionBar().show();
-                //toggle.setDrawerIndicatorEnabled(true);
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fmain).commit();
                 break;
