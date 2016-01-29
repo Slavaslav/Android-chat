@@ -33,7 +33,7 @@ public class FragmentLogin extends Fragment {
     EditText txtPwd;
     Button btnLog;
     Button btnReg;
-    ProgressDialog pd;
+
     private String mParam1;
     private String mParam2;
     private OnFragmentInteractionListener mListener;
@@ -88,14 +88,14 @@ public class FragmentLogin extends Fragment {
                 String login = txtPhone.getText().toString();
                 String pwd = txtPwd.getText().toString();
                 Account acc = new Account();
-                pd = new ProgressDialog(getActivity());
-                pd.setMessage("Loading...");
+                final ProgressDialog pd = new ProgressDialog(getActivity());
+                pd.setMessage(getString(R.string.progress_wait));
                 pd.setIndeterminate(false);
                 pd.setCancelable(false);
-                pd.show();
 
                 switch (v.getId()) {
                     case R.id.btnLog:
+                        pd.show();
                         acc.logIn(login, pwd, new MyCallback() {
                             @Override
                             public void loggedIn() {

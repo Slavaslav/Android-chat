@@ -1,5 +1,6 @@
 package com.slava.chat.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -70,7 +71,27 @@ public class FragmentProfile extends Fragment {
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        logOut();
+        Button btnLogOut = (Button) getView().findViewById(R.id.button_log_out);
+
+        View.OnClickListener pressBtn = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProgressDialog pd = new ProgressDialog(getActivity());
+                pd.setMessage(getString(R.string.progress_wait));
+                pd.setIndeterminate(false);
+                pd.setCancelable(false);
+                switch (v.getId()) {
+                    case R.id.button_log_out:
+                        pd.show();
+                        if (new Account().logOut()) {
+                            pd.dismiss();
+                            ((MainActivity) getActivity()).loadingFragment("fragmentLogin");
+                        }
+                        break;
+                }
+            }
+        };
+        btnLogOut.setOnClickListener(pressBtn);
     }
 
     public void onButtonPressed(Uri uri) {
@@ -96,22 +117,6 @@ public class FragmentProfile extends Fragment {
         mListener = null;
     }
 
-    private void logOut() {
-        Button btnLogOut = (Button) getView().findViewById(R.id.button_log_out);
-
-        View.OnClickListener pressBtn = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.button_log_out:
-                        if (new Account().logOut())
-                            ((MainActivity) getActivity()).loadingFragment("fragmentLogin");
-                        break;
-                }
-            }
-        };
-        btnLogOut.setOnClickListener(pressBtn);
-    }
 
     /**
      * This interface must be implemented by activities that contain this
