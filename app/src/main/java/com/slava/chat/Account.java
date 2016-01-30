@@ -7,6 +7,22 @@ import com.parse.SignUpCallback;
 import com.slava.chat.fragments.FragmentLogin;
 
 public class Account {
+    public static void logIn(String login, String password, final FragmentLogin.MyCallback callBack) {
+
+        ParseUser.logInInBackground(login, password, new LogInCallback() {
+            public void done(ParseUser user, ParseException e) {
+                if (user != null) {
+                    // Hooray! The user is logged in.
+                    callBack.loggedIn();
+                } else {
+                    // Signup failed. Look at the ParseException to see what happened.
+                    callBack.e(e.getMessage());
+                }
+            }
+        });
+
+    }
+
     public void signUp(String login, String password) {
         ParseUser user = new ParseUser();
         user.setUsername(login);
@@ -22,22 +38,6 @@ public class Account {
                 }
             }
         });
-    }
-
-    public void logIn(String login, String password, final FragmentLogin.MyCallback callBack) {
-
-        ParseUser.logInInBackground(login, password, new LogInCallback() {
-            public void done(ParseUser user, ParseException e) {
-                if (user != null) {
-                    // Hooray! The user is logged in.
-                    callBack.loggedIn();
-                } else {
-                    // Signup failed. Look at the ParseException to see what happened.
-                    callBack.e(e.getMessage());
-                }
-            }
-        });
-
     }
 
     public boolean getCurrentUser() {

@@ -88,21 +88,16 @@ public class FragmentLogin extends Fragment {
             public void onClick(View v) {
                 String login = txtPhone.getText().toString();
                 String pwd = txtPwd.getText().toString();
-                Account acc = new Account();
-                final ProgressDialog pd = new ProgressDialog(getActivity());
-                pd.setMessage(getString(R.string.progress_wait));
-                pd.setIndeterminate(false);
-                pd.setCancelable(false);
 
                 switch (v.getId()) {
                     case R.id.btnLog:
-                        pd.show();
-                        acc.logIn(login, pwd, new MyCallback() {
+                        final ProgressDialog pd = ProgressDialog.show(getActivity(), null, getString(R.string.progress_wait), false, false);
+                        Account.logIn(login, pwd, new MyCallback() {
                             @Override
                             public void loggedIn() {
                                 Utils.hideKeyboard(getActivity());
-                                pd.dismiss();
                                 ((MainActivity) getActivity()).loadingFragment("fragmentMain");
+                                pd.dismiss();
                             }
 
                             @Override
