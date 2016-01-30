@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.slava.chat.Account;
 import com.slava.chat.MainActivity;
 import com.slava.chat.R;
+import com.slava.chat.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -99,6 +100,7 @@ public class FragmentLogin extends Fragment {
                         acc.logIn(login, pwd, new MyCallback() {
                             @Override
                             public void loggedIn() {
+                                Utils.hideKeyboard(getActivity());
                                 pd.dismiss();
                                 ((MainActivity) getActivity()).loadingFragment("fragmentMain");
                             }
