@@ -92,9 +92,9 @@ public class FragmentLogin extends Fragment {
                 switch (v.getId()) {
                     case R.id.btnLog:
                         final ProgressDialog pd = ProgressDialog.show(getActivity(), null, getString(R.string.progress_wait), false, false);
-                        Account.logIn(login, pwd, new MyCallback() {
+                        Account.logIn(login, pwd, new MainActivity.MyCallback() {
                             @Override
-                            public void loggedIn() {
+                            public void success() {
                                 Utils.hideKeyboard(getActivity());
                                 ((MainActivity) getActivity()).loadingFragment("fragmentMain");
                                 pd.dismiss();
@@ -151,13 +151,6 @@ public class FragmentLogin extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-
-    public interface MyCallback {
-        void loggedIn();
-
-        void e(String s);
-
-    }
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);

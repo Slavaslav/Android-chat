@@ -182,4 +182,10 @@ public class MainActivity extends AppCompatActivity implements
         //this method could be use to communicate between fragments
         //you can leave it empty
     }
+
+    public interface MyCallback {
+        void success();
+
+        void e(String s);
+    }
 }

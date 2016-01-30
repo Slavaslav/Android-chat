@@ -1,5 +1,6 @@
 package com.slava.chat.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,9 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.slava.chat.Account;
+import com.slava.chat.MainActivity;
 import com.slava.chat.R;
+import com.slava.chat.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +29,9 @@ public class FragmentRegistration extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    EditText txtPhone;
+    EditText txtPwd;
+    Button btnReg;
 
     private String mParam1;
     private String mParam2;
@@ -70,7 +77,40 @@ public class FragmentRegistration extends Fragment {
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        signUp();
+
+        txtPhone = (EditText) getView().findViewById(R.id.txtPhone);
+        txtPwd = (EditText) getView().findViewById(R.id.txtPwd);
+        btnReg = (Button) getView().findViewById(R.id.btnReg);
+
+
+        View.OnClickListener pressBtn = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String login = txtPhone.getText().toString();
+                String pwd = txtPwd.getText().toString();
+
+                switch (v.getId()) {
+                    case R.id.btnReg:
+                        final ProgressDialog pd = ProgressDialog.show(getActivity(), null, getString(R.string.progress_wait), false, false);
+                        Account.signUp(login, pwd, new MainActivity.MyCallback() {
+                            @Override
+                            public void success() {
+                                Utils.hideKeyboard(getActivity());
+                                ((MainActivity) getActivity()).loadingFragment("fragmentMain");
+                                pd.dismiss();
+                            }
+
+                            @Override
+                            public void e(String s) {
+                                pd.dismiss();
+                                Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        break;
+                }
+            }
+        };
+        btnReg.setOnClickListener(pressBtn);
     }
 
     public void onButtonPressed(Uri uri) {
@@ -94,26 +134,6 @@ public class FragmentRegistration extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    private void signUp() {
-        final EditText textPhone = (EditText) getView().findViewById(R.id.editText_phone_reg);
-        final EditText textPassword = (EditText) getView().findViewById(R.id.editText_password_reg);
-        Button btnSignUp = (Button) getView().findViewById(R.id.button_log_in_reg);
-        final Account account = new Account();
-
-
-        View.OnClickListener pressBtn = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.button_log_in_reg:
-                        account.signUp(textPhone.getText().toString(), textPassword.getText().toString());
-                        break;
-                }
-            }
-        };
-        btnSignUp.setOnClickListener(pressBtn);
     }
 
     /**
