@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:divider="@color/color_gray"
         android:dividerHeight="@dimen/_1dp"
-        tools:listitem="@layout/chat_item">
+        tools:listitem="@layout/dialog_item">
 
     </ListView>
 

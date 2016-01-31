@@ -13,7 +13,7 @@
         android:layout_weight="1"
         android:divider="@color/color_white"
         android:dividerHeight="@dimen/_5dp"
-        tools:listitem="@layout/chat_item_rcv">
+        tools:listitem="@layout/msg_rcv_item">
 
     </ListView>
 
