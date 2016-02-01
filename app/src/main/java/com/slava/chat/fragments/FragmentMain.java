@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.parse.ParseObject;
 import com.slava.chat.Account;
@@ -85,7 +86,7 @@ public class FragmentMain extends Fragment {
 
             @Override
             public void success(List<ParseObject> list) {
-                Log.d("malog", " " + list.size());
+                Log.d("mylog", " " + list.size());
             }
 
             @Override
@@ -94,6 +95,9 @@ public class FragmentMain extends Fragment {
 
             }
         });
+
+        ListView listDlg = (ListView) getView().findViewById(R.id.listDlg);
+        //listDlg.setAdapter();
 
 
     }
