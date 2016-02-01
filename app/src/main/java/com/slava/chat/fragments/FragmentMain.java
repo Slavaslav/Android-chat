@@ -4,11 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.parse.ParseObject;
+import com.slava.chat.Account;
+import com.slava.chat.MainActivity;
 import com.slava.chat.R;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,6 +72,30 @@ public class FragmentMain extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Account.loadUserDialogs(new MainActivity.MyCallback() {
+            @Override
+            public void success() {
+            }
+
+            @Override
+            public void success(List<ParseObject> list) {
+                Log.d("malog", " " + list.size());
+            }
+
+            @Override
+            public void e(String s) {
+                Log.d("mylog", "Error: " + s);
+
+            }
+        });
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

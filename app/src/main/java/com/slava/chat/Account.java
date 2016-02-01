@@ -1,9 +1,14 @@
 package com.slava.chat;
 
+import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+
+import java.util.List;
 
 public class Account {
     public static void logIn(String login, String password, final MainActivity.MyCallback callBack) {
@@ -51,6 +56,22 @@ public class Account {
         ParseUser user = ParseUser.getCurrentUser();
         user.put("online", b);
         user.saveEventually();
+    }
+
+    public static void loadUserDialogs(final MainActivity.MyCallback callBack) {
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("dialog");
+        query.whereEqualTo("parent", ParseUser.getCurrentUser());
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null) {
+                    callBack.success(list);
+                } else {
+                    callBack.e(e.getMessage());
+                }
+            }
+        });
     }
 
     public void logOut() {

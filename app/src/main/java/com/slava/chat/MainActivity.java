@@ -14,11 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.parse.Parse;
+import com.parse.ParseObject;
 import com.slava.chat.fragments.FragmentContacts;
 import com.slava.chat.fragments.FragmentLogin;
 import com.slava.chat.fragments.FragmentMain;
 import com.slava.chat.fragments.FragmentProfile;
 import com.slava.chat.fragments.FragmentRegistration;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         FragmentContacts.OnFragmentInteractionListener,
@@ -90,6 +93,12 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             loadingFragment("fragmentLogin");
         }
+
+        /*ParseUser user = ParseUser.getCurrentUser();
+        ParseObject dialog = new ParseObject("dialog");
+        dialog.put("title", "Игорь");
+        dialog.put("parent", user);
+        dialog.saveInBackground();*/
 
     }
 
@@ -192,6 +201,8 @@ public class MainActivity extends AppCompatActivity implements
 
     public interface MyCallback {
         void success();
+
+        void success(List<ParseObject> list);
 
         void e(String s);
     }
