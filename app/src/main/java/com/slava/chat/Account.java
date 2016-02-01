@@ -41,10 +41,16 @@ public class Account {
         });
     }
 
-    public boolean getCurrentUser() {
+    public static boolean getCurrentUser() {
         if (ParseUser.getCurrentUser() != null)
             return true;
         return false;
+    }
+
+    public static void updateUserStatus(boolean b) {
+        ParseUser user = ParseUser.getCurrentUser();
+        user.put("online", b);
+        user.saveEventually();
     }
 
     public void logOut() {

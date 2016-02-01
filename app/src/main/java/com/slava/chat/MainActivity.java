@@ -84,12 +84,19 @@ public class MainActivity extends AppCompatActivity implements
         fprofile = new FragmentProfile();
         freg = new FragmentRegistration();
 
-        if (new Account().getCurrentUser()) {
+        if (Account.getCurrentUser()) {
+            Account.updateUserStatus(true);
             loadingFragment("fragmentMain");
         } else {
             loadingFragment("fragmentLogin");
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Account.updateUserStatus(false);
     }
 
     @Override
