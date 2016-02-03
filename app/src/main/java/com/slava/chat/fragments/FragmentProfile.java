@@ -78,7 +78,7 @@ public class FragmentProfile extends Fragment {
                 switch (v.getId()) {
                     case R.id.button_log_out:
                         Account.updateUserStatus(false);
-                        new Account().logOut();
+                        Account.logOut();
                         ((MainActivity) getActivity()).loadingFragment("fragmentLogin");
                         break;
                 }

@@ -74,7 +74,7 @@ public class Account {
         });
     }
 
-    public void logOut() {
+    public static void logOut() {
         ParseUser.logOut();
     }
 }
