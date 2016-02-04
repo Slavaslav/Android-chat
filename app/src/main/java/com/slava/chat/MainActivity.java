@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawer;
     private Toolbar toolbar;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         //when press button HomeAsUp
@@ -76,6 +78,14 @@ public class MainActivity extends AppCompatActivity implements
                 } else {
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                     toggle.setDrawerIndicatorEnabled(true);
+
+                    Menu menu = navigationView.getMenu();
+                    for (int i = 0; i < menu.size(); i++) {
+                        Log.d("log", "i = " + i);
+                        MenuItem item = menu.getItem(i);
+                        item.setChecked(false);
+                    }
+
                 }
             }
         });
@@ -144,11 +154,6 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        // do not to create a duplicate
-        if (toggle.onOptionsItemSelected(item)) {
-            return true;
-        }
 
         if (id == R.id.nav_contacts) {
             loadingFragment("fragmentContacts");
