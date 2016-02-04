@@ -86,7 +86,7 @@ public class FragmentMain extends Fragment {
 
             @Override
             public void success(List<ParseObject> list) {
-                Log.d("mylog", " " + list.size());
+                Log.d("mylog", "FragmentMain " + list.size());
             }
 
             @Override

@@ -53,9 +53,12 @@ public class Account {
     }
 
     public static void updateUserStatus(boolean b) {
-        ParseUser user = ParseUser.getCurrentUser();
-        user.put("online", b);
-        user.saveEventually();
+
+        if (getCurrentUser()) {
+            ParseUser user = ParseUser.getCurrentUser();
+            user.put("online", b);
+            user.saveEventually();
+        }
     }
 
     public static void loadUserDialogs(final MainActivity.MyCallback callBack) {
