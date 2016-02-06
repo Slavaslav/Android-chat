@@ -1,9 +1,14 @@
 package com.slava.chat;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -41,6 +46,13 @@ public class MainActivity extends AppCompatActivity implements
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private NavigationView navigationView;
+    // Handler for received Intents
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +63,19 @@ public class MainActivity extends AppCompatActivity implements
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        fcontacts = new FragmentContacts();
+        flogin = new FragmentLogin();
+        fmain = new FragmentMain();
+        fprofile = new FragmentProfile();
+        freg = new FragmentRegistration();
 
         //when press button HomeAsUp
         toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
@@ -79,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                     toggle.setDrawerIndicatorEnabled(true);
 
+                    // uncheck all selected item
                     Menu menu = navigationView.getMenu();
                     for (int i = 0; i < menu.size(); i++) {
                         Log.d("log", "i = " + i);
@@ -90,13 +107,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-
-        fcontacts = new FragmentContacts();
-        flogin = new FragmentLogin();
-        fmain = new FragmentMain();
-        fprofile = new FragmentProfile();
-        freg = new FragmentRegistration();
-
         if (Account.getCurrentUser()) {
             Account.updateUserStatus(true);
             loadingFragment("fragmentMain");
@@ -104,17 +114,16 @@ public class MainActivity extends AppCompatActivity implements
             loadingFragment("fragmentLogin");
         }
 
-        /*ParseUser user = ParseUser.getCurrentUser();
-        ParseObject dialog = new ParseObject("dialog");
-        dialog.put("title", "Игорь");
-        dialog.put("parent", user);
-        dialog.saveInBackground();*/
+        // Register to receive messages
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("custom-event"));
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // Unregister to receive messages
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         Account.updateUserStatus(false);
     }
 
