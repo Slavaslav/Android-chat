@@ -46,11 +46,13 @@ public class MainActivity extends AppCompatActivity implements
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private NavigationView navigationView;
+
     // Handler for received Intents
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
+            Log.d("MainActivity", "Receiver got message: " + message);
         }
     };
 
@@ -114,6 +116,9 @@ public class MainActivity extends AppCompatActivity implements
             loadingFragment("fragmentLogin");
         }
 
+        //start service
+        startService(new Intent(this, MyService.class));
+
         // Register to receive messages
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("custom-event"));
 
@@ -122,8 +127,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        // Stop service
+        stopService(new Intent(this, MyService.class));
+
         // Unregister to receive messages
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+
+        // Update user status (set fasle)
         Account.updateUserStatus(false);
     }
 
