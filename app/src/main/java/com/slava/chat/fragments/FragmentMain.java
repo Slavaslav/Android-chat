@@ -1,21 +1,17 @@
 package com.slava.chat.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.parse.ParseObject;
-import com.slava.chat.Account;
-import com.slava.chat.MainActivity;
+import com.slava.chat.MyService;
 import com.slava.chat.R;
-
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,22 +75,8 @@ public class FragmentMain extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Account.loadUserDialogs(new MainActivity.MyCallback() {
-            @Override
-            public void success() {
-            }
-
-            @Override
-            public void success(List<ParseObject> list) {
-                Log.d("mylog", "FragmentMain " + list.size());
-            }
-
-            @Override
-            public void e(String s) {
-                Log.d("mylog", "Error: " + s);
-
-            }
-        });
+        //start service
+        getActivity().startService(new Intent(getActivity(), MyService.class).putExtra("message", "loadUserDialogs"));
 
         ListView listDlg = (ListView) getView().findViewById(R.id.listDlg);
         //listDlg.setAdapter();

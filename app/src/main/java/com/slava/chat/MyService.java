@@ -6,6 +6,10 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.parse.ParseObject;
+
+import java.util.List;
+
 public class MyService extends Service {
     public MyService() {
     }
@@ -30,8 +34,32 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("MyService.class", "Send broadcasting message");
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("custom-event").putExtra("message", "This is my message!"));
+
+        // Run load dialogs list
+        if (intent.getStringExtra("message") != null && intent.getStringExtra("message").equals("loadUserDialogs"))
+            loadUsersDialogs();
+
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void loadUsersDialogs() {
+        Account.loadUserDialogs(new MainActivity.MyCallback() {
+            @Override
+            public void success() {
+            }
+
+            @Override
+            public void success(List<ParseObject> list) {
+                Log.d("mylog", "FragmentMain " + list.size());
+                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent("custom-event").putExtra("message", "This is my message!"));
+            }
+
+            @Override
+            public void e(String s) {
+                Log.d("mylog", "Error: " + s);
+
+            }
+        });
+
     }
 }
