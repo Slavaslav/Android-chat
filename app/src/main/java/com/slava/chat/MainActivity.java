@@ -1,14 +1,10 @@
 package com.slava.chat;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -47,15 +43,6 @@ public class MainActivity extends AppCompatActivity implements
     private Toolbar toolbar;
     private NavigationView navigationView;
 
-    // Handler for received Intents
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String message = intent.getStringExtra("message");
-            Log.d("MainActivity", "Receiver got message: " + message);
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
+        // Listener BackStackChanged
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
@@ -119,9 +107,6 @@ public class MainActivity extends AppCompatActivity implements
         //start service
         startService(new Intent(this, MyService.class));
 
-        // Register to receive messages
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("custom-event"));
-
     }
 
     @Override
@@ -130,9 +115,6 @@ public class MainActivity extends AppCompatActivity implements
 
         // Stop service
         stopService(new Intent(this, MyService.class));
-
-        // Unregister to receive messages
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
 
         // Update user status (set fasle)
         Account.updateUserStatus(false);

@@ -1,17 +1,24 @@
 package com.slava.chat.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.parse.ParseObject;
 import com.slava.chat.MyService;
 import com.slava.chat.R;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +39,14 @@ public class FragmentMain extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    // Handler for received Intents
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            List<ParseObject> list = (List<ParseObject>) intent.getExtras().getSerializable("list");
+            Log.d("mylog", "FragmentMain " + list.size());
+        }
+    };
 
     public FragmentMain() {
         // Required empty public constructor
@@ -78,9 +93,11 @@ public class FragmentMain extends Fragment {
         //start service
         getActivity().startService(new Intent(getActivity(), MyService.class).putExtra("message", "loadUserDialogs"));
 
+        // Register to receive messages
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter("loadUserDialogs"));
+
         ListView listDlg = (ListView) getView().findViewById(R.id.listDlg);
         //listDlg.setAdapter();
-
 
     }
 
@@ -106,6 +123,7 @@ public class FragmentMain extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
     }
 
     /**

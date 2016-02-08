@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.parse.ParseObject;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class MyService extends Service {
@@ -36,8 +37,13 @@ public class MyService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         // Run load dialogs list
-        if (intent.getStringExtra("message") != null && intent.getStringExtra("message").equals("loadUserDialogs"))
-            loadUsersDialogs();
+        if (intent.getStringExtra("message") != null) {
+            switch (intent.getStringExtra("message")) {
+                case "loadUserDialogs":
+                    loadUsersDialogs();
+                    break;
+            }
+        }
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -50,8 +56,8 @@ public class MyService extends Service {
 
             @Override
             public void success(List<ParseObject> list) {
-                Log.d("mylog", "FragmentMain " + list.size());
-                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent("custom-event").putExtra("message", "This is my message!"));
+                // Send broadcast
+                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent("loadUserDialogs").putExtra("list", (Serializable) list));
             }
 
             @Override
