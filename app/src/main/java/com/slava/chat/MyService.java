@@ -12,6 +12,9 @@ import java.io.Serializable;
 import java.util.List;
 
 public class MyService extends Service {
+
+    public static final String FRIEND_LIST_UPDATED = "Take Friend List";
+
     public MyService() {
     }
 
@@ -29,7 +32,6 @@ public class MyService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -57,7 +59,7 @@ public class MyService extends Service {
             @Override
             public void success(List<ParseObject> list) {
                 // Send broadcast
-                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent("loadUserDialogs").putExtra("list", (Serializable) list));
+                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(FRIEND_LIST_UPDATED).putExtra("list", (Serializable) list));
             }
 
             @Override

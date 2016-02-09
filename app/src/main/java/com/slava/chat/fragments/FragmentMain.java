@@ -39,6 +39,7 @@ public class FragmentMain extends Fragment {
     private String mParam1;
     private String mParam2;
     private OnFragmentInteractionListener mListener;
+
     public FragmentMain() {
         // Required empty public constructor
     }
@@ -84,9 +85,6 @@ public class FragmentMain extends Fragment {
         //start service
         getActivity().startService(new Intent(getActivity(), MyService.class).putExtra("message", "loadUserDialogs"));
 
-        // Register to receive messages
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter("loadUserDialogs"));
-
         ListView listDlg = (ListView) getView().findViewById(R.id.listDlg);
         //listDlg.setAdapter(new UserAdapter());
 
@@ -108,6 +106,9 @@ public class FragmentMain extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
+        // Register to receive messages
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter(MyService.FRIEND_LIST_UPDATED));
     }
 
     @Override
@@ -136,8 +137,11 @@ public class FragmentMain extends Fragment {
         // Handler for received Intents
         @Override
         public void onReceive(Context context, Intent intent) {
-            List<ParseObject> list = (List<ParseObject>) intent.getExtras().getSerializable("list");
-            Log.d("mylog", "FragmentMain " + list.size());
+
+            if (intent.getAction().equals(MyService.FRIEND_LIST_UPDATED)) {
+                List<ParseObject> list = (List<ParseObject>) intent.getExtras().getSerializable("list");
+                Log.d("mylog", "FragmentMain " + list.size());
+            }
         }
     }
 
