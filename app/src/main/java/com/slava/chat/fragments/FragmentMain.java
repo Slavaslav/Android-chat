@@ -34,21 +34,11 @@ public class FragmentMain extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    MessageReceiver mMessageReceiver = new MessageReceiver();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     private OnFragmentInteractionListener mListener;
-    // Handler for received Intents
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            List<ParseObject> list = (List<ParseObject>) intent.getExtras().getSerializable("list");
-            Log.d("mylog", "FragmentMain " + list.size());
-        }
-    };
-
     public FragmentMain() {
         // Required empty public constructor
     }
@@ -140,6 +130,15 @@ public class FragmentMain extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public class MessageReceiver extends BroadcastReceiver {
+        // Handler for received Intents
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            List<ParseObject> list = (List<ParseObject>) intent.getExtras().getSerializable("list");
+            Log.d("mylog", "FragmentMain " + list.size());
+        }
     }
 
     private class UserAdapter extends BaseAdapter {
