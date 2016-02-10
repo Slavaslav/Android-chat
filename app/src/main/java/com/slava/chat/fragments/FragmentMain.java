@@ -19,6 +19,7 @@ import com.parse.ParseObject;
 import com.slava.chat.MyService;
 import com.slava.chat.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,6 +31,8 @@ public class FragmentMain extends Fragment {
     private String mParam1;
     private String mParam2;
     private OnFragmentInteractionListener mListener;
+    private DialogsListAdapter dialogsAdapter;
+    private ListView listDlg;
 
     public FragmentMain() {
         // Required empty public constructor
@@ -67,8 +70,9 @@ public class FragmentMain extends Fragment {
         //start service
         getActivity().startService(new Intent(getActivity(), MyService.class).putExtra("message", "loadUserDialogs"));
 
-        ListView listDlg = (ListView) getView().findViewById(R.id.listDlg);
-        //listDlg.setAdapter(new UserAdapter());
+        dialogsAdapter = new DialogsListAdapter();
+
+        listDlg = (ListView) getView().findViewById(R.id.listDlg);
 
     }
 
@@ -110,12 +114,22 @@ public class FragmentMain extends Fragment {
 
             if (intent.getAction().equals(MyService.DIALOGS_LIST_UPDATED)) {
                 List<ParseObject> list = (List<ParseObject>) intent.getExtras().getSerializable(MyService.DIALOGS_LIST);
+                ArrayList<ParseObject> dList = new ArrayList<>(list);
+                dialogsAdapter.setDialogsList(dList);
+                //listDlg.setAdapter(dialogsAdapter);
                 Log.d("mylog", "FragmentMain " + list.size());
+                Log.d("mylog", "adapter " + dList.get(0).get("title"));
             }
         }
     }
 
-    private class UserAdapter extends BaseAdapter {
+    private class DialogsListAdapter extends BaseAdapter {
+
+        private ArrayList<ParseObject> list = null;
+
+        public void setDialogsList(ArrayList<ParseObject> list) {
+            this.list = list;
+        }
 
         @Override
         public int getCount() {
