@@ -13,7 +13,8 @@ import java.util.List;
 
 public class MyService extends Service {
 
-    public static final String FRIEND_LIST_UPDATED = "Take Friend List";
+    public static final String DIALOGS_LIST = "Dialogs List";
+    public static final String DIALOGS_LIST_UPDATED = "Take Dialogs List";
 
     public MyService() {
     }
@@ -56,7 +57,7 @@ public class MyService extends Service {
             @Override
             public void success(List<ParseObject> list) {
                 // Send broadcast
-                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(FRIEND_LIST_UPDATED).putExtra("list", (Serializable) list));
+                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(DIALOGS_LIST_UPDATED).putExtra(DIALOGS_LIST, (Serializable) list));
             }
 
             @Override
