@@ -51,10 +51,7 @@ public class MyService extends Service {
     }
 
     private void loadUsersDialogs() {
-        Account.loadUserDialogs(new MainActivity.MyCallback() {
-            @Override
-            public void success() {
-            }
+        Account.loadUserDialogs(new Account.CallbackLoadDialogs() {
 
             @Override
             public void success(List<ParseObject> list) {

@@ -11,7 +11,7 @@ import com.parse.SignUpCallback;
 import java.util.List;
 
 public class Account {
-    public static void logIn(String login, String password, final MainActivity.MyCallback callBack) {
+    public static void logIn(String login, String password, final CallbackLogIn callBack) {
 
         ParseUser.logInInBackground(login, password, new LogInCallback() {
             public void done(ParseUser user, ParseException e) {
@@ -27,7 +27,7 @@ public class Account {
 
     }
 
-    public static void signUp(String login, String password, final MainActivity.MyCallback callBack) {
+    public static void signUp(String login, String password, final CallbackLogIn callBack) {
         ParseUser user = new ParseUser();
         user.setUsername(login);
         user.setPassword(password);
@@ -61,7 +61,7 @@ public class Account {
         }
     }
 
-    public static void loadUserDialogs(final MainActivity.MyCallback callBack) {
+    public static void loadUserDialogs(final CallbackLoadDialogs callBack) {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("dialog");
         query.whereEqualTo("parent", ParseUser.getCurrentUser());
@@ -80,4 +80,17 @@ public class Account {
     public static void logOut() {
         ParseUser.logOut();
     }
+
+    public interface CallbackLogIn {
+        void success();
+
+        void e(String s);
+    }
+
+    public interface CallbackLoadDialogs {
+        void success(List<ParseObject> list);
+
+        void e(String s);
+    }
 }
+

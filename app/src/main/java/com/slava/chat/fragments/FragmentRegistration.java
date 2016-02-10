@@ -12,13 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.parse.ParseObject;
 import com.slava.chat.Account;
 import com.slava.chat.MainActivity;
 import com.slava.chat.R;
 import com.slava.chat.Utils;
-
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,16 +92,12 @@ public class FragmentRegistration extends Fragment {
                 switch (v.getId()) {
                     case R.id.btnReg:
                         final ProgressDialog pd = ProgressDialog.show(getActivity(), null, getString(R.string.progress_wait), false, false);
-                        Account.signUp(login, pwd, new MainActivity.MyCallback() {
+                        Account.signUp(login, pwd, new Account.CallbackLogIn() {
                             @Override
                             public void success() {
                                 Utils.hideKeyboard(getActivity());
                                 ((MainActivity) getActivity()).loadingFragment("fragmentMain");
                                 pd.dismiss();
-                            }
-
-                            @Override
-                            public void success(List<ParseObject> list) {
                             }
 
                             @Override

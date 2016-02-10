@@ -16,14 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.parse.Parse;
-import com.parse.ParseObject;
 import com.slava.chat.fragments.FragmentContacts;
 import com.slava.chat.fragments.FragmentLogin;
 import com.slava.chat.fragments.FragmentMain;
 import com.slava.chat.fragments.FragmentProfile;
 import com.slava.chat.fragments.FragmentRegistration;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         FragmentContacts.OnFragmentInteractionListener,
@@ -204,13 +201,5 @@ public class MainActivity extends AppCompatActivity implements
     public void onFragmentInteraction(Uri uri) {
         //this method could be use to communicate between fragments
         //you can leave it empty
-    }
-
-    public interface MyCallback {
-        void success();
-
-        void success(List<ParseObject> list);
-
-        void e(String s);
     }
 }
