@@ -117,8 +117,8 @@ public class FragmentMain extends Fragment {
                 List<ParseObject> list = (List<ParseObject>) intent.getExtras().getSerializable(MyService.DIALOGS_LIST);
                 ArrayList<ParseObject> dList = new ArrayList<>(list);
                 dialogsAdapter.setDialogsList(dList);
-                //listDlg.setAdapter(dialogsAdapter);
-                Log.d("mylog", "FragmentMain " + list.size());
+                listDlg.setAdapter(dialogsAdapter);
+                //Log.d("mylog", "FragmentMain " + list.size());
                 Log.d("mylog", "adapter " + dList.get(0).get("title"));
             }
         }
@@ -126,7 +126,7 @@ public class FragmentMain extends Fragment {
 
     private class DialogsListAdapter extends BaseAdapter {
 
-        LayoutInflater inflater;
+        LayoutInflater inflater = getActivity().getLayoutInflater();
         private ArrayList<ParseObject> list = null;
 
         public void setDialogsList(ArrayList<ParseObject> list) {
@@ -152,8 +152,7 @@ public class FragmentMain extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             if (convertView == null)
-                convertView = inflater.inflate(R.layout.dialog_item, parent);
-
+                convertView = inflater.inflate(R.layout.dialog_item, parent, false);
             ((TextView) convertView.findViewById(R.id.dlgTitle)).setText((String) list.get(position).get("title"));
 
 
