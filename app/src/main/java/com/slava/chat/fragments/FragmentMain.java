@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.parse.ParseObject;
 import com.slava.chat.MyService;
@@ -125,6 +126,7 @@ public class FragmentMain extends Fragment {
 
     private class DialogsListAdapter extends BaseAdapter {
 
+        LayoutInflater inflater;
         private ArrayList<ParseObject> list = null;
 
         public void setDialogsList(ArrayList<ParseObject> list) {
@@ -133,22 +135,29 @@ public class FragmentMain extends Fragment {
 
         @Override
         public int getCount() {
-            return 0;
+            return list.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return list.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+
+            if (convertView == null)
+                convertView = inflater.inflate(R.layout.dialog_item, parent);
+
+            ((TextView) convertView.findViewById(R.id.dlgTitle)).setText((String) list.get(position).get("title"));
+
+
+            return convertView;
         }
     }
 }
