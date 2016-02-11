@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,10 @@ import com.parse.ParseObject;
 import com.slava.chat.MyService;
 import com.slava.chat.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 public class FragmentMain extends Fragment {
@@ -118,8 +119,6 @@ public class FragmentMain extends Fragment {
                 ArrayList<ParseObject> dList = new ArrayList<>(list);
                 dialogsAdapter.setDialogsList(dList);
                 listDlg.setAdapter(dialogsAdapter);
-                //Log.d("mylog", "FragmentMain " + list.size());
-                Log.d("mylog", "adapter " + dList.get(0).get("title"));
             }
         }
     }
@@ -153,8 +152,10 @@ public class FragmentMain extends Fragment {
 
             if (convertView == null)
                 convertView = inflater.inflate(R.layout.dialog_item, parent, false);
-            ((TextView) convertView.findViewById(R.id.dlgTitle)).setText((String) list.get(position).get("title"));
 
+            ((TextView) convertView.findViewById(R.id.dlgTitle)).setText(list.get(position).get("title").toString());
+            ((TextView) convertView.findViewById(R.id.dlgMessage)).setText(list.get(position).get("lMessage").toString());
+            ((TextView) convertView.findViewById(R.id.dlgTime)).setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(list.get(position).getUpdatedAt()));
 
             return convertView;
         }
