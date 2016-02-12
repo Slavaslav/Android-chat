@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.parse.ParseObject;
+import com.slava.chat.MainActivity;
 import com.slava.chat.MyService;
 import com.slava.chat.R;
 
@@ -123,7 +124,7 @@ public class FragmentMain extends Fragment {
                 listDlg.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                        ((MainActivity) getActivity()).loadingFragment("fragmentMessages");
                     }
                 });
             }

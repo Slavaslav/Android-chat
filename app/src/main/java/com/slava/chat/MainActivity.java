@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +18,7 @@ import com.parse.Parse;
 import com.slava.chat.fragments.FragmentContacts;
 import com.slava.chat.fragments.FragmentLogin;
 import com.slava.chat.fragments.FragmentMain;
+import com.slava.chat.fragments.FragmentMessages;
 import com.slava.chat.fragments.FragmentProfile;
 import com.slava.chat.fragments.FragmentRegistration;
 
@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements
         FragmentContacts.OnFragmentInteractionListener,
         FragmentLogin.OnFragmentInteractionListener,
         FragmentMain.OnFragmentInteractionListener,
+        FragmentMessages.OnFragmentInteractionListener,
         FragmentProfile.OnFragmentInteractionListener,
         FragmentRegistration.OnFragmentInteractionListener,
         NavigationView.OnNavigationItemSelectedListener {
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements
     private FragmentContacts fcontacts;
     private FragmentLogin flogin;
     private FragmentMain fmain;
+    private FragmentMessages fmessages;
     private FragmentProfile fprofile;
     private FragmentRegistration freg;
     private ActionBarDrawerToggle toggle;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements
         fcontacts = new FragmentContacts();
         flogin = new FragmentLogin();
         fmain = new FragmentMain();
+        fmessages = new FragmentMessages();
         fprofile = new FragmentProfile();
         freg = new FragmentRegistration();
 
@@ -85,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements
                     // uncheck all selected item
                     Menu menu = navigationView.getMenu();
                     for (int i = 0; i < menu.size(); i++) {
-                        Log.d("log", "i = " + i);
                         MenuItem item = menu.getItem(i);
                         item.setChecked(false);
                     }
@@ -171,6 +173,11 @@ public class MainActivity extends AppCompatActivity implements
                 getSupportActionBar().show();
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fmain).commit();
+                break;
+            }
+            case "fragmentMessages": {
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fmessages).addToBackStack(null).commit();
                 break;
             }
             case "fragmentContacts": {
