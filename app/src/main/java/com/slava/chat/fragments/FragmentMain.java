@@ -22,7 +22,6 @@ import com.slava.chat.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 
@@ -116,9 +115,8 @@ public class FragmentMain extends Fragment {
         public void onReceive(Context context, Intent intent) {
 
             if (intent.getAction().equals(MyService.DIALOGS_LIST_UPDATED)) {
-                List<ParseObject> list = (List<ParseObject>) intent.getExtras().getSerializable(MyService.DIALOGS_LIST);
-                ArrayList<ParseObject> dList = new ArrayList<>(list);
-                dialogsAdapter.setDialogsList(dList);
+                ArrayList<ParseObject> list = (ArrayList<ParseObject>) intent.getExtras().getSerializable(MyService.DIALOGS_LIST);
+                dialogsAdapter.setDialogsList(list);
                 listDlg.setAdapter(dialogsAdapter);
                 listDlg.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

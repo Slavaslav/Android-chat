@@ -9,6 +9,7 @@ import android.util.Log;
 import com.parse.ParseObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyService extends Service {
@@ -56,8 +57,9 @@ public class MyService extends Service {
 
             @Override
             public void success(List<ParseObject> list) {
+                ArrayList<ParseObject> dList = new ArrayList<>(list);
                 // Send broadcast
-                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(DIALOGS_LIST_UPDATED).putExtra(DIALOGS_LIST, (Serializable) list));
+                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(DIALOGS_LIST_UPDATED).putExtra(DIALOGS_LIST, (Serializable) dList));
             }
 
             @Override
