@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.parse.ParseObject;
+import com.slava.chat.MainActivity;
 import com.slava.chat.MyService;
 import com.slava.chat.R;
 
@@ -115,17 +117,36 @@ public class FragmentMain extends Fragment {
         public void onReceive(Context context, Intent intent) {
 
             if (intent.getAction().equals(MyService.DIALOGS_LIST_UPDATED)) {
-                ArrayList<ParseObject> list = (ArrayList<ParseObject>) intent.getExtras().getSerializable(MyService.DIALOGS_LIST);
+                final ArrayList<ParseObject> list = (ArrayList<ParseObject>) intent.getExtras().getSerializable(MyService.DIALOGS_LIST);
                 dialogsAdapter.setDialogsList(list);
                 listDlg.setAdapter(dialogsAdapter);
                 listDlg.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                       /* ((MainActivity) getActivity()).loadingFragment("fragmentMessages");
+
+                        ((MainActivity) getActivity()).loadingFragment("fragmentMessages");
+                        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(list.get(position).get("title").toString());
+
+
+                       /*final String lastMessage = "Hello";
+
+                        // add new message
                         ParseObject message = new ParseObject("message");
-                        message.put("content", "Удачи");
-                        message.put("parent", ParseObject.createWithoutData("dialog", dList.get(position).getObjectId()));
-                        message.saveInBackground();*/
+                        message.put("content", lastMessage);
+                        message.put("parent", ParseObject.createWithoutData("dialog", list.get(position).getObjectId()));
+                        message.saveEventually();
+
+                        // add last message to dialogs table
+                        ParseQuery<ParseObject> query = ParseQuery.getQuery("dialog");
+                        query.getInBackground(list.get(position).getObjectId(), new GetCallback<ParseObject>() {
+                            public void done(ParseObject dialog, ParseException e) {
+                                if (e == null) {
+                                    dialog.put("lMessage", lastMessage);
+                                    dialog.saveEventually();
+                                }
+                            }
+                        });*/
+
                     }
                 });
             }
