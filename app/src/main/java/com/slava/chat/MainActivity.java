@@ -205,8 +205,14 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    // implement method from fragment
     public void onFragmentInteraction(Uri uri) {
-        //this method could be use to communicate between fragments
-        //you can leave it empty
+
+    }
+
+    // implement method from fragment
+    @Override
+    public void setTitleToolbar(String s) {
+        getSupportActionBar().setTitle(s);
     }
 }

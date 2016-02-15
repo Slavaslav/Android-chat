@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
@@ -105,12 +104,9 @@ public class FragmentContacts extends Fragment implements
         } else {
             getLoaderManager().initLoader(0, null, this);
         }
-    }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        //set Toolbar title
+        mListener.setTitleToolbar(getString(R.string.fragment_contacts));
     }
 
     @Override
@@ -194,7 +190,7 @@ public class FragmentContacts extends Fragment implements
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+        void setTitleToolbar(String s);
     }
 
 }

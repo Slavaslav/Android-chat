@@ -4,11 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,12 +76,8 @@ public class FragmentMain extends Fragment {
 
         listDlg = (ListView) getView().findViewById(R.id.listDlg);
 
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        //set Toolbar title
+        mListener.setTitleToolbar(getString(R.string.menu_profile));
     }
 
     @Override
@@ -108,7 +102,7 @@ public class FragmentMain extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+        void setTitleToolbar(String s);
     }
 
     public class MessageReceiver extends BroadcastReceiver {
@@ -125,7 +119,8 @@ public class FragmentMain extends Fragment {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                         ((MainActivity) getActivity()).loadingFragment("fragmentMessages");
-                        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(list.get(position).get("title").toString());
+                        //set Toolbar title
+                        mListener.setTitleToolbar(list.get(position).get("title").toString());
 
 
                        /*final String lastMessage = "Hello";

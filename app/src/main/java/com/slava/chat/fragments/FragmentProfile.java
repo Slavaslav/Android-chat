@@ -1,7 +1,6 @@
 package com.slava.chat.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -86,12 +85,8 @@ public class FragmentProfile extends Fragment {
             }
         };
         btnLogOut.setOnClickListener(pressBtn);
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        //set Toolbar title
+        mListener.setTitleToolbar(getString(R.string.fragment_main));
     }
 
     @Override
@@ -123,6 +118,6 @@ public class FragmentProfile extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+        void setTitleToolbar(String s);
     }
 }
