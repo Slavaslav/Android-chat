@@ -77,7 +77,7 @@ public class FragmentMain extends Fragment {
         listDlg = (ListView) getView().findViewById(R.id.listDlg);
 
         //set Toolbar title
-        mListener.setTitleToolbar(getString(R.string.menu_profile));
+        mListener.setTitleToolbar(getString(R.string.fragment_main));
     }
 
     @Override

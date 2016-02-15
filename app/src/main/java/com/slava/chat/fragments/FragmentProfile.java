@@ -86,7 +86,7 @@ public class FragmentProfile extends Fragment {
         };
         btnLogOut.setOnClickListener(pressBtn);
         //set Toolbar title
-        mListener.setTitleToolbar(getString(R.string.fragment_main));
+        mListener.setTitleToolbar(getString(R.string.menu_profile));
     }
 
     @Override
