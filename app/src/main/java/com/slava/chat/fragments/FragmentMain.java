@@ -70,7 +70,7 @@ public class FragmentMain extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         //start service
-        getActivity().startService(new Intent(getActivity(), MyService.class).putExtra("message", "loadUserDialogs"));
+        getActivity().startService(new Intent(getActivity(), MyService.class).putExtra(MyService.INTENT_MESSAGE, MyService.DIALOGS_LIST_UPDATED));
 
         dialogsAdapter = new DialogsListAdapter();
 
@@ -123,12 +123,13 @@ public class FragmentMain extends Fragment {
                         mListener.setTitleToolbar(list.get(position).get("title").toString());
 
 
-                       /*final String lastMessage = "Hello";
+                       /*final String lastMessage = "wuzzup";
 
                         // add new message
                         ParseObject message = new ParseObject("message");
                         message.put("content", lastMessage);
                         message.put("parent", ParseObject.createWithoutData("dialog", list.get(position).getObjectId()));
+                        message.put("senderID", ParseUser.getCurrentUser());
                         message.saveEventually();
 
                         // add last message to dialogs table
