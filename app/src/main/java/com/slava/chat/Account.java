@@ -61,7 +61,7 @@ public class Account {
         }
     }
 
-    public static void loadUserDialogs(final CallbackLoadDialogs callBack) {
+    public static void loadUserDialogs(final CallbackLoad callBack) {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("dialog");
         query.whereEqualTo("parent", ParseUser.getCurrentUser());
@@ -77,6 +77,24 @@ public class Account {
         });
     }
 
+    public static void loadMessageList(String dialogId, final CallbackLoad callBack) {
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("message");
+        query.whereEqualTo("parent", dialogId);
+        query.whereEqualTo("sender", ParseUser.getCurrentUser());
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null) {
+                    callBack.success(list);
+                } else {
+                    callBack.e(e.getMessage());
+                }
+            }
+        });
+
+    }
+
     public static void logOut() {
         ParseUser.logOut();
     }
@@ -87,7 +105,7 @@ public class Account {
         void e(String s);
     }
 
-    public interface CallbackLoadDialogs {
+    public interface CallbackLoad {
         void success(List<ParseObject> list);
 
         void e(String s);

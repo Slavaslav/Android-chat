@@ -121,6 +121,7 @@ public class FragmentMain extends Fragment {
                         ((MainActivity) getActivity()).loadingFragment("fragmentMessages");
                         //set Toolbar title
                         mListener.setTitleToolbar(list.get(position).get("title").toString());
+                        //list.get(position).getObjectId();
 
 
                        /*final String lastMessage = "wuzzup";
