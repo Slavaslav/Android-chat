@@ -43,10 +43,9 @@ public class FragmentContacts extends Fragment implements
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY // that's what we want to display
     };
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
-    private static final String TAG = "myLogs";
-    private ListView mContactsList;
     private OnFragmentInteractionListener mListener;
     private SimpleCursorAdapter mCursorAdapter;
+    private ListView mContactsList;
 
     public FragmentContacts() {
         // Required empty public constructor
@@ -86,13 +85,15 @@ public class FragmentContacts extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_contacts, container, false);
+        View view = inflater.inflate(R.layout.fragment_contacts, container, false);
+        mContactsList = (ListView) view.findViewById(R.id.contacts_list);
+        mContactsList.setOnItemClickListener(this);
+        return view;
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mContactsList = (ListView) getView().findViewById(R.id.contacts_list);
-        mContactsList.setOnItemClickListener(this);
+
 
         // each time we are started use our listadapter
         mContactsList.setAdapter(mCursorAdapter);

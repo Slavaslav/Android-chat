@@ -29,9 +29,7 @@ public class FragmentMain extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    MessageReceiver mMessageReceiver = new MessageReceiver();
-    private String mParam1;
-    private String mParam2;
+    private final MessageReceiver mMessageReceiver = new MessageReceiver();
     private OnFragmentInteractionListener mListener;
     private DialogsListAdapter dialogsAdapter;
     private ListView listDlg;
@@ -53,16 +51,18 @@ public class FragmentMain extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            String mParam1 = getArguments().getString(ARG_PARAM1);
+            String mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        listDlg = (ListView) view.findViewById(R.id.listDlg);
+
+        return view;
     }
 
     @Override
@@ -73,8 +73,6 @@ public class FragmentMain extends Fragment {
         getActivity().startService(new Intent(getActivity(), MyService.class).putExtra(MyService.INTENT_MESSAGE, MyService.DIALOGS_LIST_UPDATED));
 
         dialogsAdapter = new DialogsListAdapter();
-
-        listDlg = (ListView) getView().findViewById(R.id.listDlg);
 
         //set Toolbar title
         mListener.setTitleToolbar(getString(R.string.fragment_main));
@@ -120,7 +118,10 @@ public class FragmentMain extends Fragment {
 
                         ((MainActivity) getActivity()).loadingFragment("fragmentMessages");
                         //set Toolbar title
-                        mListener.setTitleToolbar(list.get(position).get("title").toString());
+
+                        if (list != null) {
+                            mListener.setTitleToolbar(list.get(position).get("title").toString());
+                        }
                         //list.get(position).getObjectId();
 
 
@@ -152,7 +153,7 @@ public class FragmentMain extends Fragment {
 
     private class DialogsListAdapter extends BaseAdapter {
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final LayoutInflater inflater = getActivity().getLayoutInflater();
         private ArrayList<ParseObject> list = null;
 
         public void setDialogsList(ArrayList<ParseObject> list) {

@@ -30,13 +30,11 @@ public class FragmentLogin extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    EditText txtPhone;
-    EditText txtPwd;
-    Button btnLog;
-    Button btnReg;
+    private EditText txtPhone;
+    private EditText txtPwd;
+    private Button btnLog;
+    private Button btnReg;
 
-    private String mParam1;
-    private String mParam2;
     private OnFragmentInteractionListener mListener;
 
     public FragmentLogin() {
@@ -64,24 +62,24 @@ public class FragmentLogin extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            String mParam1 = getArguments().getString(ARG_PARAM1);
+            String mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        txtPhone = (EditText) view.findViewById(R.id.txtPhone);
+        txtPwd = (EditText) view.findViewById(R.id.txtPwd);
+        btnLog = (Button) view.findViewById(R.id.btnLog);
+        btnReg = (Button) view.findViewById(R.id.btnReg);
+        return view;
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        txtPhone = (EditText) getView().findViewById(R.id.txtPhone);
-        txtPwd = (EditText) getView().findViewById(R.id.txtPwd);
-        btnLog = (Button) getView().findViewById(R.id.btnLog);
-        btnReg = (Button) getView().findViewById(R.id.btnReg);
 
         View.OnClickListener pressBtn = new View.OnClickListener() {
             @Override

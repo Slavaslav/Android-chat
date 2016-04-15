@@ -47,9 +47,7 @@ public class Account {
     }
 
     public static boolean getCurrentUser() {
-        if (ParseUser.getCurrentUser() != null)
-            return true;
-        return false;
+        return ParseUser.getCurrentUser() != null;
     }
 
     public static void updateUserStatus(boolean b) {

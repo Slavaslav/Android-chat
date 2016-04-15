@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.parse.ParseObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +16,8 @@ public class MyService extends Service {
     public static final String INTENT_MESSAGE = "Intent Message";
     public static final String DIALOGS_LIST = "Dialogs List";
     public static final String DIALOGS_LIST_UPDATED = "Take Dialogs List";
-    public static final String MESSAGES_LIST = "Messages List";
-    public static final String MESSAGES_LIST_UPDATED = "Take Messages List";
+    private static final String MESSAGES_LIST = "Messages List";
+    private static final String MESSAGES_LIST_UPDATED = "Take Messages List";
 
     public MyService() {
     }
@@ -65,12 +64,12 @@ public class MyService extends Service {
             public void success(List<ParseObject> list) {
                 ArrayList<ParseObject> dList = new ArrayList<>(list);
                 // Send broadcast
-                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(DIALOGS_LIST_UPDATED).putExtra(DIALOGS_LIST, (Serializable) dList));
+                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(DIALOGS_LIST_UPDATED).putExtra(DIALOGS_LIST, dList));
             }
 
             @Override
             public void e(String s) {
-                Log.d("mylog", "Error: " + s);
+                Log.d("LOG", "Error: " + s);
 
             }
         });
@@ -83,12 +82,12 @@ public class MyService extends Service {
             public void success(List<ParseObject> list) {
                 ArrayList<ParseObject> dList = new ArrayList<>(list);
                 // Send broadcast
-                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(MESSAGES_LIST_UPDATED).putExtra(MESSAGES_LIST, (Serializable) dList));
+                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(MESSAGES_LIST_UPDATED).putExtra(MESSAGES_LIST, dList));
             }
 
             @Override
             public void e(String s) {
-                Log.d("mylog", "Error: " + s);
+                Log.d("LOG", "Error: " + s);
 
             }
         });

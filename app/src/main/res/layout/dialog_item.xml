@@ -10,7 +10,10 @@
         android:layout_weight="1"
         android:orientation="vertical"
         android:paddingBottom="@dimen/_10dp"
+        android:paddingEnd="@dimen/_0dp"
         android:paddingLeft="@dimen/_20dp"
+        android:paddingRight="@dimen/_0dp"
+        android:paddingStart="@dimen/_20dp"
         android:paddingTop="@dimen/_10dp">
 
         <TextView

@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements
     private FragmentRegistration freg;
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawer;
-    private Toolbar toolbar;
     private NavigationView navigationView;
 
     @Override
@@ -49,15 +48,18 @@ public class MainActivity extends AppCompatActivity implements
 
         Parse.initialize(this, "78vxcrQI4qOuwsNDMOWNovUqGOaGNREHGGMSChUL", "jXJXeTKSURpgqijsqkfAhgGQkDJbwxMNgEFusFwE");
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+        }
+
 
         fcontacts = new FragmentContacts();
         flogin = new FragmentLogin();
@@ -80,12 +82,16 @@ public class MainActivity extends AppCompatActivity implements
             public void onBackStackChanged() {
                 if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     toggle.setDrawerIndicatorEnabled(false);
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    }
                 } else {
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                    }
                     toggle.setDrawerIndicatorEnabled(true);
 
-                    // uncheck all selected item
+                    // unselect all selected item
                     Menu menu = navigationView.getMenu();
                     for (int i = 0; i < menu.size(); i++) {
                         MenuItem item = menu.getItem(i);
@@ -115,13 +121,12 @@ public class MainActivity extends AppCompatActivity implements
         // Stop service
         stopService(new Intent(this, MyService.class));
 
-        // Update user status (set fasle)
+        // Update user status (set false)
         Account.updateUserStatus(false);
     }
 
     @Override
     public void onBackPressed() {
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -162,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements
             loadingFragment("fragmentProfile");
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -170,7 +174,9 @@ public class MainActivity extends AppCompatActivity implements
     public void loadingFragment(String s) {
         switch (s) {
             case "fragmentMain": {
-                getSupportActionBar().show();
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().show();
+                }
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fmain).commit();
                 break;
@@ -191,13 +197,17 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             }
             case "fragmentLogin": {
-                getSupportActionBar().hide();
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().hide();
+                }
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, flogin).commit();
                 break;
             }
             case "fragmentReg": {
-                getSupportActionBar().hide();
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().hide();
+                }
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, freg).addToBackStack(null).commit();
                 break;
@@ -213,6 +223,9 @@ public class MainActivity extends AppCompatActivity implements
     // implement method from fragment
     @Override
     public void setTitleToolbar(String s) {
-        getSupportActionBar().setTitle(s);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(s);
+        }
+
     }
 }

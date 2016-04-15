@@ -9,7 +9,7 @@
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_0dp"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:divider="@color/color_white"
         android:dividerHeight="@dimen/_5dp"
@@ -25,9 +25,10 @@
         android:padding="@dimen/_5dp">
 
         <EditText
-            android:layout_width="@dimen/_0dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_10dp"
+            android:layout_marginStart="@dimen/_10dp"
             android:layout_weight="1"
             android:hint="@string/msg"
             android:textSize="@dimen/txt_20sp" />
@@ -35,7 +36,7 @@
         <Button
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_gravity="center|right"
+            android:layout_gravity="center|end"
             android:background="@drawable/ic_send_btn" />
 
     </LinearLayout>

@@ -29,12 +29,9 @@ public class FragmentRegistration extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    EditText txtPhone;
-    EditText txtPwd;
-    Button btnReg;
-
-    private String mParam1;
-    private String mParam2;
+    private EditText txtPhone;
+    private EditText txtPwd;
+    private Button btnReg;
 
     private OnFragmentInteractionListener mListener;
 
@@ -63,25 +60,23 @@ public class FragmentRegistration extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            String mParam1 = getArguments().getString(ARG_PARAM1);
+            String mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_registration, container, false);
+        View view = inflater.inflate(R.layout.fragment_registration, container, false);
+        txtPhone = (EditText) view.findViewById(R.id.txtPhone);
+        txtPwd = (EditText) view.findViewById(R.id.txtPwd);
+        btnReg = (Button) view.findViewById(R.id.btnReg);
+        return view;
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        txtPhone = (EditText) getView().findViewById(R.id.txtPhone);
-        txtPwd = (EditText) getView().findViewById(R.id.txtPwd);
-        btnReg = (Button) getView().findViewById(R.id.btnReg);
-
 
         View.OnClickListener pressBtn = new View.OnClickListener() {
             @Override
