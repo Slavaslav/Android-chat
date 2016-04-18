@@ -31,42 +31,31 @@ public class MainActivity extends AppCompatActivity implements
         FragmentRegistration.OnFragmentInteractionListener,
         NavigationView.OnNavigationItemSelectedListener {
 
-    private FragmentContacts fcontacts;
-    private FragmentLogin flogin;
-    private FragmentMain fmain;
-    private FragmentMessages fmessages;
-    private FragmentProfile fprofile;
-    private FragmentRegistration freg;
-    private ActionBarDrawerToggle toggle;
+    public static final int FRAGMENT_MAIN = 0;
+    public static final int FRAGMENT_MESSAGES = 1;
+    public static final int FRAGMENT_LOGIN = 4;
+    public static final int FRAGMENT_REG = 5;
+    private final int FRAGMENT_CONTACTS = 2;
+    private final int FRAGMENT_PROFILE = 3;
     private DrawerLayout drawer;
-    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Parse.initialize(this, "78vxcrQI4qOuwsNDMOWNovUqGOaGNREHGGMSChUL", "jXJXeTKSURpgqijsqkfAhgGQkDJbwxMNgEFusFwE");
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+        drawer.setDrawerListener(toggle);
         toggle.syncState();
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
-
-
-        fcontacts = new FragmentContacts();
-        flogin = new FragmentLogin();
-        fmain = new FragmentMain();
-        fmessages = new FragmentMessages();
-        fprofile = new FragmentProfile();
-        freg = new FragmentRegistration();
 
         //when press button HomeAsUp
         toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
@@ -88,25 +77,29 @@ public class MainActivity extends AppCompatActivity implements
                 } else {
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                        toggle.setDrawerIndicatorEnabled(true);
                     }
-                    toggle.setDrawerIndicatorEnabled(true);
 
                     // unselect all selected item
-                    Menu menu = navigationView.getMenu();
-                    for (int i = 0; i < menu.size(); i++) {
-                        MenuItem item = menu.getItem(i);
-                        item.setChecked(false);
-                    }
+                    if (navigationView != null) {
+                        Menu menu = navigationView.getMenu();
+                        for (int i = 0; i < menu.size(); i++) {
+                            MenuItem item = menu.getItem(i);
+                            item.setChecked(false);
+                        }
 
+                    }
                 }
             }
         });
 
+        Parse.initialize(this, "78vxcrQI4qOuwsNDMOWNovUqGOaGNREHGGMSChUL", "jXJXeTKSURpgqijsqkfAhgGQkDJbwxMNgEFusFwE");
+
         if (Account.getCurrentUser()) {
             Account.updateUserStatus(true);
-            loadingFragment("fragmentMain");
+            loadingFragment(FRAGMENT_MAIN);
         } else {
-            loadingFragment("fragmentLogin");
+            loadingFragment(FRAGMENT_LOGIN);
         }
 
         //start service
@@ -162,54 +155,54 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.nav_contacts) {
-            loadingFragment("fragmentContacts");
+            loadingFragment(FRAGMENT_CONTACTS);
         } else if (id == R.id.nav_profile) {
-            loadingFragment("fragmentProfile");
+            loadingFragment(FRAGMENT_PROFILE);
         }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public void loadingFragment(String s) {
-        switch (s) {
-            case "fragmentMain": {
+    public void loadingFragment(int i) {
+        switch (i) {
+            case FRAGMENT_MAIN: {
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().show();
                 }
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fmain).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentMain()).commit();
                 break;
             }
-            case "fragmentMessages": {
+            case FRAGMENT_MESSAGES: {
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fmessages).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentMessages()).addToBackStack(null).commit();
                 break;
             }
-            case "fragmentContacts": {
+            case FRAGMENT_CONTACTS: {
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fcontacts).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentContacts()).addToBackStack(null).commit();
                 break;
             }
-            case "fragmentProfile": {
+            case FRAGMENT_PROFILE: {
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fprofile).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentProfile()).addToBackStack(null).commit();
                 break;
             }
-            case "fragmentLogin": {
+            case FRAGMENT_LOGIN: {
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().hide();
                 }
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, flogin).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentLogin()).commit();
                 break;
             }
-            case "fragmentReg": {
+            case FRAGMENT_REG: {
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().hide();
                 }
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, freg).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentRegistration()).addToBackStack(null).commit();
                 break;
             }
         }

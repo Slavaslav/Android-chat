@@ -94,7 +94,7 @@ public class FragmentLogin extends Fragment {
                             @Override
                             public void success() {
                                 Utils.hideKeyboard(getActivity());
-                                ((MainActivity) getActivity()).loadingFragment("fragmentMain");
+                                ((MainActivity) getActivity()).loadingFragment(MainActivity.FRAGMENT_MAIN);
                                 pd.dismiss();
                             }
 
@@ -106,7 +106,7 @@ public class FragmentLogin extends Fragment {
                         });
                         break;
                     case R.id.btnReg:
-                        ((MainActivity) getActivity()).loadingFragment("fragmentReg");
+                        ((MainActivity) getActivity()).loadingFragment(MainActivity.FRAGMENT_REG);
                         break;
                 }
             }

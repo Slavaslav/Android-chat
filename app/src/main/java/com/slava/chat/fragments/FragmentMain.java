@@ -116,7 +116,7 @@ public class FragmentMain extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        ((MainActivity) getActivity()).loadingFragment("fragmentMessages");
+                        ((MainActivity) getActivity()).loadingFragment(MainActivity.FRAGMENT_MESSAGES);
                         //set Toolbar title
 
                         if (list != null) {

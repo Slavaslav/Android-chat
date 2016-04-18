@@ -78,7 +78,7 @@ public class FragmentProfile extends Fragment {
                         getActivity().getSupportFragmentManager().popBackStack();
                         Account.updateUserStatus(false);
                         Account.logOut();
-                        ((MainActivity) getActivity()).loadingFragment("fragmentLogin");
+                        ((MainActivity) getActivity()).loadingFragment(MainActivity.FRAGMENT_LOGIN);
                         break;
                 }
             }

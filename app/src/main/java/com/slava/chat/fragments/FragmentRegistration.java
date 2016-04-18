@@ -91,7 +91,7 @@ public class FragmentRegistration extends Fragment {
                             @Override
                             public void success() {
                                 Utils.hideKeyboard(getActivity());
-                                ((MainActivity) getActivity()).loadingFragment("fragmentMain");
+                                ((MainActivity) getActivity()).loadingFragment(MainActivity.FRAGMENT_MAIN);
                                 pd.dismiss();
                             }
 
