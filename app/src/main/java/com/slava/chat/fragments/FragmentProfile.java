@@ -3,6 +3,7 @@ package com.slava.chat.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,21 +70,20 @@ public class FragmentProfile extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-
-        View.OnClickListener pressBtn = new View.OnClickListener() {
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.button_log_out:
-                        getActivity().getSupportFragmentManager().popBackStack();
+                        getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         Account.updateUserStatus(false);
                         Account.logOut();
                         ((MainActivity) getActivity()).loadingFragment(MainActivity.FRAGMENT_LOGIN);
+
                         break;
                 }
             }
-        };
-        btnLogOut.setOnClickListener(pressBtn);
+        });
         //set Toolbar title
         mListener.setTitleToolbar(getString(R.string.menu_profile));
     }
