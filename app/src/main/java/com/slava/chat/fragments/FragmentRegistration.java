@@ -131,6 +131,12 @@ public class FragmentRegistration extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -143,5 +149,7 @@ public class FragmentRegistration extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+
+        void setDrawerLockMode(int i);
     }
 }

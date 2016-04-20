@@ -93,6 +93,12 @@ public class FragmentMain extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mListener.setDrawerLockMode(MainActivity.LOCK_MODE_UNLOCKED);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
@@ -101,6 +107,8 @@ public class FragmentMain extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void setTitleToolbar(String s);
+
+        void setDrawerLockMode(int i);
     }
 
     public class MessageReceiver extends BroadcastReceiver {

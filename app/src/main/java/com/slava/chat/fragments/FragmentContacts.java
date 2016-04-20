@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.slava.chat.MainActivity;
 import com.slava.chat.R;
 
 /**
@@ -180,6 +181,12 @@ public class FragmentContacts extends Fragment implements
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -192,6 +199,8 @@ public class FragmentContacts extends Fragment implements
      */
     public interface OnFragmentInteractionListener {
         void setTitleToolbar(String s);
+
+        void setDrawerLockMode(int i);
     }
 
 }

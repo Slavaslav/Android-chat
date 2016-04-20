@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.slava.chat.MainActivity;
 import com.slava.chat.R;
 
 /**
@@ -88,9 +89,16 @@ public class FragmentMessages extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
+    }
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+
+        void setDrawerLockMode(int i);
     }
 
     private class MessagesListAdapter extends BaseAdapter {

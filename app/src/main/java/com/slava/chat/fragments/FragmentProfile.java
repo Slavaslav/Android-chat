@@ -105,6 +105,11 @@ public class FragmentProfile extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -118,5 +123,7 @@ public class FragmentProfile extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void setTitleToolbar(String s);
+
+        void setDrawerLockMode(int i);
     }
 }

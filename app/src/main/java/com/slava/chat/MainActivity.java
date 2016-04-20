@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements
     public static final int FRAGMENT_MESSAGES = 1;
     public static final int FRAGMENT_LOGIN = 4;
     public static final int FRAGMENT_REG = 5;
+    public static final int LOCK_MODE_LOCKED_CLOSED = 1;
+    public static final int LOCK_MODE_UNLOCKED = 0;
     private final int FRAGMENT_CONTACTS = 2;
     private final int FRAGMENT_PROFILE = 3;
     private DrawerLayout drawer;
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -170,22 +172,18 @@ public class MainActivity extends AppCompatActivity implements
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().show();
                 }
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentMain()).commit();
                 break;
             }
             case FRAGMENT_MESSAGES: {
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentMessages()).addToBackStack(null).commit();
                 break;
             }
             case FRAGMENT_CONTACTS: {
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentContacts()).addToBackStack(null).commit();
                 break;
             }
             case FRAGMENT_PROFILE: {
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentProfile()).addToBackStack(null).commit();
                 break;
             }
@@ -193,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().hide();
                 }
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentLogin()).commit();
                 break;
             }
@@ -201,7 +198,6 @@ public class MainActivity extends AppCompatActivity implements
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().hide();
                 }
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentRegistration()).addToBackStack(null).commit();
                 break;
             }
@@ -220,5 +216,10 @@ public class MainActivity extends AppCompatActivity implements
             getSupportActionBar().setTitle(s);
         }
 
+    }
+
+    @Override
+    public void setDrawerLockMode(int i) {
+        drawer.setDrawerLockMode(i);
     }
 }

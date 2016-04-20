@@ -138,6 +138,11 @@ public class FragmentLogin extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -152,5 +157,7 @@ public class FragmentLogin extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+
+        void setDrawerLockMode(int i);
     }
 }
