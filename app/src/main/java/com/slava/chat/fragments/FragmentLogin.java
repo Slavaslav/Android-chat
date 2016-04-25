@@ -96,7 +96,7 @@ public class FragmentLogin extends Fragment {
                             public void success() {
                                 getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                 Utils.hideKeyboard(getActivity());
-                                ((MainActivity) getActivity()).loadingFragment(MainActivity.FRAGMENT_MAIN);
+                                mListener.loadFragment(new FragmentMain(), true, false);
                                 pd.dismiss();
                             }
 
@@ -108,7 +108,7 @@ public class FragmentLogin extends Fragment {
                         });
                         break;
                     case R.id.btnReg:
-                        ((MainActivity) getActivity()).loadingFragment(MainActivity.FRAGMENT_REG);
+                        mListener.loadFragment(new FragmentRegistration(), false, false);
                         break;
                 }
             }
@@ -161,5 +161,7 @@ public class FragmentLogin extends Fragment {
         void onFragmentInteraction(Uri uri);
 
         void setDrawerLockMode(int i);
+
+        void loadFragment(Fragment fragment, boolean showActionBar, boolean addBackStack);
     }
 }

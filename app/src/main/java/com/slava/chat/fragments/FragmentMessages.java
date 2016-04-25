@@ -63,6 +63,8 @@ public class FragmentMessages extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        String dialogId = getArguments().getString("dialogId");
+        //Log.d("LOG","LOG = " + dialogId);
         return inflater.inflate(R.layout.fragment_messages, container, false);
     }
 

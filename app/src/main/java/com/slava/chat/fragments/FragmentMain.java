@@ -109,6 +109,8 @@ public class FragmentMain extends Fragment {
         void setTitleToolbar(String s);
 
         void setDrawerLockMode(int i);
+
+        void loadFragment(Fragment fragment, boolean showActionBar, boolean addBackStack);
     }
 
     public class MessageReceiver extends BroadcastReceiver {
@@ -124,14 +126,16 @@ public class FragmentMain extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        ((MainActivity) getActivity()).loadingFragment(MainActivity.FRAGMENT_MESSAGES);
-                        //set Toolbar title
-
                         if (list != null) {
                             mListener.setTitleToolbar(list.get(position).get("title").toString());
-                        }
-                        //list.get(position).getObjectId();
 
+                            Bundle bundle = new Bundle();
+                            bundle.putString("dialogId", list.get(position).getObjectId());
+                            Fragment fragmentMessages = new FragmentMessages();
+                            fragmentMessages.setArguments(bundle);
+
+                            mListener.loadFragment(fragmentMessages, true, true);
+                        }
 
                        /*final String lastMessage = "wuzzup";
 

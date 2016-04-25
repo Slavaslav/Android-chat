@@ -78,7 +78,7 @@ public class FragmentProfile extends Fragment {
                         getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         Account.updateUserStatus(false);
                         Account.logOut();
-                        ((MainActivity) getActivity()).loadingFragment(MainActivity.FRAGMENT_LOGIN);
+                        mListener.loadFragment(new FragmentLogin(), false, false);
 
                         break;
                 }
@@ -125,5 +125,7 @@ public class FragmentProfile extends Fragment {
         void setTitleToolbar(String s);
 
         void setDrawerLockMode(int i);
+
+        void loadFragment(Fragment fragment, boolean showActionBar, boolean addBackStack);
     }
 }

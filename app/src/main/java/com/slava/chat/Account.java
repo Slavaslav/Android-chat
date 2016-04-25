@@ -79,7 +79,7 @@ public class Account {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("message");
         query.whereEqualTo("parent", dialogId);
-        query.whereEqualTo("sender", ParseUser.getCurrentUser());
+        // query.whereEqualTo("sender", ParseUser.getCurrentUser());
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {

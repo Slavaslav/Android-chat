@@ -15,9 +15,9 @@ public class MyService extends Service {
 
     public static final String INTENT_MESSAGE = "Intent Message";
     public static final String DIALOGS_LIST = "Dialogs List";
-    public static final String DIALOGS_LIST_UPDATED = "Take Dialogs List";
+    public static final String DIALOGS_LIST_UPDATED = "Download Dialogs List";
     private static final String MESSAGES_LIST = "Messages List";
-    private static final String MESSAGES_LIST_UPDATED = "Take Messages List";
+    private static final String MESSAGES_LIST_UPDATED = "Download Messages List";
 
     public MyService() {
     }
@@ -25,13 +25,11 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("MyService.class", "service was stopped");
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("MyService.class", "service was started");
     }
 
     @Override

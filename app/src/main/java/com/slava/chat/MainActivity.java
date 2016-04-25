@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,14 +32,8 @@ public class MainActivity extends AppCompatActivity implements
         FragmentRegistration.OnFragmentInteractionListener,
         NavigationView.OnNavigationItemSelectedListener {
 
-    public static final int FRAGMENT_MAIN = 0;
-    public static final int FRAGMENT_MESSAGES = 1;
-    public static final int FRAGMENT_LOGIN = 4;
-    public static final int FRAGMENT_REG = 5;
     public static final int LOCK_MODE_LOCKED_CLOSED = 1;
     public static final int LOCK_MODE_UNLOCKED = 0;
-    private final int FRAGMENT_CONTACTS = 2;
-    private final int FRAGMENT_PROFILE = 3;
     private DrawerLayout drawer;
 
     @Override
@@ -99,9 +94,9 @@ public class MainActivity extends AppCompatActivity implements
 
         if (Account.getCurrentUser()) {
             Account.updateUserStatus(true);
-            loadingFragment(FRAGMENT_MAIN);
+            loadFragment(new FragmentMain(), true, false);
         } else {
-            loadingFragment(FRAGMENT_LOGIN);
+            loadFragment(new FragmentLogin(), false, false);
         }
 
         //start service
@@ -157,51 +152,13 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.nav_contacts) {
-            loadingFragment(FRAGMENT_CONTACTS);
+            loadFragment(new FragmentContacts(), true, true);
         } else if (id == R.id.nav_profile) {
-            loadingFragment(FRAGMENT_PROFILE);
+            loadFragment(new FragmentProfile(), true, true);
         }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void loadingFragment(int i) {
-        switch (i) {
-            case FRAGMENT_MAIN: {
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().show();
-                }
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentMain()).commit();
-                break;
-            }
-            case FRAGMENT_MESSAGES: {
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentMessages()).addToBackStack(null).commit();
-                break;
-            }
-            case FRAGMENT_CONTACTS: {
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentContacts()).addToBackStack(null).commit();
-                break;
-            }
-            case FRAGMENT_PROFILE: {
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentProfile()).addToBackStack(null).commit();
-                break;
-            }
-            case FRAGMENT_LOGIN: {
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().hide();
-                }
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentLogin()).commit();
-                break;
-            }
-            case FRAGMENT_REG: {
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().hide();
-                }
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FragmentRegistration()).addToBackStack(null).commit();
-                break;
-            }
-        }
     }
 
     // implement method from fragment
@@ -222,4 +179,26 @@ public class MainActivity extends AppCompatActivity implements
     public void setDrawerLockMode(int i) {
         drawer.setDrawerLockMode(i);
     }
+
+    @Override
+    public void loadFragment(Fragment fragment, boolean showActionBar, boolean addBackStack) {
+        if (showActionBar == true && addBackStack == true) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().show();
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+        } else if (showActionBar == true && addBackStack == false) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().show();
+            }
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+        } else if (showActionBar == false && addBackStack == false) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().hide();
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+        }
+    }
+
 }
