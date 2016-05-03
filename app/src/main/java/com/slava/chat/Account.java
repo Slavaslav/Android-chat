@@ -97,6 +97,7 @@ public class Account {
         ParseUser.logOut();
     }
 
+
     public interface CallbackLogIn {
         void success();
 

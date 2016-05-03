@@ -32,7 +32,7 @@ public class FragmentMain extends Fragment {
     private final MessageReceiver mMessageReceiver = new MessageReceiver();
     private OnFragmentInteractionListener mListener;
     private DialogsListAdapter dialogsAdapter;
-    private ListView listDlg;
+    private ListView dialogsList;
 
     public FragmentMain() {
         // Required empty public constructor
@@ -60,7 +60,7 @@ public class FragmentMain extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        listDlg = (ListView) view.findViewById(R.id.listDlg);
+        dialogsList = (ListView) view.findViewById(R.id.dialogs_list);
 
         return view;
     }
@@ -121,8 +121,8 @@ public class FragmentMain extends Fragment {
             if (intent.getAction().equals(MyService.DIALOGS_LIST_UPDATED)) {
                 final ArrayList<ParseObject> list = (ArrayList<ParseObject>) intent.getExtras().getSerializable(MyService.DIALOGS_LIST);
                 dialogsAdapter.setDialogsList(list);
-                listDlg.setAdapter(dialogsAdapter);
-                listDlg.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                dialogsList.setAdapter(dialogsAdapter);
+                dialogsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 

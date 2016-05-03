@@ -22,23 +22,13 @@ import android.widget.ListView;
 import com.slava.chat.MainActivity;
 import com.slava.chat.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentContacts.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentContacts#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentContacts extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>,
         AdapterView.OnItemClickListener {
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String[] FROM_COLUMNS = {ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
     private static final int[] TO_IDS = {android.R.id.text1};
-    // columns requested from the database
     private static final String[] PROJECTION = {
             ContactsContract.Contacts._ID, // _ID is always required
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY // that's what we want to display
@@ -52,14 +42,6 @@ public class FragmentContacts extends Fragment implements
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentContacts.
-     */
     public static FragmentContacts newInstance(String param1, String param2) {
         FragmentContacts fragment = new FragmentContacts();
         Bundle args = new Bundle();
@@ -95,7 +77,6 @@ public class FragmentContacts extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-
         // each time we are started use our listadapter
         mContactsList.setAdapter(mCursorAdapter);
 
@@ -130,7 +111,6 @@ public class FragmentContacts extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
 
         // no sub-selection, no sort order, simply every row
         // projection says we want just the _id and the name column

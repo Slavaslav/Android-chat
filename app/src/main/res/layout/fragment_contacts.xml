@@ -2,19 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/_16dp"
     android:orientation="vertical"
     tools:context="com.slava.chat.fragments.FragmentContacts">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_contacts"
-        android:textSize="@dimen/txt_17sp" />
     <ListView
         android:id="@+id/contacts_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:divider="@color/color_gray"
+        android:dividerHeight="@dimen/_1dp"
+        tools:listitem="@layout/contacts_list_item" />
 
 </LinearLayout>

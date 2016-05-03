@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 import com.slava.chat.MainActivity;
 import com.slava.chat.R;
@@ -65,7 +66,12 @@ public class FragmentMessages extends Fragment {
         // Inflate the layout for this fragment
         String dialogId = getArguments().getString("dialogId");
         //Log.d("LOG","LOG = " + dialogId);
-        return inflater.inflate(R.layout.fragment_messages, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_messages, container, false);
+        ListView listMessages = (ListView) view.findViewById(R.id.list_messages);
+        listMessages.setStackFromBottom(true);
+
+        return view;
     }
 
     public void onButtonPressed(Uri uri) {
