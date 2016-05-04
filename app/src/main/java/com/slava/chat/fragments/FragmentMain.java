@@ -193,9 +193,9 @@ public class FragmentMain extends Fragment {
             if (convertView == null)
                 convertView = inflater.inflate(R.layout.dialog_item, parent, false);
 
-            ((TextView) convertView.findViewById(R.id.dlgTitle)).setText(list.get(position).get("title").toString());
-            ((TextView) convertView.findViewById(R.id.dlgMessage)).setText(list.get(position).get("lMessage").toString());
-            ((TextView) convertView.findViewById(R.id.dlgTime)).setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(list.get(position).getUpdatedAt()));
+            ((TextView) convertView.findViewById(R.id.dialog_title)).setText(list.get(position).get("title").toString());
+            ((TextView) convertView.findViewById(R.id.dialog_message)).setText(list.get(position).get("lMessage").toString());
+            ((TextView) convertView.findViewById(R.id.dialog_time)).setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(list.get(position).getUpdatedAt()));
 
             return convertView;
         }

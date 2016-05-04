@@ -17,13 +17,13 @@
         android:paddingTop="@dimen/_10dp">
 
         <TextView
-            android:id="@+id/dlgTitle"
+            android:id="@+id/dialog_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/txt_18sp" />
 
         <TextView
-            android:id="@+id/dlgMessage"
+            android:id="@+id/dialog_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -32,7 +32,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/dlgTime"
+        android:id="@+id/dialog_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/_10dp"

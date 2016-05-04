@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
@@ -27,7 +28,13 @@ public class FragmentContacts extends Fragment implements
         AdapterView.OnItemClickListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final String[] FROM_COLUMNS = {ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
+
+    private final static String[] FROM_COLUMNS = {
+            Build.VERSION.SDK_INT
+                    >= Build.VERSION_CODES.HONEYCOMB ?
+                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
+                    ContactsContract.Contacts.DISPLAY_NAME
+    };
     private static final int[] TO_IDS = {android.R.id.text1};
     private static final String[] PROJECTION = {
             ContactsContract.Contacts._ID, // _ID is always required
@@ -55,14 +62,6 @@ public class FragmentContacts extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        // create adapter once
-        mCursorAdapter = new SimpleCursorAdapter(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                null,
-                FROM_COLUMNS,
-                TO_IDS,
-                0);
     }
 
     @Override
@@ -77,7 +76,14 @@ public class FragmentContacts extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // each time we are started use our listadapter
+        mCursorAdapter = new SimpleCursorAdapter(
+                getActivity(),
+                android.R.layout.simple_list_item_1,
+                null,
+                FROM_COLUMNS,
+                TO_IDS,
+                0);
+
         mContactsList.setAdapter(mCursorAdapter);
 
         if (ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
