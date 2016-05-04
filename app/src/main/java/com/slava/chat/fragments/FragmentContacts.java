@@ -36,10 +36,16 @@ public class FragmentContacts extends Fragment implements
                     ContactsContract.Contacts.DISPLAY_NAME
     };
     private static final int[] TO_IDS = {android.R.id.text1};
-    private static final String[] PROJECTION = {
-            ContactsContract.Contacts._ID, // _ID is always required
-            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY // that's what we want to display
-    };
+    private static final String[] PROJECTION =
+            {
+                    ContactsContract.Contacts._ID,
+                    ContactsContract.Contacts.LOOKUP_KEY,
+                    Build.VERSION.SDK_INT
+                            >= Build.VERSION_CODES.HONEYCOMB ?
+                            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
+                            ContactsContract.Contacts.DISPLAY_NAME
+
+            };
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
     private OnFragmentInteractionListener mListener;
     private SimpleCursorAdapter mCursorAdapter;
@@ -60,7 +66,6 @@ public class FragmentContacts extends Fragment implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
     }
 
@@ -118,8 +123,6 @@ public class FragmentContacts extends Fragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        // no sub-selection, no sort order, simply every row
-        // projection says we want just the _id and the name column
         return new CursorLoader(
                 getActivity(),
                 ContactsContract.Contacts.CONTENT_URI,
@@ -132,15 +135,11 @@ public class FragmentContacts extends Fragment implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        // Once cursor is loaded, give it to adapter
         mCursorAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
-        // on reset take any old cursor away
         mCursorAdapter.swapCursor(null);
     }
 
@@ -173,16 +172,6 @@ public class FragmentContacts extends Fragment implements
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         void setTitleToolbar(String s);
 

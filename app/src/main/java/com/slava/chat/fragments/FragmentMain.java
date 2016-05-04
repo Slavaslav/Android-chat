@@ -70,7 +70,7 @@ public class FragmentMain extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         //start service
-        getActivity().startService(new Intent(getActivity(), MyService.class).putExtra(MyService.INTENT_MESSAGE, MyService.DIALOGS_LIST_UPDATED));
+        getActivity().startService(new Intent(getActivity(), MyService.class).putExtra(MyService.INTENT_MESSAGE, MyService.UPDATE_DIALOGS_LIST));
 
         dialogsAdapter = new DialogsListAdapter();
 
@@ -89,7 +89,7 @@ public class FragmentMain extends Fragment {
         }
 
         // Register to receive messages
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter(MyService.DIALOGS_LIST_UPDATED));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter(MyService.UPDATE_DIALOGS_LIST));
     }
 
     @Override
@@ -118,7 +118,7 @@ public class FragmentMain extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if (intent.getAction().equals(MyService.DIALOGS_LIST_UPDATED)) {
+            if (intent.getAction().equals(MyService.UPDATE_DIALOGS_LIST)) {
                 final ArrayList<ParseObject> list = (ArrayList<ParseObject>) intent.getExtras().getSerializable(MyService.DIALOGS_LIST);
                 dialogsAdapter.setDialogsList(list);
                 dialogsList.setAdapter(dialogsAdapter);

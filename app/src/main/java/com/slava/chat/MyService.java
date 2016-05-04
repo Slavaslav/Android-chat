@@ -15,9 +15,9 @@ public class MyService extends Service {
 
     public static final String INTENT_MESSAGE = "Intent Message";
     public static final String DIALOGS_LIST = "Dialogs List";
-    public static final String DIALOGS_LIST_UPDATED = "Download Dialogs List";
+    public static final String UPDATE_DIALOGS_LIST = "Download Dialogs List";
     private static final String MESSAGES_LIST = "Messages List";
-    private static final String MESSAGES_LIST_UPDATED = "Download Messages List";
+    private static final String UPDATE_MESSAGES_LIST = "Download Messages List";
 
     public MyService() {
     }
@@ -43,10 +43,10 @@ public class MyService extends Service {
         // Run load dialogs list
         if (intent.getStringExtra(INTENT_MESSAGE) != null) {
             switch (intent.getStringExtra(INTENT_MESSAGE)) {
-                case DIALOGS_LIST_UPDATED:
+                case UPDATE_DIALOGS_LIST:
                     loadUsersDialogs();
                     break;
-                case MESSAGES_LIST_UPDATED:
+                case UPDATE_MESSAGES_LIST:
                     loadMessageList();
                     break;
             }
@@ -62,7 +62,7 @@ public class MyService extends Service {
             public void success(List<ParseObject> list) {
                 ArrayList<ParseObject> dList = new ArrayList<>(list);
                 // Send broadcast
-                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(DIALOGS_LIST_UPDATED).putExtra(DIALOGS_LIST, dList));
+                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(UPDATE_DIALOGS_LIST).putExtra(DIALOGS_LIST, dList));
             }
 
             @Override
@@ -80,7 +80,7 @@ public class MyService extends Service {
             public void success(List<ParseObject> list) {
                 ArrayList<ParseObject> dList = new ArrayList<>(list);
                 // Send broadcast
-                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(MESSAGES_LIST_UPDATED).putExtra(MESSAGES_LIST, dList));
+                LocalBroadcastManager.getInstance(MyService.this).sendBroadcast(new Intent(UPDATE_MESSAGES_LIST).putExtra(MESSAGES_LIST, dList));
             }
 
             @Override
