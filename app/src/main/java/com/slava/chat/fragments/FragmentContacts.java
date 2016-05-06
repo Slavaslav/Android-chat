@@ -14,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.parse.ParseUser;
 import com.slava.chat.Account;
@@ -32,6 +34,7 @@ public class FragmentContacts extends Fragment implements
 
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
+    HashMap<String, String> contactsDataMap = new HashMap<>();
     private OnFragmentInteractionListener mListener;
     private ListView mContactsList;
 
@@ -64,8 +67,6 @@ public class FragmentContacts extends Fragment implements
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        //mContactsList.setAdapter();
 
         if (ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this.getActivity(),
@@ -120,7 +121,6 @@ public class FragmentContacts extends Fragment implements
     }
 
     private void getContactsData() {
-        HashMap<String, String> contactsDataMap = new HashMap<>();
         Cursor cursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -141,7 +141,8 @@ public class FragmentContacts extends Fragment implements
         Account.loadPhoneNumberList(strings, new Account.CallbackLoadUser() {
             @Override
             public void success(List<ParseUser> list) {
-                Log.d("LOG", "LOG = " + list.size());
+                ContactsAdapter contactsAdapter = new ContactsAdapter(list);
+                mContactsList.setAdapter(contactsAdapter);
             }
 
             @Override
@@ -157,4 +158,46 @@ public class FragmentContacts extends Fragment implements
         void setDrawerLockMode(int i);
     }
 
+
+    private class ContactsAdapter extends BaseAdapter {
+
+        final LayoutInflater inflater = getActivity().getLayoutInflater();
+        List<ParseUser> list;
+        String phoneNumber;
+        String name;
+
+        public ContactsAdapter(List<ParseUser> list) {
+            this.list = list;
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            if (convertView == null)
+                convertView = inflater.inflate(R.layout.contacts_list_item, parent, false);
+
+            phoneNumber = list.get(position).getUsername();
+            name = contactsDataMap.get(phoneNumber);
+
+            ((TextView) convertView.findViewById(R.id.contact_name)).setText(name);
+            ((TextView) convertView.findViewById(R.id.contact_phone_number)).setText(phoneNumber);
+
+            return convertView;
+        }
+    }
 }

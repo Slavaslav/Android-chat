@@ -11,12 +11,14 @@
     android:paddingTop="@dimen/_10dp">
 
     <TextView
+        android:id="@+id/contact_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Contact Name"
         android:textSize="@dimen/txt_18sp" />
 
     <TextView
+        android:id="@+id/contact_phone_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Phone Number"
