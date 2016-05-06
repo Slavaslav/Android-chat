@@ -56,7 +56,7 @@ public class MyService extends Service {
     }
 
     private void loadUsersDialogs() {
-        Account.loadUserDialogs(new Account.CallbackLoad() {
+        Account.loadUserDialogs(new Account.CallbackLoadObject() {
 
             @Override
             public void success(List<ParseObject> list) {
@@ -74,7 +74,7 @@ public class MyService extends Service {
     }
 
     private void loadMessageList() {
-        Account.loadMessageList("add here dialog id", new Account.CallbackLoad() {
+        Account.loadMessageList("add here dialog id", new Account.CallbackLoadObject() {
 
             @Override
             public void success(List<ParseObject> list) {

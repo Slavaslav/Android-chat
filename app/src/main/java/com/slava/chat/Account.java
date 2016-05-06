@@ -9,6 +9,7 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 import java.util.List;
+import java.util.Set;
 
 public class Account {
     public static void logIn(String login, String password, final CallbackLogIn callBack) {
@@ -59,7 +60,7 @@ public class Account {
         }
     }
 
-    public static void loadUserDialogs(final CallbackLoad callBack) {
+    public static void loadUserDialogs(final CallbackLoadObject callBack) {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("dialog");
         query.whereEqualTo("parent", ParseUser.getCurrentUser());
@@ -75,7 +76,7 @@ public class Account {
         });
     }
 
-    public static void loadMessageList(String dialogId, final CallbackLoad callBack) {
+    public static void loadMessageList(String dialogId, final CallbackLoadObject callBack) {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("message");
         query.whereEqualTo("parent", dialogId);
@@ -93,6 +94,22 @@ public class Account {
 
     }
 
+    public static void loadPhoneNumberList(Set<String> strings, final CallbackLoadUser callBack) {
+
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereContainedIn("username", strings);
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> list, ParseException e) {
+                if (e == null) {
+                    callBack.success(list);
+                } else {
+                    callBack.e(e.getMessage());
+                }
+            }
+        });
+    }
+
     public static void logOut() {
         ParseUser.logOut();
     }
@@ -104,8 +121,14 @@ public class Account {
         void e(String s);
     }
 
-    public interface CallbackLoad {
+    public interface CallbackLoadObject {
         void success(List<ParseObject> list);
+
+        void e(String s);
+    }
+
+    public interface CallbackLoadUser {
+        void success(List<ParseUser> list);
 
         void e(String s);
     }

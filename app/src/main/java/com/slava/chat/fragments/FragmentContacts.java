@@ -16,8 +16,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.parse.ParseUser;
+import com.slava.chat.Account;
 import com.slava.chat.MainActivity;
 import com.slava.chat.R;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 public class FragmentContacts extends Fragment implements
         AdapterView.OnItemClickListener {
@@ -66,7 +72,7 @@ public class FragmentContacts extends Fragment implements
                     new String[]{Manifest.permission.READ_CONTACTS},
                     MY_PERMISSIONS_REQUEST_READ_CONTACTS);
         } else {
-            getContactsInfo();
+            getContactsData();
         }
 
         //set Toolbar title
@@ -96,7 +102,7 @@ public class FragmentContacts extends Fragment implements
             case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getContactsInfo();
+                    getContactsData();
                 }
             }
         }
@@ -113,18 +119,36 @@ public class FragmentContacts extends Fragment implements
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
     }
 
-    public void getContactsInfo() {
+    private void getContactsData() {
+        HashMap<String, String> contactsDataMap = new HashMap<>();
         Cursor cursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                Log.d("LOG", "name = " + name);
-                Log.d("LOG", "number = " + phoneNumber);
+                phoneNumber = phoneNumber.replaceAll(" ", "");
+                contactsDataMap.put(phoneNumber, name);
 
             }
             cursor.close();
+
+            getMatchingPhoneNumber(contactsDataMap.keySet());
+
         }
+    }
+
+    private void getMatchingPhoneNumber(Set<String> strings) {
+        Account.loadPhoneNumberList(strings, new Account.CallbackLoadUser() {
+            @Override
+            public void success(List<ParseUser> list) {
+                Log.d("LOG", "LOG = " + list.size());
+            }
+
+            @Override
+            public void e(String s) {
+                Log.d("LOG", "Error: " + s);
+            }
+        });
     }
 
     public interface OnFragmentInteractionListener {
