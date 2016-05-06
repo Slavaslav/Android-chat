@@ -3,9 +3,7 @@ package com.slava.chat.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -25,7 +23,6 @@ import com.slava.chat.R;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class FragmentContacts extends Fragment implements
         AdapterView.OnItemClickListener {
@@ -34,7 +31,6 @@ public class FragmentContacts extends Fragment implements
 
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
-    HashMap<String, String> contactsDataMap = new HashMap<>();
     private OnFragmentInteractionListener mListener;
     private ListView mContactsList;
 
@@ -73,7 +69,7 @@ public class FragmentContacts extends Fragment implements
                     new String[]{Manifest.permission.READ_CONTACTS},
                     MY_PERMISSIONS_REQUEST_READ_CONTACTS);
         } else {
-            getContactsData();
+            handleContactsList();
         }
 
         //set Toolbar title
@@ -103,7 +99,7 @@ public class FragmentContacts extends Fragment implements
             case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getContactsData();
+                    handleContactsList();
                 }
             }
         }
@@ -120,28 +116,12 @@ public class FragmentContacts extends Fragment implements
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
     }
 
-    private void getContactsData() {
-        Cursor cursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                phoneNumber = phoneNumber.replaceAll(" ", "");
-                contactsDataMap.put(phoneNumber, name);
+    private void handleContactsList() {
 
-            }
-            cursor.close();
-
-            getMatchingPhoneNumber(contactsDataMap.keySet());
-
-        }
-    }
-
-    private void getMatchingPhoneNumber(Set<String> strings) {
-        Account.loadPhoneNumberList(strings, new Account.CallbackLoadUser() {
+        Account.loadContactsList(new Account.CallbackLoadUser() {
             @Override
-            public void success(List<ParseUser> list) {
-                ContactsAdapter contactsAdapter = new ContactsAdapter(list);
+            public void success(List<ParseUser> list, HashMap<String, String> contactsDataMap) {
+                ContactsAdapter contactsAdapter = new ContactsAdapter(list, contactsDataMap);
                 mContactsList.setAdapter(contactsAdapter);
             }
 
@@ -158,16 +138,17 @@ public class FragmentContacts extends Fragment implements
         void setDrawerLockMode(int i);
     }
 
-
     private class ContactsAdapter extends BaseAdapter {
 
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         List<ParseUser> list;
+        HashMap<String, String> contactsDataMap;
         String phoneNumber;
         String name;
 
-        public ContactsAdapter(List<ParseUser> list) {
+        public ContactsAdapter(List<ParseUser> list, HashMap<String, String> contactsDataMap) {
             this.list = list;
+            this.contactsDataMap = contactsDataMap;
         }
 
         @Override

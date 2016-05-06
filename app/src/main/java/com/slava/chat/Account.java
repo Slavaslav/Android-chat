@@ -1,5 +1,8 @@
 package com.slava.chat;
 
+import android.database.Cursor;
+import android.provider.ContactsContract;
+
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -8,8 +11,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class Account {
     public static void logIn(String login, String password, final CallbackLogIn callBack) {
@@ -94,15 +97,28 @@ public class Account {
 
     }
 
-    public static void loadPhoneNumberList(Set<String> strings, final CallbackLoadUser callBack) {
+    public static void loadContactsList(final CallbackLoadUser callBack) {
+
+        final HashMap<String, String> contactsDataMap = new HashMap<>();
+        Cursor cursor = App.applicationContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                phoneNumber = phoneNumber.replaceAll(" ", "");
+                contactsDataMap.put(phoneNumber, name);
+
+            }
+            cursor.close();
+        }
 
         ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereContainedIn("username", strings);
+        query.whereContainedIn("username", contactsDataMap.keySet());
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> list, ParseException e) {
                 if (e == null) {
-                    callBack.success(list);
+                    callBack.success(list, contactsDataMap);
                 } else {
                     callBack.e(e.getMessage());
                 }
@@ -128,7 +144,7 @@ public class Account {
     }
 
     public interface CallbackLoadUser {
-        void success(List<ParseUser> list);
+        void success(List<ParseUser> list, HashMap<String, String> contactsDataMap);
 
         void e(String s);
     }
