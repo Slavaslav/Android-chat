@@ -24,8 +24,7 @@ import com.slava.chat.R;
 import java.util.HashMap;
 import java.util.List;
 
-public class FragmentContacts extends Fragment implements
-        AdapterView.OnItemClickListener {
+public class FragmentContacts extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -57,7 +56,6 @@ public class FragmentContacts extends Fragment implements
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
         mContactsList = (ListView) view.findViewById(R.id.contacts_list);
-        mContactsList.setOnItemClickListener(this);
         return view;
     }
 
@@ -106,11 +104,6 @@ public class FragmentContacts extends Fragment implements
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
@@ -120,9 +113,26 @@ public class FragmentContacts extends Fragment implements
 
         Account.loadContactsList(new Account.CallbackLoadUser() {
             @Override
-            public void success(List<ParseUser> list, HashMap<String, String> contactsDataMap) {
+            public void success(final List<ParseUser> list, final HashMap<String, String> contactsDataMap) {
                 ContactsAdapter contactsAdapter = new ContactsAdapter(list, contactsDataMap);
                 mContactsList.setAdapter(contactsAdapter);
+                mContactsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                        final String senderPhoneNumber = ParseUser.getCurrentUser().getUsername();
+                        final String receiverPhoneNumber = list.get(position).getUsername();
+                        String titleActionBar = contactsDataMap.get(receiverPhoneNumber);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("senderPhoneNumber", senderPhoneNumber);
+                        bundle.putString("receiverPhoneNumber", receiverPhoneNumber);
+                        bundle.putString("titleActionBar", titleActionBar);
+                        Fragment fragmentMessages = new FragmentMessages();
+                        fragmentMessages.setArguments(bundle);
+                        mListener.loadFragment(fragmentMessages, true, true);
+                    }
+                });
             }
 
             @Override
@@ -136,6 +146,8 @@ public class FragmentContacts extends Fragment implements
         void setTitleToolbar(String s);
 
         void setDrawerLockMode(int i);
+
+        void loadFragment(Fragment fragment, boolean showActionBar, boolean addBackStack);
     }
 
     private class ContactsAdapter extends BaseAdapter {

@@ -41,14 +41,16 @@ public class MyService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         // Run load dialogs list
-        if (intent.getStringExtra(INTENT_MESSAGE) != null) {
-            switch (intent.getStringExtra(INTENT_MESSAGE)) {
-                case UPDATE_DIALOGS_LIST:
-                    loadUsersDialogs();
-                    break;
-                case UPDATE_MESSAGES_LIST:
-                    loadMessageList();
-                    break;
+        if (intent != null) {
+            if (intent.getStringExtra(INTENT_MESSAGE) != null) {
+                switch (intent.getStringExtra(INTENT_MESSAGE)) {
+                    case UPDATE_DIALOGS_LIST:
+                        loadUsersDialogs();
+                        break;
+                    case UPDATE_MESSAGES_LIST:
+                        loadMessageList();
+                        break;
+                }
             }
         }
 

@@ -1,17 +1,21 @@
 package com.slava.chat.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.parse.ParseObject;
+import com.slava.chat.Account;
 import com.slava.chat.MainActivity;
 import com.slava.chat.R;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,21 +67,43 @@ public class FragmentMessages extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        String dialogId = getArguments().getString("dialogId");
-        //Log.d("LOG","LOG = " + dialogId);
+
+
+        Bundle args = getArguments();
+        String senderPhoneNumber = args.getString("senderPhoneNumber");
+        String receiverPhoneNumber = args.getString("receiverPhoneNumber");
+        String titleActionBar = args.getString("titleActionBar");
+
+        mListener.setTitleToolbar(titleActionBar);
+
+        Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
+            @Override
+            public void success(List<ParseObject> list) {
+                if (list.size() != 0) {
+
+                } else {
+
+                }
+            }
+
+            @Override
+            public void e(String s) {
+                Log.d("LOG", "Error: " + s);
+            }
+        });
+
+
+        /*ParseObject dialog = new ParseObject("Dialogs");
+        dialog.put("sender", senderPhoneNumber);
+        dialog.put("receiver", receiverPhoneNumber);
+        dialog.put("lastMessage", "");
+        dialog.saveEventually();*/
 
         View view = inflater.inflate(R.layout.fragment_messages, container, false);
         ListView listMessages = (ListView) view.findViewById(R.id.list_messages);
         listMessages.setStackFromBottom(true);
 
         return view;
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -104,9 +130,10 @@ public class FragmentMessages extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
 
         void setDrawerLockMode(int i);
+
+        void setTitleToolbar(String s);
     }
 
     private class MessagesListAdapter extends BaseAdapter {

@@ -79,6 +79,24 @@ public class Account {
         });
     }
 
+    public static void loadSelectedDialog(final String senderPhoneNumber, final String receiverPhoneNumber, final CallbackLoadObject callBack) {
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Dialogs");
+        query.whereEqualTo("sender", senderPhoneNumber);
+        query.whereEqualTo("receiver", receiverPhoneNumber);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null) {
+                    callBack.success(list);
+                } else {
+                    callBack.e(e.getMessage());
+                }
+            }
+        });
+
+    }
+
     public static void loadMessageList(String dialogId, final CallbackLoadObject callBack) {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("message");
