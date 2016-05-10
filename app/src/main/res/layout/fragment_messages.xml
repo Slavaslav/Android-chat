@@ -25,6 +25,7 @@
         android:padding="@dimen/_5dp">
 
         <EditText
+            android:id="@+id/edit_text_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_10dp"
@@ -34,6 +35,7 @@
             android:textSize="@dimen/txt_20sp" />
 
         <Button
+            android:id="@+id/button_message"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center|end"

@@ -8,12 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.parse.ParseObject;
 import com.slava.chat.Account;
 import com.slava.chat.MainActivity;
 import com.slava.chat.R;
+import com.slava.chat.Utils;
 
 import java.util.List;
 
@@ -31,21 +34,13 @@ public class FragmentMessages extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private MessagesListAdapter dialogsAdapter;
-
     private OnFragmentInteractionListener mListener;
+    private ParseObject dialogObject;
 
     public FragmentMessages() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentMessages.
-     */
     public static FragmentMessages newInstance(String param1, String param2) {
         FragmentMessages fragment = new FragmentMessages();
         Bundle args = new Bundle();
@@ -67,12 +62,17 @@ public class FragmentMessages extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        View view = inflater.inflate(R.layout.fragment_messages, container, false);
 
         Bundle args = getArguments();
-        String senderPhoneNumber = args.getString("senderPhoneNumber");
-        String receiverPhoneNumber = args.getString("receiverPhoneNumber");
+        final String senderPhoneNumber = args.getString("senderPhoneNumber");
+        final String receiverPhoneNumber = args.getString("receiverPhoneNumber");
         String titleActionBar = args.getString("titleActionBar");
+
+        ListView listMessages = (ListView) view.findViewById(R.id.list_messages);
+        listMessages.setStackFromBottom(true);
+        final EditText editTextMessage = (EditText) view.findViewById(R.id.edit_text_message);
+        Button buttonSendMessage = (Button) view.findViewById(R.id.button_message);
 
         mListener.setTitleToolbar(titleActionBar);
 
@@ -80,28 +80,72 @@ public class FragmentMessages extends Fragment {
             @Override
             public void success(List<ParseObject> list) {
                 if (list.size() != 0) {
+                    dialogObject = list.get(0);
+                    Account.loadMessages(dialogObject, new Account.CallbackLoadObject() {
+                        @Override
+                        public void success(List<ParseObject> list) {
+                            Log.d("LOG", "message = " + list.get(0).get("textMessage"));
+                            Log.d("LOG", "message = " + list.get(1).get("textMessage"));
+                        }
 
+                        @Override
+                        public void e(String s) {
+                            Log.d("LOG", "Error: " + s);
+                        }
+                    });
                 } else {
+                    Account.createNewDialog(senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
+                        @Override
+                        public void success() {
+                            Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
+                                @Override
+                                public void success(List<ParseObject> list) {
+                                    dialogObject = list.get(0);
+                                }
 
+                                @Override
+                                public void e(String s) {
+                                    Log.d("LOG", "Error: " + s);
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void e(String s) {
+                            Log.d("LOG", "Error: " + s);
+                        }
+                    });
                 }
+
             }
 
             @Override
             public void e(String s) {
                 Log.d("LOG", "Error: " + s);
+
             }
         });
 
+        buttonSendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editTextMessage.getText().length() > 0) {
+                    Account.sendMessage(dialogObject, editTextMessage.getText().toString(), senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
+                        @Override
+                        public void success() {
+                            editTextMessage.getText().clear();
+                            Utils.hideKeyboard(editTextMessage);
+                        }
 
-        /*ParseObject dialog = new ParseObject("Dialogs");
-        dialog.put("sender", senderPhoneNumber);
-        dialog.put("receiver", receiverPhoneNumber);
-        dialog.put("lastMessage", "");
-        dialog.saveEventually();*/
-
-        View view = inflater.inflate(R.layout.fragment_messages, container, false);
-        ListView listMessages = (ListView) view.findViewById(R.id.list_messages);
-        listMessages.setStackFromBottom(true);
+                        @Override
+                        public void e(String s) {
+                            Log.d("LOG", "Error: " + s);
+                        }
+                    });
+                }
+            }
+        });
 
         return view;
     }

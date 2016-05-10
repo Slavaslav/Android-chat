@@ -88,11 +88,11 @@ public class FragmentRegistration extends Fragment {
                 switch (v.getId()) {
                     case R.id.btnReg:
                         final ProgressDialog pd = ProgressDialog.show(getActivity(), null, getString(R.string.progress_wait), false, false);
-                        Account.signUp(login, pwd, new Account.CallbackLogIn() {
+                        Account.signUp(login, pwd, new Account.Callback() {
                             @Override
                             public void success() {
                                 getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                Utils.hideKeyboard(getActivity());
+                                Utils.hideKeyboard(txtPwd);
                                 mListener.loadFragment(new FragmentMain(), true, false);
                                 pd.dismiss();
                             }

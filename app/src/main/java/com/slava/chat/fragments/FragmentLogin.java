@@ -91,11 +91,11 @@ public class FragmentLogin extends Fragment {
                 switch (v.getId()) {
                     case R.id.btnLog:
                         final ProgressDialog pd = ProgressDialog.show(getActivity(), null, getString(R.string.progress_wait), false, false);
-                        Account.logIn(login, pwd, new Account.CallbackLogIn() {
+                        Account.logIn(login, pwd, new Account.Callback() {
                             @Override
                             public void success() {
                                 getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                Utils.hideKeyboard(getActivity());
+                                Utils.hideKeyboard(txtPwd);
                                 mListener.loadFragment(new FragmentMain(), true, false);
                                 pd.dismiss();
                             }

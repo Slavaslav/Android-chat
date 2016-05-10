@@ -4,18 +4,21 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public class Account {
-    public static void logIn(String login, String password, final CallbackLogIn callBack) {
+    public static void logIn(String login, String password, final Callback callBack) {
 
         ParseUser.logInInBackground(login, password, new LogInCallback() {
             public void done(ParseUser user, ParseException e) {
@@ -31,7 +34,7 @@ public class Account {
 
     }
 
-    public static void signUp(String login, String password, final CallbackLogIn callBack) {
+    public static void signUp(String login, String password, final Callback callBack) {
         ParseUser user = new ParseUser();
         user.setUsername(login);
         user.setPassword(password);
@@ -77,24 +80,6 @@ public class Account {
                 }
             }
         });
-    }
-
-    public static void loadSelectedDialog(final String senderPhoneNumber, final String receiverPhoneNumber, final CallbackLoadObject callBack) {
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Dialogs");
-        query.whereEqualTo("sender", senderPhoneNumber);
-        query.whereEqualTo("receiver", receiverPhoneNumber);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> list, ParseException e) {
-                if (e == null) {
-                    callBack.success(list);
-                } else {
-                    callBack.e(e.getMessage());
-                }
-            }
-        });
-
     }
 
     public static void loadMessageList(String dialogId, final CallbackLoadObject callBack) {
@@ -148,8 +133,94 @@ public class Account {
         ParseUser.logOut();
     }
 
+    public static void loadSelectedDialog(final String senderPhoneNumber, final String receiverPhoneNumber, final CallbackLoadObject callback) {
 
-    public interface CallbackLogIn {
+        String[] phones = {senderPhoneNumber, receiverPhoneNumber};
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Dialogs");
+        query.whereContainedIn("user1", Arrays.asList(phones));
+        query.whereContainedIn("user2", Arrays.asList(phones));
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null) {
+                    callback.success(list);
+                } else {
+                    callback.e(e.getMessage());
+                }
+            }
+        });
+    }
+
+    public static void createNewDialog(final String senderPhoneNumber, final String receiverPhoneNumber, final Callback callback) {
+        ParseObject dialog = new ParseObject("Dialogs");
+        dialog.put("user1", senderPhoneNumber);
+        dialog.put("user2", receiverPhoneNumber);
+        dialog.put("lastMessage", "");
+        dialog.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    callback.success();
+                } else {
+                    callback.e(e.getMessage());
+                }
+            }
+        });
+
+    }
+
+    public static void loadMessages(ParseObject dialogObject, final CallbackLoadObject callback) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
+        query.whereEqualTo("parent", dialogObject);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null) {
+                    callback.success(list);
+                } else {
+                    callback.e(e.getMessage());
+                }
+            }
+        });
+
+    }
+
+    public static void sendMessage(final ParseObject dialogObject, final String textMessage, String senderPhoneNumber, String receiverPhoneNumber, final Callback callback) {
+        ParseObject messages = new ParseObject("Messages");
+        messages.put("parent", ParseObject.createWithoutData("Dialogs", dialogObject.getObjectId()));
+        messages.put("textMessage", textMessage);
+        messages.put("senderPhoneNumber", senderPhoneNumber);
+        messages.put("receiverPhoneNumber", receiverPhoneNumber);
+        messages.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    // update a row 'lastMessage' in the dialogue table
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Dialogs");
+                    query.getInBackground(dialogObject.getObjectId(), new GetCallback<ParseObject>() {
+                        public void done(ParseObject object, ParseException e) {
+                            if (e == null) {
+                                object.put("lastMessage", textMessage);
+                                object.saveInBackground();
+                            }
+                        }
+                    });
+                    callback.success();
+
+                } else {
+                    callback.e(e.getMessage());
+
+                }
+
+            }
+        });
+
+
+    }
+
+
+    public interface Callback {
         void success();
 
         void e(String s);
