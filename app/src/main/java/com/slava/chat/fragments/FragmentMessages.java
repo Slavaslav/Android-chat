@@ -138,12 +138,16 @@ public class FragmentMessages extends Fragment {
                     Account.loadMessages(currentDialogList.get(0), new Account.CallbackLoadObject() {
                         @Override
                         public void success(List<ParseObject> list) {
-                            messagesList = list;
+                            // messagesList = list;
                             if (list.size() == 0) {
                                 if (frameLayoutNoMessages.getVisibility() == View.GONE && listMessages.getVisibility() == View.VISIBLE) {
                                     listMessages.setVisibility(View.GONE);
                                     frameLayoutNoMessages.setVisibility(View.VISIBLE);
                                 }
+                            } else {
+                                // MessagesListAdapter messagesListAdapter = new MessagesListAdapter(list);
+                                // listMessages.setAdapter(messagesListAdapter);
+
                             }
                         }
 
@@ -156,18 +160,7 @@ public class FragmentMessages extends Fragment {
                     Account.createNewDialog(senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
                         @Override
                         public void success() {
-                            Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
-                                @Override
-                                public void success(List<ParseObject> list) {
-                                    handleSelectedDialog(senderPhoneNumber, receiverPhoneNumber);
-                                }
-
-                                @Override
-                                public void e(String s) {
-                                    Log.d("LOG", "Error: " + s);
-                                }
-                            });
-
+                            handleSelectedDialog(senderPhoneNumber, receiverPhoneNumber);
                         }
 
                         @Override
@@ -182,7 +175,6 @@ public class FragmentMessages extends Fragment {
             @Override
             public void e(String s) {
                 Log.d("LOG", "Error: " + s);
-
             }
         });
     }
@@ -195,10 +187,17 @@ public class FragmentMessages extends Fragment {
     }
 
     private class MessagesListAdapter extends BaseAdapter {
+        final LayoutInflater inflater = getActivity().getLayoutInflater();
+        List<ParseObject> list;
+
+        MessagesListAdapter(List<ParseObject> list) {
+            this.list = list;
+
+        }
 
         @Override
         public int getCount() {
-            return 0;
+            return list.size();
         }
 
         @Override
@@ -213,7 +212,7 @@ public class FragmentMessages extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+            return convertView;
         }
     }
 }
