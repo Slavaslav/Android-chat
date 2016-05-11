@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.parse.ParseObject;
@@ -32,10 +33,12 @@ public class FragmentMessages extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    List<ParseObject> currentDialogList;
+    List<ParseObject> messagesList;
+    ListView listMessages;
+    FrameLayout frameLayoutNoMessages;
     private MessagesListAdapter dialogsAdapter;
     private OnFragmentInteractionListener mListener;
-    private ParseObject dialogObject;
 
     public FragmentMessages() {
         // Required empty public constructor
@@ -69,69 +72,21 @@ public class FragmentMessages extends Fragment {
         final String receiverPhoneNumber = args.getString("receiverPhoneNumber");
         String titleActionBar = args.getString("titleActionBar");
 
-        ListView listMessages = (ListView) view.findViewById(R.id.list_messages);
+        listMessages = (ListView) view.findViewById(R.id.list_messages);
         listMessages.setStackFromBottom(true);
         final EditText editTextMessage = (EditText) view.findViewById(R.id.edit_text_message);
+        frameLayoutNoMessages = (FrameLayout) view.findViewById(R.id.no_messages);
         Button buttonSendMessage = (Button) view.findViewById(R.id.button_message);
 
         mListener.setTitleToolbar(titleActionBar);
 
-        Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
-            @Override
-            public void success(List<ParseObject> list) {
-                if (list.size() != 0) {
-                    dialogObject = list.get(0);
-                    Account.loadMessages(dialogObject, new Account.CallbackLoadObject() {
-                        @Override
-                        public void success(List<ParseObject> list) {
-                            Log.d("LOG", "message = " + list.get(0).get("textMessage"));
-                            Log.d("LOG", "message = " + list.get(1).get("textMessage"));
-                        }
-
-                        @Override
-                        public void e(String s) {
-                            Log.d("LOG", "Error: " + s);
-                        }
-                    });
-                } else {
-                    Account.createNewDialog(senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
-                        @Override
-                        public void success() {
-                            Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
-                                @Override
-                                public void success(List<ParseObject> list) {
-                                    dialogObject = list.get(0);
-                                }
-
-                                @Override
-                                public void e(String s) {
-                                    Log.d("LOG", "Error: " + s);
-                                }
-                            });
-
-                        }
-
-                        @Override
-                        public void e(String s) {
-                            Log.d("LOG", "Error: " + s);
-                        }
-                    });
-                }
-
-            }
-
-            @Override
-            public void e(String s) {
-                Log.d("LOG", "Error: " + s);
-
-            }
-        });
+        handleSelectedDialog(senderPhoneNumber, receiverPhoneNumber);
 
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (editTextMessage.getText().length() > 0) {
-                    Account.sendMessage(dialogObject, editTextMessage.getText().toString(), senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
+                    Account.sendMessage(currentDialogList.get(0), editTextMessage.getText().toString(), senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
                         @Override
                         public void success() {
                             editTextMessage.getText().clear();
@@ -171,6 +126,65 @@ public class FragmentMessages extends Fragment {
     public void onResume() {
         super.onResume();
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
+    }
+
+    private void handleSelectedDialog(final String senderPhoneNumber, final String receiverPhoneNumber) {
+
+        Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
+            @Override
+            public void success(List<ParseObject> list) {
+                if (list.size() != 0) {
+                    currentDialogList = list;
+                    Account.loadMessages(currentDialogList.get(0), new Account.CallbackLoadObject() {
+                        @Override
+                        public void success(List<ParseObject> list) {
+                            messagesList = list;
+                            if (list.size() == 0) {
+                                if (frameLayoutNoMessages.getVisibility() == View.GONE && listMessages.getVisibility() == View.VISIBLE) {
+                                    listMessages.setVisibility(View.GONE);
+                                    frameLayoutNoMessages.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void e(String s) {
+                            Log.d("LOG", "Error: " + s);
+                        }
+                    });
+                } else {
+                    Account.createNewDialog(senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
+                        @Override
+                        public void success() {
+                            Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
+                                @Override
+                                public void success(List<ParseObject> list) {
+                                    handleSelectedDialog(senderPhoneNumber, receiverPhoneNumber);
+                                }
+
+                                @Override
+                                public void e(String s) {
+                                    Log.d("LOG", "Error: " + s);
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void e(String s) {
+                            Log.d("LOG", "Error: " + s);
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void e(String s) {
+                Log.d("LOG", "Error: " + s);
+
+            }
+        });
     }
 
     public interface OnFragmentInteractionListener {
