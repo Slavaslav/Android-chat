@@ -88,7 +88,6 @@ public class FragmentMessages extends Fragment {
         loadCurrentDialog();
 
         messagesListAdapter = new MessagesListAdapter();
-        listMessages.setAdapter(messagesListAdapter);
 
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,10 +158,13 @@ public class FragmentMessages extends Fragment {
             public void success(List<ParseObject> list) {
 
                 if (list.size() != 0) {
+                    messagesList = list;
+                    if (listMessages.getAdapter() == null) {
+                        //listMessages.setAdapter(messagesListAdapter);
+                    }
                     if (showNoMessageView == true) {
                         hideNoMessageView();
                     }
-                    messagesList = list;
                     //messagesListAdapter.notifyDataSetChanged();
                 } else {
                     showNoMessageView();
@@ -266,11 +268,10 @@ public class FragmentMessages extends Fragment {
 
     private class MessagesListAdapter extends BaseAdapter {
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        List<ParseObject> list;
 
         @Override
         public int getCount() {
-            return list.size();
+            return messagesList.size();
         }
 
         @Override
