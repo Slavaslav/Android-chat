@@ -13,6 +13,8 @@
         android:layout_weight="1"
         android:divider="@color/color_white"
         android:dividerHeight="@dimen/_5dp"
+        android:paddingBottom="@dimen/_5dp"
+        android:paddingTop="@dimen/_5dp"
         tools:listitem="@layout/message_item">
 
     </ListView>

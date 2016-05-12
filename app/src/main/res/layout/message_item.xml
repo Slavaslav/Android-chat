@@ -4,13 +4,13 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/rcv_message_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/_20dp"
+        android:layout_marginEnd="@dimen/_30dp"
         android:layout_marginLeft="@dimen/_10dp"
-        android:layout_marginRight="@dimen/_20dp"
+        android:layout_marginRight="@dimen/_30dp"
         android:layout_marginStart="@dimen/_10dp"
-        android:layout_marginTop="@dimen/_10dp"
         android:background="@color/color_gray"
         android:orientation="vertical"
         android:visibility="gone">
@@ -19,15 +19,20 @@
             android:id="@+id/rcv_text_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_10dp"
+            android:paddingEnd="@dimen/_10dp"
+            android:paddingLeft="@dimen/_10dp"
+            android:paddingRight="@dimen/_10dp"
+            android:paddingStart="@dimen/_10dp"
+            android:paddingTop="@dimen/_5dp"
             android:text=""
             android:textSize="@dimen/txt_14sp" />
 
         <TextView
+            android:id="@+id/rcv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:paddingBottom="@dimen/_10dp"
+            android:paddingBottom="@dimen/_5dp"
             android:paddingLeft="@dimen/_10dp"
             android:paddingStart="@dimen/_10dp"
             android:text="12:35"
@@ -36,30 +41,35 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/send_message_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:layout_marginEnd="@dimen/_10dp"
-        android:layout_marginLeft="@dimen/_20dp"
+        android:layout_marginLeft="@dimen/_30dp"
         android:layout_marginRight="@dimen/_10dp"
-        android:layout_marginStart="@dimen/_20dp"
-        android:layout_marginTop="@dimen/_10dp"
+        android:layout_marginStart="@dimen/_30dp"
         android:background="@color/color_blue"
-        android:gravity="end"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/send_text_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_10dp"
-            android:text="Мем (англ. meme) — единица культурной информации. Мемом может считаться любая идея, символ, манера или образ действия, осознанно или неосознанно передаваемые от человека к человеку посредством речи, письма, видео, ритуалов, жестов и т. д. Концепция мема и сам термин были предложены эволюционным биологом Ричардом Докинзом в 1976 году в книге «Эгоистичный ген». Докинз предложил идею о том, что вся культурная информация состоит из базовых единиц — мемов, точно так же как биологическая информация состоит из генов; и так же как гены, мемы подвержены естественному отбору, мутации и искусственной селекции. На основе этой идеи Докинза возникла дисциплина меметика, в настоящее время считающаяся псевдонаукой[1]"
+            android:paddingEnd="@dimen/_10dp"
+            android:paddingLeft="@dimen/_10dp"
+            android:paddingRight="@dimen/_10dp"
+            android:paddingStart="@dimen/_10dp"
+            android:paddingTop="@dimen/_5dp"
+            android:text="@string/holder"
             android:textSize="@dimen/txt_14sp" />
 
         <TextView
+            android:id="@+id/send_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:paddingBottom="@dimen/_10dp"
+            android:paddingBottom="@dimen/_5dp"
             android:paddingLeft="@dimen/_10dp"
             android:paddingStart="@dimen/_10dp"
             android:text="12:35"

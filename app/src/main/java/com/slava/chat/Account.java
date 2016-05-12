@@ -117,6 +117,7 @@ public class Account {
 
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereContainedIn("username", contactsDataMap.keySet());
+        query.whereNotEqualTo("username", ParseUser.getCurrentUser().getUsername());
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> list, ParseException e) {

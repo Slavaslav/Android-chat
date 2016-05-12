@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.parse.ParseObject;
 import com.slava.chat.Account;
@@ -19,16 +20,10 @@ import com.slava.chat.MainActivity;
 import com.slava.chat.R;
 import com.slava.chat.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentMessages.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentMessages#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentMessages extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -160,7 +155,7 @@ public class FragmentMessages extends Fragment {
                 if (list.size() != 0) {
                     messagesList = list;
                     if (listMessages.getAdapter() == null) {
-                        //listMessages.setAdapter(messagesListAdapter);
+                        listMessages.setAdapter(messagesListAdapter);
                     }
                     if (showNoMessageView == true) {
                         hideNoMessageView();
@@ -286,6 +281,41 @@ public class FragmentMessages extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+
+            if (convertView == null)
+                convertView = inflater.inflate(R.layout.message_item, parent, false);
+
+            TextView msgTextView, msgTimeView;
+
+            View sendMessageBox = convertView.findViewById(R.id.send_message_box);
+            View receiveMessageBox = convertView.findViewById(R.id.rcv_message_box);
+
+            String phoneNumber = messagesList.get(position).getString("senderPhoneNumber");
+
+            View visibleView;
+            if (phoneNumber.equals(senderPhoneNumber)) {
+                visibleView = sendMessageBox;
+                msgTextView = (TextView) convertView.findViewById(R.id.send_text_message);
+                msgTimeView = (TextView) convertView.findViewById(R.id.send_time);
+            } else {
+                visibleView = receiveMessageBox;
+                msgTextView = (TextView) convertView.findViewById(R.id.rcv_text_message);
+                msgTimeView = (TextView) convertView.findViewById(R.id.rcv_time);
+
+            }
+
+            msgTextView.setText(messagesList.get(position).getString("textMessage"));
+            msgTimeView.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(messagesList.get(position).getUpdatedAt()));
+
+            View[] allViews = {sendMessageBox, receiveMessageBox};
+            for (View v : allViews) {
+                if (v == visibleView) {
+                    v.setVisibility(View.VISIBLE);
+                } else {
+                    v.setVisibility(View.GONE);
+                }
+            }
+
             return convertView;
         }
     }
