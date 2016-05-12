@@ -56,7 +56,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center|end"
-            android:background="@drawable/ic_send_btn" />
+            android:background="@drawable/btn_send_msg_selector"
+            android:enabled="false" />
 
     </LinearLayout>
 

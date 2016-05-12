@@ -3,6 +3,8 @@ package com.slava.chat.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,7 +78,7 @@ public class FragmentMessages extends Fragment {
         listMessages.setStackFromBottom(true);
         editTextMessage = (EditText) view.findViewById(R.id.edit_text_message);
         frameLayoutNoMessages = (FrameLayout) view.findViewById(R.id.no_messages);
-        Button buttonSendMessage = (Button) view.findViewById(R.id.button_message);
+        final Button buttonSendMessage = (Button) view.findViewById(R.id.button_message);
 
         mListener.setTitleToolbar(titleActionBar);
 
@@ -96,6 +98,29 @@ public class FragmentMessages extends Fragment {
                         sendMessage();
                     }
                 }
+            }
+        });
+
+        editTextMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    buttonSendMessage.setEnabled(true);
+                } else {
+                    buttonSendMessage.setEnabled(false);
+                }
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -160,7 +185,7 @@ public class FragmentMessages extends Fragment {
                     if (showNoMessageView == true) {
                         hideNoMessageView();
                     }
-                    //messagesListAdapter.notifyDataSetChanged();
+                    messagesListAdapter.notifyDataSetChanged();
                 } else {
                     showNoMessageView();
                 }
