@@ -33,12 +33,17 @@ public class FragmentMessages extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    List<ParseObject> currentDialogList;
-    List<ParseObject> messagesList;
-    ListView listMessages;
-    FrameLayout frameLayoutNoMessages;
+    private List<ParseObject> currentDialogList;
+    private List<ParseObject> messagesList;
+    private ListView listMessages;
+    private FrameLayout frameLayoutNoMessages;
     private MessagesListAdapter dialogsAdapter;
     private OnFragmentInteractionListener mListener;
+    private String senderPhoneNumber;
+    private String receiverPhoneNumber;
+    private MessagesListAdapter messagesListAdapter;
+    private boolean showNoMessageView = false;
+    private EditText editTextMessage;
 
     public FragmentMessages() {
         // Required empty public constructor
@@ -68,36 +73,34 @@ public class FragmentMessages extends Fragment {
         View view = inflater.inflate(R.layout.fragment_messages, container, false);
 
         Bundle args = getArguments();
-        final String senderPhoneNumber = args.getString("senderPhoneNumber");
-        final String receiverPhoneNumber = args.getString("receiverPhoneNumber");
+        senderPhoneNumber = args.getString("senderPhoneNumber");
+        receiverPhoneNumber = args.getString("receiverPhoneNumber");
         String titleActionBar = args.getString("titleActionBar");
 
         listMessages = (ListView) view.findViewById(R.id.list_messages);
         listMessages.setStackFromBottom(true);
-        final EditText editTextMessage = (EditText) view.findViewById(R.id.edit_text_message);
+        editTextMessage = (EditText) view.findViewById(R.id.edit_text_message);
         frameLayoutNoMessages = (FrameLayout) view.findViewById(R.id.no_messages);
         Button buttonSendMessage = (Button) view.findViewById(R.id.button_message);
 
         mListener.setTitleToolbar(titleActionBar);
 
-        handleSelectedDialog(senderPhoneNumber, receiverPhoneNumber);
+        loadCurrentDialog();
+
+        messagesListAdapter = new MessagesListAdapter();
+        listMessages.setAdapter(messagesListAdapter);
 
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editTextMessage.getText().length() > 0) {
-                    Account.sendMessage(currentDialogList.get(0), editTextMessage.getText().toString(), senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
-                        @Override
-                        public void success() {
-                            editTextMessage.getText().clear();
-                            Utils.hideKeyboard(editTextMessage);
-                        }
 
-                        @Override
-                        public void e(String s) {
-                            Log.d("LOG", "Error: " + s);
-                        }
-                    });
+                if (editTextMessage.getText().length() > 0) {
+
+                    if (currentDialogList == null) {
+                        createNewDialog();
+                    } else {
+                        sendMessage();
+                    }
                 }
             }
         });
@@ -128,48 +131,18 @@ public class FragmentMessages extends Fragment {
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
     }
 
-    private void handleSelectedDialog(final String senderPhoneNumber, final String receiverPhoneNumber) {
+    private void loadCurrentDialog() {
 
         Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
+
             @Override
             public void success(List<ParseObject> list) {
                 if (list.size() != 0) {
                     currentDialogList = list;
-                    Account.loadMessages(currentDialogList.get(0), new Account.CallbackLoadObject() {
-                        @Override
-                        public void success(List<ParseObject> list) {
-                            // messagesList = list;
-                            if (list.size() == 0) {
-                                if (frameLayoutNoMessages.getVisibility() == View.GONE && listMessages.getVisibility() == View.VISIBLE) {
-                                    listMessages.setVisibility(View.GONE);
-                                    frameLayoutNoMessages.setVisibility(View.VISIBLE);
-                                }
-                            } else {
-                                // MessagesListAdapter messagesListAdapter = new MessagesListAdapter(list);
-                                // listMessages.setAdapter(messagesListAdapter);
-
-                            }
-                        }
-
-                        @Override
-                        public void e(String s) {
-                            Log.d("LOG", "Error: " + s);
-                        }
-                    });
+                    loadMessages();
                 } else {
-                    Account.createNewDialog(senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
-                        @Override
-                        public void success() {
-                            handleSelectedDialog(senderPhoneNumber, receiverPhoneNumber);
-                        }
-
-                        @Override
-                        public void e(String s) {
-                            Log.d("LOG", "Error: " + s);
-                        }
-                    });
+                    showNoMessageView();
                 }
-
             }
 
             @Override
@@ -178,6 +151,111 @@ public class FragmentMessages extends Fragment {
             }
         });
     }
+
+    private void loadMessages() {
+
+        Account.loadMessages(currentDialogList.get(0), new Account.CallbackLoadObject() {
+            @Override
+            public void success(List<ParseObject> list) {
+
+                if (list.size() != 0) {
+                    if (showNoMessageView == true) {
+                        hideNoMessageView();
+                    }
+                    messagesList = list;
+                    //messagesListAdapter.notifyDataSetChanged();
+                } else {
+                    showNoMessageView();
+                }
+            }
+
+            @Override
+            public void e(String s) {
+                Log.d("LOG", "Error: " + s);
+            }
+        });
+
+    }
+
+    private void createNewDialog() {
+
+        Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
+
+            @Override
+            public void success(List<ParseObject> list) {
+                if (list.size() != 0) {
+                    currentDialogList = list;
+                    sendMessage();
+                } else {
+                    Account.createNewDialog(senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
+                        @Override
+                        public void success() {
+                            Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
+
+                                @Override
+                                public void success(List<ParseObject> list) {
+                                    if (list.size() != 0) {
+                                        currentDialogList = list;
+                                        sendMessage();
+                                    }
+                                }
+
+                                @Override
+                                public void e(String s) {
+                                    Log.d("LOG", "Error: " + s);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void e(String s) {
+                            Log.d("LOG", "Error: " + s);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void e(String s) {
+                Log.d("LOG", "Error: " + s);
+            }
+        });
+    }
+
+    private void sendMessage() {
+
+        Account.sendMessage(currentDialogList.get(0), editTextMessage.getText().toString(), senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
+            @Override
+            public void success() {
+                editTextMessage.getText().clear();
+                Utils.hideKeyboard(editTextMessage);
+                loadMessages();
+            }
+
+            @Override
+            public void e(String s) {
+                Log.d("LOG", "Error: " + s);
+            }
+        });
+
+    }
+
+    private void showNoMessageView() {
+        if (frameLayoutNoMessages.getVisibility() == View.GONE && listMessages.getVisibility() == View.VISIBLE) {
+            listMessages.setVisibility(View.GONE);
+            frameLayoutNoMessages.setVisibility(View.VISIBLE);
+            showNoMessageView = true;
+        }
+    }
+
+    private void hideNoMessageView() {
+        if (frameLayoutNoMessages.getVisibility() == View.VISIBLE && listMessages.getVisibility() == View.GONE) {
+            listMessages.setVisibility(View.VISIBLE);
+            frameLayoutNoMessages.setVisibility(View.GONE);
+            showNoMessageView = false;
+        }
+    }
+
 
     public interface OnFragmentInteractionListener {
 
@@ -189,11 +267,6 @@ public class FragmentMessages extends Fragment {
     private class MessagesListAdapter extends BaseAdapter {
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         List<ParseObject> list;
-
-        MessagesListAdapter(List<ParseObject> list) {
-            this.list = list;
-
-        }
 
         @Override
         public int getCount() {
