@@ -70,7 +70,7 @@ public class FragmentMain extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         //start service
-        getActivity().startService(new Intent(getActivity(), MyService.class).putExtra(MyService.INTENT_MESSAGE, MyService.UPDATE_DIALOGS_LIST));
+        //getActivity().startService(new Intent(getActivity(), MyService.class).putExtra(MyService.INTENT_MESSAGE, MyService.UPDATE_DIALOGS_LIST));
 
         dialogsAdapter = new DialogsListAdapter();
 
@@ -136,27 +136,6 @@ public class FragmentMain extends Fragment {
 
                             mListener.loadFragment(fragmentMessages, true, true);
                         }
-
-                       /*final String lastMessage = "wuzzup";
-
-                        // add new message
-                        ParseObject message = new ParseObject("message");
-                        message.put("content", lastMessage);
-                        message.put("parent", ParseObject.createWithoutData("dialog", list.get(position).getObjectId()));
-                        message.put("senderID", ParseUser.getCurrentUser());
-                        message.saveEventually();
-
-                        // add last message to dialogs table
-                        ParseQuery<ParseObject> query = ParseQuery.getQuery("dialog");
-                        query.getInBackground(list.get(position).getObjectId(), new GetCallback<ParseObject>() {
-                            public void done(ParseObject dialog, ParseException e) {
-                                if (e == null) {
-                                    dialog.put("lMessage", lastMessage);
-                                    dialog.saveEventually();
-                                }
-                            }
-                        });*/
-
                     }
                 });
             }
