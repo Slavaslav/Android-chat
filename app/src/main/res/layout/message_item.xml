@@ -33,7 +33,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:paddingBottom="@dimen/_5dp"
+            android:paddingEnd="@dimen/_10dp"
             android:paddingLeft="@dimen/_10dp"
+            android:paddingRight="@dimen/_10dp"
             android:paddingStart="@dimen/_10dp"
             android:text="12:35"
             android:textSize="@dimen/txt_10sp" />
@@ -70,12 +72,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:paddingBottom="@dimen/_5dp"
+            android:paddingEnd="@dimen/_10dp"
             android:paddingLeft="@dimen/_10dp"
+            android:paddingRight="@dimen/_10dp"
             android:paddingStart="@dimen/_10dp"
             android:text="12:35"
             android:textSize="@dimen/txt_10sp" />
-
-
     </LinearLayout>
 
 </FrameLayout>

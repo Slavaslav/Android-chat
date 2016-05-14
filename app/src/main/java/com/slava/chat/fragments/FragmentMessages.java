@@ -149,6 +149,13 @@ public class FragmentMessages extends Fragment {
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        Utils.hideKeyboard(editTextMessage);
+    }
+
+
     private void loadCurrentDialog() {
 
         Account.loadSelectedDialog(senderPhoneNumber, recipientPhoneNumber, new Account.CallbackLoadObject() {
