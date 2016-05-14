@@ -1,1 +1,1 @@
-# Chat
+# simple-chat-android

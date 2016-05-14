@@ -239,6 +239,8 @@ public class Account {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Dialogs");
         query.whereEqualTo("sender", ParseUser.getCurrentUser().getUsername());
+        query.orderByDescending("updatedAt");
+        query.setLimit(20);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {

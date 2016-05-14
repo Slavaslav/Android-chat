@@ -86,12 +86,31 @@ public class FragmentMain extends Fragment {
         Account.findDialogs(new Account.CallbackLoadObject() {
 
             @Override
-            public void success(List<ParseObject> list) {
+            public void success(final List<ParseObject> list) {
                 if (list.size() != 0) {
                     messagesParseObjectsList = list;
                     dialogsListAdapter = new DialogsListAdapter();
 
                     dialogsList.setAdapter(dialogsListAdapter);
+                    dialogsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                            final String senderPhoneNumber = list.get(position).getString("sender");
+                            final String recipientPhoneNumber = list.get(position).getString("recipient");
+                            String titleActionBar = Account.contactsDataMap.get(recipientPhoneNumber);
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("senderPhoneNumber", senderPhoneNumber);
+                            bundle.putString("recipientPhoneNumber", recipientPhoneNumber);
+                            bundle.putString("titleActionBar", titleActionBar);
+                            Fragment fragmentMessages = new FragmentMessages();
+                            fragmentMessages.setArguments(bundle);
+                            mListener.loadFragment(fragmentMessages, true, true);
+
+
+                        }
+                    });
 
                 } else {
                     showNoMessageView();
