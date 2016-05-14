@@ -9,43 +9,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.parse.ParseUser;
 import com.slava.chat.Account;
 import com.slava.chat.MainActivity;
 import com.slava.chat.R;
 
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentProfile.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentProfile#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class FragmentProfile extends Fragment {
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+public class FragmentSetting extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private Button btnLogOut;
-
+    private Button buttonLogOut;
+    private TextView userPhoneNumberTextView;
     private OnFragmentInteractionListener mListener;
 
-    public FragmentProfile() {
+    public FragmentSetting() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentProfile.
-     */
-    public static FragmentProfile newInstance(String param1, String param2) {
-        FragmentProfile fragment = new FragmentProfile();
+    public static FragmentSetting newInstance(String param1, String param2) {
+        FragmentSetting fragment = new FragmentSetting();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -66,14 +51,15 @@ public class FragmentProfile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        btnLogOut = (Button) view.findViewById(R.id.button_log_out);
+        buttonLogOut = (Button) view.findViewById(R.id.button_log_out);
+        userPhoneNumberTextView = (TextView) view.findViewById(R.id.user_phone_number);
         return view;
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        btnLogOut.setOnClickListener(new View.OnClickListener() {
+        buttonLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
@@ -81,16 +67,13 @@ public class FragmentProfile extends Fragment {
                         Account.logOut(new Account.Callback() {
                             @Override
                             public void success() {
-
                                 List<Fragment> fragments = getActivity().getSupportFragmentManager().getFragments();
                                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-
                                 if (fragments != null) {
                                     for (Fragment fragment : fragments) {
                                         fragmentManager.beginTransaction().detach(fragment).commit();
                                     }
                                 }
-
                                 //Account.updateUserStatus(false);
                                 mListener.loadFragment(new FragmentLogin(), false, false);
                             }
@@ -106,6 +89,9 @@ public class FragmentProfile extends Fragment {
         });
         //set Toolbar title
         mListener.setTitleToolbar(getString(R.string.menu_profile));
+
+        userPhoneNumberTextView.setText(ParseUser.getCurrentUser().getUsername());
+
     }
 
     @Override

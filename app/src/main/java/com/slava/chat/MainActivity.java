@@ -20,15 +20,15 @@ import com.slava.chat.fragments.FragmentContacts;
 import com.slava.chat.fragments.FragmentLogin;
 import com.slava.chat.fragments.FragmentMain;
 import com.slava.chat.fragments.FragmentMessages;
-import com.slava.chat.fragments.FragmentProfile;
 import com.slava.chat.fragments.FragmentRegistration;
+import com.slava.chat.fragments.FragmentSetting;
 
 public class MainActivity extends AppCompatActivity implements
         FragmentContacts.OnFragmentInteractionListener,
         FragmentLogin.OnFragmentInteractionListener,
         FragmentMain.OnFragmentInteractionListener,
         FragmentMessages.OnFragmentInteractionListener,
-        FragmentProfile.OnFragmentInteractionListener,
+        FragmentSetting.OnFragmentInteractionListener,
         FragmentRegistration.OnFragmentInteractionListener,
         NavigationView.OnNavigationItemSelectedListener {
 
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements
         if (id == R.id.nav_contacts) {
             loadFragment(new FragmentContacts(), true, true);
         } else if (id == R.id.nav_profile) {
-            loadFragment(new FragmentProfile(), true, true);
+            loadFragment(new FragmentSetting(), true, true);
         }
 
         drawer.closeDrawer(GravityCompat.START);

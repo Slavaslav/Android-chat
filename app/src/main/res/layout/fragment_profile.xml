@@ -3,57 +3,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.slava.chat.fragments.FragmentProfile">
+    tools:context=".fragments.FragmentSetting">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/fragment_profile_top"
         android:background="@color/colorPrimary"
-        android:orientation="vertical">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="@dimen/fragment_profile_top"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_account" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="@dimen/fragment_profile_top"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_0dp"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:text="@string/fragment_profile_name"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/txt_17sp"
+                android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_account" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_0dp"
-                    android:layout_weight="1"
-                    android:gravity="bottom"
-                    android:text="@string/fragment_profile_name"
-                    android:textColor="@color/color_white"
-                    android:textSize="@dimen/txt_17sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_0dp"
-                    android:layout_weight="1"
-                    android:text="@string/fragment_profile_phone"
-                    android:textColor="@color/color_white"
-                    android:textSize="@dimen/txt_12sp" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/user_phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_0dp"
+                android:layout_weight="1"
+                android:text="@string/fragment_profile_phone"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/txt_12sp" />
         </LinearLayout>
     </LinearLayout>
 
