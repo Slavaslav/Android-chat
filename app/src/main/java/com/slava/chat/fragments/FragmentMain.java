@@ -100,12 +100,8 @@ public class FragmentMain extends Fragment {
                             final String recipientPhoneNumber = list.get(position).getString("recipient");
                             String titleActionBar = Account.contactsDataMap.get(recipientPhoneNumber);
 
-                            Bundle bundle = new Bundle();
-                            bundle.putString("senderPhoneNumber", senderPhoneNumber);
-                            bundle.putString("recipientPhoneNumber", recipientPhoneNumber);
-                            bundle.putString("titleActionBar", titleActionBar);
-                            Fragment fragmentMessages = new FragmentMessages();
-                            fragmentMessages.setArguments(bundle);
+
+                            FragmentMessages fragmentMessages = FragmentMessages.newInstance(senderPhoneNumber, recipientPhoneNumber, titleActionBar);
                             mListener.loadFragment(fragmentMessages, true, true);
 
 

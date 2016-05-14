@@ -27,9 +27,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class FragmentMessages extends Fragment {
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private List<ParseObject> dialogParseObjectsList;
     private List<ParseObject> messagesParseObjectsList;
     private ListView messagesList;
@@ -45,22 +42,19 @@ public class FragmentMessages extends Fragment {
         // Required empty public constructor
     }
 
-    public static FragmentMessages newInstance(String param1, String param2) {
+    public static FragmentMessages newInstance(String senderPhoneNumber, String recipientPhoneNumber, String titleActionBar) {
         FragmentMessages fragment = new FragmentMessages();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        Bundle bundle = new Bundle();
+        bundle.putString("senderPhoneNumber", senderPhoneNumber);
+        bundle.putString("recipientPhoneNumber", recipientPhoneNumber);
+        bundle.putString("titleActionBar", titleActionBar);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            String mParam1 = getArguments().getString(ARG_PARAM1);
-            String mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
