@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.parse.ParseObject;
@@ -33,7 +33,7 @@ public class FragmentMessages extends Fragment {
     private List<ParseObject> dialogParseObjectsList;
     private List<ParseObject> messagesList;
     private ListView listMessages;
-    private FrameLayout frameLayoutNoMessages;
+    private ScrollView viewNoMessages;
     private OnFragmentInteractionListener mListener;
     private String senderPhoneNumber;
     private String recipientPhoneNumber;
@@ -76,7 +76,7 @@ public class FragmentMessages extends Fragment {
         listMessages = (ListView) view.findViewById(R.id.list_messages);
         listMessages.setStackFromBottom(true);
         editTextMessage = (EditText) view.findViewById(R.id.edit_text_message);
-        frameLayoutNoMessages = (FrameLayout) view.findViewById(R.id.no_messages);
+        viewNoMessages = (ScrollView) view.findViewById(R.id.no_messages);
         final Button buttonSendMessage = (Button) view.findViewById(R.id.button_message);
 
         mListener.setTitleToolbar(titleActionBar);
@@ -269,17 +269,17 @@ public class FragmentMessages extends Fragment {
     }
 
     private void showNoMessageView() {
-        if (frameLayoutNoMessages.getVisibility() == View.GONE && listMessages.getVisibility() == View.VISIBLE) {
+        if (viewNoMessages.getVisibility() == View.GONE && listMessages.getVisibility() == View.VISIBLE) {
             listMessages.setVisibility(View.GONE);
-            frameLayoutNoMessages.setVisibility(View.VISIBLE);
+            viewNoMessages.setVisibility(View.VISIBLE);
             showNoMessageView = true;
         }
     }
 
     private void hideNoMessageView() {
-        if (frameLayoutNoMessages.getVisibility() == View.VISIBLE && listMessages.getVisibility() == View.GONE) {
+        if (viewNoMessages.getVisibility() == View.VISIBLE && listMessages.getVisibility() == View.GONE) {
             listMessages.setVisibility(View.VISIBLE);
-            frameLayoutNoMessages.setVisibility(View.GONE);
+            viewNoMessages.setVisibility(View.GONE);
             showNoMessageView = false;
         }
     }
