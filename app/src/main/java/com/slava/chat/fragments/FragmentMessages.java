@@ -31,8 +31,8 @@ public class FragmentMessages extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private List<ParseObject> dialogParseObjectsList;
-    private List<ParseObject> messagesList;
-    private ListView listMessages;
+    private List<ParseObject> messagesParseObjectsList;
+    private ListView messagesList;
     private ScrollView viewNoMessages;
     private OnFragmentInteractionListener mListener;
     private String senderPhoneNumber;
@@ -73,8 +73,8 @@ public class FragmentMessages extends Fragment {
         recipientPhoneNumber = args.getString("recipientPhoneNumber");
         String titleActionBar = args.getString("titleActionBar");
 
-        listMessages = (ListView) view.findViewById(R.id.list_messages);
-        listMessages.setStackFromBottom(true);
+        messagesList = (ListView) view.findViewById(R.id.list_messages);
+        messagesList.setStackFromBottom(true);
         editTextMessage = (EditText) view.findViewById(R.id.edit_text_message);
         viewNoMessages = (ScrollView) view.findViewById(R.id.no_messages);
         final Button buttonSendMessage = (Button) view.findViewById(R.id.button_message);
@@ -184,9 +184,9 @@ public class FragmentMessages extends Fragment {
             public void success(List<ParseObject> list) {
 
                 if (list.size() != 0) {
-                    messagesList = list;
-                    if (listMessages.getAdapter() == null) {
-                        listMessages.setAdapter(messagesListAdapter);
+                    messagesParseObjectsList = list;
+                    if (messagesList.getAdapter() == null) {
+                        messagesList.setAdapter(messagesListAdapter);
                     }
                     if (showNoMessageView == true) {
                         hideNoMessageView();
@@ -269,16 +269,16 @@ public class FragmentMessages extends Fragment {
     }
 
     private void showNoMessageView() {
-        if (viewNoMessages.getVisibility() == View.GONE && listMessages.getVisibility() == View.VISIBLE) {
-            listMessages.setVisibility(View.GONE);
+        if (viewNoMessages.getVisibility() == View.GONE && messagesList.getVisibility() == View.VISIBLE) {
+            messagesList.setVisibility(View.GONE);
             viewNoMessages.setVisibility(View.VISIBLE);
             showNoMessageView = true;
         }
     }
 
     private void hideNoMessageView() {
-        if (viewNoMessages.getVisibility() == View.VISIBLE && listMessages.getVisibility() == View.GONE) {
-            listMessages.setVisibility(View.VISIBLE);
+        if (viewNoMessages.getVisibility() == View.VISIBLE && messagesList.getVisibility() == View.GONE) {
+            messagesList.setVisibility(View.VISIBLE);
             viewNoMessages.setVisibility(View.GONE);
             showNoMessageView = false;
         }
@@ -297,7 +297,7 @@ public class FragmentMessages extends Fragment {
 
         @Override
         public int getCount() {
-            return messagesList.size();
+            return messagesParseObjectsList.size();
         }
 
         @Override
@@ -321,7 +321,7 @@ public class FragmentMessages extends Fragment {
             View sendMessageBox = convertView.findViewById(R.id.send_message_box);
             View receiveMessageBox = convertView.findViewById(R.id.rcv_message_box);
 
-            String phoneNumber = messagesList.get(position).getString("senderPhoneNumber");
+            String phoneNumber = messagesParseObjectsList.get(position).getString("senderPhoneNumber");
 
             View visibleView;
             if (phoneNumber.equals(senderPhoneNumber)) {
@@ -335,8 +335,8 @@ public class FragmentMessages extends Fragment {
 
             }
 
-            msgTextView.setText(messagesList.get(position).getString("textMessage"));
-            msgTimeView.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(messagesList.get(position).getUpdatedAt()));
+            msgTextView.setText(messagesParseObjectsList.get(position).getString("textMessage"));
+            msgTimeView.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(messagesParseObjectsList.get(position).getUpdatedAt()));
 
             View[] allViews = {sendMessageBox, receiveMessageBox};
             for (View v : allViews) {
