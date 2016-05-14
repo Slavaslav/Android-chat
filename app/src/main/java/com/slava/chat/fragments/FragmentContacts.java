@@ -113,8 +113,8 @@ public class FragmentContacts extends Fragment {
 
         Account.loadContactsList(new Account.CallbackLoadUser() {
             @Override
-            public void success(final List<ParseUser> list, final HashMap<String, String> contactsDataMap) {
-                ContactsAdapter contactsAdapter = new ContactsAdapter(list, contactsDataMap);
+            public void success(final List<ParseUser> list) {
+                ContactsAdapter contactsAdapter = new ContactsAdapter(list, Account.contactsDataMap);
                 mContactsList.setAdapter(contactsAdapter);
                 mContactsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -122,7 +122,7 @@ public class FragmentContacts extends Fragment {
 
                         final String senderPhoneNumber = ParseUser.getCurrentUser().getUsername();
                         final String recipientPhoneNumber = list.get(position).getUsername();
-                        String titleActionBar = contactsDataMap.get(recipientPhoneNumber);
+                        String titleActionBar = Account.contactsDataMap.get(recipientPhoneNumber);
 
                         Bundle bundle = new Bundle();
                         bundle.putString("senderPhoneNumber", senderPhoneNumber);

@@ -18,6 +18,22 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Account {
+    public static final HashMap<String, String> contactsDataMap = new HashMap<>();
+
+    static {
+        Cursor cursor = App.applicationContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                phoneNumber = phoneNumber.replaceAll(" ", "");
+                contactsDataMap.put(phoneNumber, name);
+
+            }
+            cursor.close();
+        }
+    }
+
     public static void logIn(String login, String password, final Callback callBack) {
 
         ParseUser.logInInBackground(login, password, new LogInCallback() {
@@ -102,19 +118,6 @@ public class Account {
 
     public static void loadContactsList(final CallbackLoadUser callBack) {
 
-        final HashMap<String, String> contactsDataMap = new HashMap<>();
-        Cursor cursor = App.applicationContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                phoneNumber = phoneNumber.replaceAll(" ", "");
-                contactsDataMap.put(phoneNumber, name);
-
-            }
-            cursor.close();
-        }
-
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereContainedIn("username", contactsDataMap.keySet());
         query.whereNotEqualTo("username", ParseUser.getCurrentUser().getUsername());
@@ -122,7 +125,7 @@ public class Account {
             @Override
             public void done(List<ParseUser> list, ParseException e) {
                 if (e == null) {
-                    callBack.success(list, contactsDataMap);
+                    callBack.success(list);
                 } else {
                     callBack.e(e.getMessage());
                 }
@@ -232,7 +235,6 @@ public class Account {
         });
     }
 
-
     public interface Callback {
         void success();
 
@@ -246,7 +248,7 @@ public class Account {
     }
 
     public interface CallbackLoadUser {
-        void success(List<ParseUser> list, HashMap<String, String> contactsDataMap);
+        void success(List<ParseUser> list);
 
         void e(String s);
     }
