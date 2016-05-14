@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.Button;
 import com.slava.chat.Account;
 import com.slava.chat.MainActivity;
 import com.slava.chat.R;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,11 +78,28 @@ public class FragmentProfile extends Fragment {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.button_log_out:
-                        getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                        Account.updateUserStatus(false);
-                        Account.logOut();
-                        mListener.loadFragment(new FragmentLogin(), false, false);
+                        Account.logOut(new Account.Callback() {
+                            @Override
+                            public void success() {
 
+                                List<Fragment> fragments = getActivity().getSupportFragmentManager().getFragments();
+                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                                if (fragments != null) {
+                                    for (Fragment fragment : fragments) {
+                                        fragmentManager.beginTransaction().detach(fragment).commit();
+                                    }
+                                }
+
+                                //Account.updateUserStatus(false);
+                                mListener.loadFragment(new FragmentLogin(), false, false);
+                            }
+
+                            @Override
+                            public void e(String s) {
+                                Log.d("LOG", "Error: " + s);
+                            }
+                        });
                         break;
                 }
             }
@@ -111,16 +131,6 @@ public class FragmentProfile extends Fragment {
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         void setTitleToolbar(String s);
 
