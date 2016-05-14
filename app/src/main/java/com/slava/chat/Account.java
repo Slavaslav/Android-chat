@@ -235,6 +235,22 @@ public class Account {
         });
     }
 
+    public static void findDialogs(final CallbackLoadObject callback) {
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Dialogs");
+        query.whereEqualTo("sender", ParseUser.getCurrentUser().getUsername());
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null) {
+                    callback.success(list);
+                } else {
+                    callback.e(e.getMessage());
+                }
+            }
+        });
+    }
+
     public interface Callback {
         void success();
 
