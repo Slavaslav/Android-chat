@@ -30,14 +30,13 @@ public class FragmentMessages extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private List<ParseObject> currentDialogList;
+    private List<ParseObject> dialogParseObjectsList;
     private List<ParseObject> messagesList;
     private ListView listMessages;
     private FrameLayout frameLayoutNoMessages;
-    private MessagesListAdapter dialogsAdapter;
     private OnFragmentInteractionListener mListener;
     private String senderPhoneNumber;
-    private String receiverPhoneNumber;
+    private String recipientPhoneNumber;
     private MessagesListAdapter messagesListAdapter;
     private boolean showNoMessageView = false;
     private EditText editTextMessage;
@@ -71,7 +70,7 @@ public class FragmentMessages extends Fragment {
 
         Bundle args = getArguments();
         senderPhoneNumber = args.getString("senderPhoneNumber");
-        receiverPhoneNumber = args.getString("receiverPhoneNumber");
+        recipientPhoneNumber = args.getString("recipientPhoneNumber");
         String titleActionBar = args.getString("titleActionBar");
 
         listMessages = (ListView) view.findViewById(R.id.list_messages);
@@ -92,7 +91,7 @@ public class FragmentMessages extends Fragment {
 
                 if (editTextMessage.getText().length() > 0) {
 
-                    if (currentDialogList == null) {
+                    if (dialogParseObjectsList == null) {
                         createNewDialog();
                     } else {
                         sendMessage();
@@ -152,12 +151,12 @@ public class FragmentMessages extends Fragment {
 
     private void loadCurrentDialog() {
 
-        Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
+        Account.loadSelectedDialog(senderPhoneNumber, recipientPhoneNumber, new Account.CallbackLoadObject() {
 
             @Override
             public void success(List<ParseObject> list) {
                 if (list.size() != 0) {
-                    currentDialogList = list;
+                    dialogParseObjectsList = list;
                     loadMessages();
                 } else {
                     showNoMessageView();
@@ -173,7 +172,7 @@ public class FragmentMessages extends Fragment {
 
     private void loadMessages() {
 
-        Account.loadMessages(currentDialogList.get(0), new Account.CallbackLoadObject() {
+        Account.loadMessages(dialogParseObjectsList, new Account.CallbackLoadObject() {
             @Override
             public void success(List<ParseObject> list) {
 
@@ -201,23 +200,23 @@ public class FragmentMessages extends Fragment {
 
     private void createNewDialog() {
 
-        Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
+        Account.loadSelectedDialog(senderPhoneNumber, recipientPhoneNumber, new Account.CallbackLoadObject() {
 
             @Override
             public void success(List<ParseObject> list) {
                 if (list.size() != 0) {
-                    currentDialogList = list;
+                    dialogParseObjectsList = list;
                     sendMessage();
                 } else {
-                    Account.createNewDialog(senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
+                    Account.createNewDialog(senderPhoneNumber, recipientPhoneNumber, new Account.Callback() {
                         @Override
                         public void success() {
-                            Account.loadSelectedDialog(senderPhoneNumber, receiverPhoneNumber, new Account.CallbackLoadObject() {
+                            Account.loadSelectedDialog(senderPhoneNumber, recipientPhoneNumber, new Account.CallbackLoadObject() {
 
                                 @Override
                                 public void success(List<ParseObject> list) {
                                     if (list.size() != 0) {
-                                        currentDialogList = list;
+                                        dialogParseObjectsList = list;
                                         sendMessage();
                                     }
                                 }
@@ -246,7 +245,7 @@ public class FragmentMessages extends Fragment {
 
     private void sendMessage() {
 
-        Account.sendMessage(currentDialogList.get(0), editTextMessage.getText().toString(), senderPhoneNumber, receiverPhoneNumber, new Account.Callback() {
+        Account.sendMessage(dialogParseObjectsList, editTextMessage.getText().toString(), senderPhoneNumber, new Account.Callback() {
             @Override
             public void success() {
                 editTextMessage.getText().clear();

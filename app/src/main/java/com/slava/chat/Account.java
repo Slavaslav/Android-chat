@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -13,6 +12,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -134,13 +134,13 @@ public class Account {
         ParseUser.logOut();
     }
 
-    public static void loadSelectedDialog(final String senderPhoneNumber, final String receiverPhoneNumber, final CallbackLoadObject callback) {
+    public static void loadSelectedDialog(final String senderPhoneNumber, final String recipientPhoneNumber, final CallbackLoadObject callback) {
 
-        String[] phones = {senderPhoneNumber, receiverPhoneNumber};
+        String[] phones = {senderPhoneNumber, recipientPhoneNumber};
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Dialogs");
-        query.whereContainedIn("user1", Arrays.asList(phones));
-        query.whereContainedIn("user2", Arrays.asList(phones));
+        query.whereContainedIn("sender", Arrays.asList(phones));
+        query.whereContainedIn("recipient", Arrays.asList(phones));
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
@@ -153,12 +153,23 @@ public class Account {
         });
     }
 
-    public static void createNewDialog(final String senderPhoneNumber, final String receiverPhoneNumber, final Callback callback) {
-        ParseObject dialog = new ParseObject("Dialogs");
-        dialog.put("user1", senderPhoneNumber);
-        dialog.put("user2", receiverPhoneNumber);
-        dialog.put("lastMessage", "");
-        dialog.saveInBackground(new SaveCallback() {
+    public static void createNewDialog(final String senderPhoneNumber, final String recipientPhoneNumber, final Callback callback) {
+
+        List<ParseObject> parseObjects = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            ParseObject dialog = new ParseObject("Dialogs");
+            if (i == 0) {
+                dialog.put("sender", senderPhoneNumber);
+                dialog.put("recipient", recipientPhoneNumber);
+            } else {
+                dialog.put("sender", recipientPhoneNumber);
+                dialog.put("recipient", senderPhoneNumber);
+            }
+
+            parseObjects.add(dialog);
+        }
+
+        ParseObject.saveAllInBackground(parseObjects, new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
@@ -168,56 +179,57 @@ public class Account {
                 }
             }
         });
-
     }
 
-    public static void loadMessages(ParseObject dialogObject, final CallbackLoadObject callback) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
-        query.whereEqualTo("parent", dialogObject);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> list, ParseException e) {
-                if (e == null) {
-                    callback.success(list);
-                } else {
-                    callback.e(e.getMessage());
-                }
-            }
-        });
-
-    }
-
-    public static void sendMessage(final ParseObject dialogObject, final String textMessage, String senderPhoneNumber, String receiverPhoneNumber, final Callback callback) {
-        ParseObject messages = new ParseObject("Messages");
-        messages.put("parent", ParseObject.createWithoutData("Dialogs", dialogObject.getObjectId()));
-        messages.put("textMessage", textMessage);
-        messages.put("senderPhoneNumber", senderPhoneNumber);
-        messages.put("receiverPhoneNumber", receiverPhoneNumber);
-        messages.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    // update a row 'lastMessage' in the dialogue table
-                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Dialogs");
-                    query.getInBackground(dialogObject.getObjectId(), new GetCallback<ParseObject>() {
-                        public void done(ParseObject object, ParseException e) {
-                            if (e == null) {
-                                object.put("lastMessage", textMessage);
-                                object.saveInBackground();
-                            }
+    public static void loadMessages(List<ParseObject> dialogParseObjectsList, final CallbackLoadObject callback) {
+        for (int i = 0; i < dialogParseObjectsList.size(); i++) {
+            ParseObject dialogObject = dialogParseObjectsList.get(i);
+            if (dialogObject.get("sender").equals(ParseUser.getCurrentUser().getUsername())) {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
+                query.whereEqualTo("parent", dialogObject);
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> list, ParseException e) {
+                        if (e == null) {
+                            callback.success(list);
+                        } else {
+                            callback.e(e.getMessage());
                         }
-                    });
-                    callback.success();
+                    }
+                });
+                break;
+            }
+        }
+    }
 
+    public static void sendMessage(final List<ParseObject> dialogParseObjectsList, final String textMessage, String senderPhoneNumber, final Callback callback) {
+
+        List<ParseObject> parseObjects = new ArrayList<>();
+        for (int i = 0; i < dialogParseObjectsList.size(); i++) {
+
+            ParseObject dialogObject = dialogParseObjectsList.get(i);
+
+            ParseObject messages = new ParseObject("Messages");
+            messages.put("parent", ParseObject.createWithoutData("Dialogs", dialogObject.getObjectId()));
+            messages.put("textMessage", textMessage);
+            messages.put("senderPhoneNumber", senderPhoneNumber);
+            parseObjects.add(messages);
+
+            // update a row 'lastMessage' in the dialogue table
+            dialogObject.put("lastMessage", textMessage);
+            parseObjects.add(dialogObject);
+        }
+
+        ParseObject.saveAllInBackground(parseObjects, new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    callback.success();
                 } else {
                     callback.e(e.getMessage());
-
                 }
-
             }
         });
-
-
     }
 
 

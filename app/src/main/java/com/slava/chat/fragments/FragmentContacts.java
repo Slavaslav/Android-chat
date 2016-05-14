@@ -121,12 +121,12 @@ public class FragmentContacts extends Fragment {
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
                         final String senderPhoneNumber = ParseUser.getCurrentUser().getUsername();
-                        final String receiverPhoneNumber = list.get(position).getUsername();
-                        String titleActionBar = contactsDataMap.get(receiverPhoneNumber);
+                        final String recipientPhoneNumber = list.get(position).getUsername();
+                        String titleActionBar = contactsDataMap.get(recipientPhoneNumber);
 
                         Bundle bundle = new Bundle();
                         bundle.putString("senderPhoneNumber", senderPhoneNumber);
-                        bundle.putString("receiverPhoneNumber", receiverPhoneNumber);
+                        bundle.putString("recipientPhoneNumber", recipientPhoneNumber);
                         bundle.putString("titleActionBar", titleActionBar);
                         Fragment fragmentMessages = new FragmentMessages();
                         fragmentMessages.setArguments(bundle);
