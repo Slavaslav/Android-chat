@@ -83,6 +83,37 @@ public class FragmentMain extends Fragment {
         //set Toolbar title
         mListener.setTitleToolbar(getString(R.string.fragment_main));
 
+        findDialogs();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+
+        // Register to receive messages
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter(MyService.UPDATE_DIALOGS_LIST));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mListener.setDrawerLockMode(MainActivity.LOCK_MODE_UNLOCKED);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
+    }
+
+    private void findDialogs() {
         Account.findDialogs(new Account.CallbackLoadObject() {
 
             @Override
@@ -118,33 +149,6 @@ public class FragmentMain extends Fragment {
                 Log.d("LOG", "Error: " + s);
             }
         });
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-
-        // Register to receive messages
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter(MyService.UPDATE_DIALOGS_LIST));
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mListener.setDrawerLockMode(MainActivity.LOCK_MODE_UNLOCKED);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
     }
 
 

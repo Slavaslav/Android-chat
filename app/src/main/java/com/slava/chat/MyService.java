@@ -3,13 +3,6 @@ package com.slava.chat;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-
-import com.parse.ParseObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MyService extends Service {
 
@@ -58,7 +51,7 @@ public class MyService extends Service {
     }
 
     private void loadUsersDialogs() {
-        Account.loadUserDialogs(new Account.CallbackLoadObject() {
+        /*Account.loadUserDialogs(new Account.CallbackLoadObject() {
 
             @Override
             public void success(List<ParseObject> list) {
@@ -72,11 +65,11 @@ public class MyService extends Service {
                 Log.d("LOG", "Error: " + s);
 
             }
-        });
+        });*/
     }
 
     private void loadMessageList() {
-        Account.loadMessageList("add here dialog id", new Account.CallbackLoadObject() {
+        /*Account.loadMessageList("add here dialog id", new Account.CallbackLoadObject() {
 
             @Override
             public void success(List<ParseObject> list) {
@@ -90,7 +83,7 @@ public class MyService extends Service {
                 Log.d("LOG", "Error: " + s);
 
             }
-        });
+        });*/
     }
 
 }

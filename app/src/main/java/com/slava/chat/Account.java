@@ -5,6 +5,7 @@ import android.provider.ContactsContract;
 
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
+import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -74,46 +75,22 @@ public class Account {
     }
 
     public static void updateUserStatus(boolean b) {
-
-        if (getCurrentUser()) {
             ParseUser user = ParseUser.getCurrentUser();
             user.put("online", b);
             user.saveEventually();
-        }
     }
 
-    public static void loadUserDialogs(final CallbackLoadObject callBack) {
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("dialog");
-        query.whereEqualTo("parent", ParseUser.getCurrentUser());
-        query.findInBackground(new FindCallback<ParseObject>() {
+    public static void logOut(final Callback callback) {
+        ParseUser.logOutInBackground(new LogOutCallback() {
             @Override
-            public void done(List<ParseObject> list, ParseException e) {
+            public void done(ParseException e) {
                 if (e == null) {
-                    callBack.success(list);
+                    callback.success();
                 } else {
-                    callBack.e(e.getMessage());
+                    callback.e(e.getMessage());
                 }
             }
         });
-    }
-
-    public static void loadMessageList(String dialogId, final CallbackLoadObject callBack) {
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("message");
-        query.whereEqualTo("parent", dialogId);
-        // query.whereEqualTo("sender", ParseUser.getCurrentUser());
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> list, ParseException e) {
-                if (e == null) {
-                    callBack.success(list);
-                } else {
-                    callBack.e(e.getMessage());
-                }
-            }
-        });
-
     }
 
     public static void loadContactsList(final CallbackLoadUser callBack) {
@@ -131,10 +108,6 @@ public class Account {
                 }
             }
         });
-    }
-
-    public static void logOut() {
-        ParseUser.logOut();
     }
 
     public static void loadSelectedDialog(final String senderPhoneNumber, final String recipientPhoneNumber, final CallbackLoadObject callback) {

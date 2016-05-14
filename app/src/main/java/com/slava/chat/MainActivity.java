@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements
         Parse.initialize(this, "78vxcrQI4qOuwsNDMOWNovUqGOaGNREHGGMSChUL", "jXJXeTKSURpgqijsqkfAhgGQkDJbwxMNgEFusFwE");
 
         if (Account.getCurrentUser()) {
-            Account.updateUserStatus(true);
+            // Account.updateUserStatus(true);
             loadFragment(new FragmentMain(), true, false);
         } else {
             loadFragment(new FragmentLogin(), false, false);
