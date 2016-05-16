@@ -40,10 +40,8 @@ public class Account {
         ParseUser.logInInBackground(login, password, new LogInCallback() {
             public void done(ParseUser user, ParseException e) {
                 if (user != null) {
-                    // Hooray! The user is logged in.
                     callBack.success();
                 } else {
-                    // Signup failed. Look at the ParseException to see what happened.
                     callBack.e(e.getMessage());
                 }
             }
@@ -59,11 +57,8 @@ public class Account {
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
                 if (e == null) {
-                    // Hooray! Let them use the app now.
                     callBack.success();
                 } else {
-                    // Sign up didn't succeed. Look at the ParseException
-                    // to figure out what went wrong
                     callBack.e(e.getMessage());
                 }
             }

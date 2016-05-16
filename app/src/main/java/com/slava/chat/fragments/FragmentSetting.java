@@ -1,9 +1,9 @@
 package com.slava.chat.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +15,7 @@ import com.parse.ParseUser;
 import com.slava.chat.Account;
 import com.slava.chat.MainActivity;
 import com.slava.chat.R;
-
-import java.util.List;
+import com.slava.chat.Utils;
 
 public class FragmentSetting extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -64,16 +63,13 @@ public class FragmentSetting extends Fragment {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.button_log_out:
+                        final ProgressDialog progressDialog = Utils.showProgressDialog(getActivity(), getString(R.string.progress_wait), false, false);
+                        progressDialog.show();
                         Account.logOut(new Account.Callback() {
                             @Override
                             public void success() {
-                                List<Fragment> fragments = getActivity().getSupportFragmentManager().getFragments();
-                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                if (fragments != null) {
-                                    for (Fragment fragment : fragments) {
-                                        fragmentManager.beginTransaction().detach(fragment).commit();
-                                    }
-                                }
+                                progressDialog.dismiss();
+                                Utils.detachAllFragments(getActivity());
                                 //Account.updateUserStatus(false);
                                 mListener.loadFragment(new FragmentLogin(), false, false);
                             }
