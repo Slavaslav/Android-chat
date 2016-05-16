@@ -75,10 +75,9 @@ public class FragmentLogin extends Fragment {
                         Account.logIn(login, password, new Account.Callback() {
                             @Override
                             public void success() {
-                                Utils.detachAllFragments(getActivity());
                                 Utils.hideKeyboard(passwordText);
-                                mListener.loadFragment(new FragmentMain(), true, false);
                                 progressDialog.dismiss();
+                                mListener.loadFragment(new FragmentMain(), true, false);
                             }
 
                             @Override

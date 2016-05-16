@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,10 +74,10 @@ public class FragmentRegistration extends Fragment {
                         Account.signUp(login, password, new Account.Callback() {
                             @Override
                             public void success() {
-                                Utils.detachAllFragments(getActivity());
                                 Utils.hideKeyboard(passwordText);
-                                mListener.loadFragment(new FragmentMain(), true, false);
                                 progressDialog.dismiss();
+                                getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                mListener.loadFragment(new FragmentMain(), true, false);
                             }
 
                             @Override

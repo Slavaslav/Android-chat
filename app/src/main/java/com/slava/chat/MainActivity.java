@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.parse.Parse;
 import com.slava.chat.fragments.FragmentContacts;
 import com.slava.chat.fragments.FragmentLogin;
 import com.slava.chat.fragments.FragmentMain;
@@ -90,8 +89,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        Parse.initialize(this, "78vxcrQI4qOuwsNDMOWNovUqGOaGNREHGGMSChUL", "jXJXeTKSURpgqijsqkfAhgGQkDJbwxMNgEFusFwE");
-
         if (Account.getCurrentUser()) {
             // Account.updateUserStatus(true);
             loadFragment(new FragmentMain(), true, false);
@@ -112,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements
         stopService(new Intent(this, MyService.class));
 
         // Update user status (set false)
-        Account.updateUserStatus(false);
+        //Account.updateUserStatus(false);
     }
 
     @Override

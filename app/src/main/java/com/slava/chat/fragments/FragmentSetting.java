@@ -1,9 +1,12 @@
 package com.slava.chat.fragments;
 
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.IntentCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,9 +72,12 @@ public class FragmentSetting extends Fragment {
                             @Override
                             public void success() {
                                 progressDialog.dismiss();
-                                Utils.detachAllFragments(getActivity());
                                 //Account.updateUserStatus(false);
-                                mListener.loadFragment(new FragmentLogin(), false, false);
+                                Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getPackageName());
+                                ComponentName componentName = intent.getComponent();
+                                Intent mainIntent = IntentCompat.makeRestartActivityTask(componentName);
+                                getActivity().startActivity(mainIntent);
+                                System.exit(0);
                             }
 
                             @Override

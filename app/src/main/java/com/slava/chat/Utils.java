@@ -3,13 +3,8 @@ package com.slava.chat;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-
-import java.util.List;
 
 public class Utils {
 
@@ -31,17 +26,6 @@ public class Utils {
         progressDialog.setCancelable(cancelable);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         return progressDialog;
-    }
-
-    public static void detachAllFragments(FragmentActivity activity) {
-        List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
-        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-        if (fragments != null) {
-            for (Fragment fragment : fragments) {
-                fragmentManager.beginTransaction().detach(fragment).commit();
-            }
-        }
-
     }
 
 }
