@@ -6,23 +6,13 @@ import android.os.IBinder;
 
 public class MyService extends Service {
 
-    public static final String INTENT_MESSAGE = "Intent Message";
     public static final String DIALOGS_LIST = "Dialogs List";
     public static final String UPDATE_DIALOGS_LIST = "Download Dialogs List";
+    private static final String INTENT_MESSAGE = "Intent Message";
     private static final String MESSAGES_LIST = "Messages List";
     private static final String UPDATE_MESSAGES_LIST = "Download Messages List";
 
     public MyService() {
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
     }
 
     @Override

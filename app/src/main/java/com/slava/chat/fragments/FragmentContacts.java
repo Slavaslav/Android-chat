@@ -31,9 +31,9 @@ public class FragmentContacts extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
-    FrameLayout progressContacts;
-    ScrollView emptyList;
-    View visibleView;
+    private FrameLayout progressContacts;
+    private ScrollView emptyList;
+    private View visibleView;
     private OnFragmentInteractionListener mListener;
     private ListView contactsList;
 
@@ -48,11 +48,6 @@ public class FragmentContacts extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -166,8 +161,8 @@ public class FragmentContacts extends Fragment {
     private class ContactsAdapter extends BaseAdapter {
 
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        List<ParseUser> list;
-        HashMap<String, String> contactsDataMap;
+        final List<ParseUser> list;
+        final HashMap<String, String> contactsDataMap;
         String phoneNumber;
         String name;
 

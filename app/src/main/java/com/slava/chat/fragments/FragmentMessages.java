@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class FragmentMessages extends Fragment {
-    View visibleView;
-    ScrollView emptyList;
-    FrameLayout progressMessages;
+    private View visibleView;
+    private ScrollView emptyList;
+    private FrameLayout progressMessages;
     private List<ParseObject> dialogParseObjectsList;
     private List<ParseObject> messagesParseObjectsList;
     private ListView messagesList;
@@ -52,11 +52,6 @@ public class FragmentMessages extends Fragment {
         bundle.putString("titleActionBar", titleActionBar);
         fragment.setArguments(bundle);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override

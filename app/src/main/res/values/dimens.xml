@@ -6,12 +6,10 @@
 
     <dimen name="txt_10sp">10sp</dimen>
     <dimen name="txt_12sp">12sp</dimen>
-    <dimen name="txt_13sp">13sp</dimen>
     <dimen name="txt_14sp">14sp</dimen>
     <dimen name="txt_17sp">17sp</dimen>
     <dimen name="txt_18sp">18sp</dimen>
     <dimen name="txt_20sp">20sp</dimen>
-    <dimen name="txt_30sp">30sp</dimen>
 
     <dimen name="_0dp">0dp</dimen>
     <dimen name="_1dp">1dp</dimen>

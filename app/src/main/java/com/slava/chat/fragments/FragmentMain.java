@@ -35,8 +35,8 @@ public class FragmentMain extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private final MessageReceiver mMessageReceiver = new MessageReceiver();
-    FrameLayout progressDialogs;
-    View visibleView;
+    private FrameLayout progressDialogs;
+    private View visibleView;
     private OnFragmentInteractionListener mListener;
     private DialogsListAdapter dialogsListAdapter;
     private ListView dialogsList;
@@ -54,15 +54,6 @@ public class FragmentMain extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            String mParam1 = getArguments().getString(ARG_PARAM1);
-            String mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override

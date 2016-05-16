@@ -12,7 +12,6 @@
     <string name="profile_name">Username</string>
     <string name="profile_phone">+380 (99) 987 65 43</string>
     <string name="fragment_main">Recent chats</string>
-    <string name="fragment_login">Login</string>
 
     <string name="edit_text_phone">Enter phone number</string>
     <string name="edit_text_password">Enter password</string>

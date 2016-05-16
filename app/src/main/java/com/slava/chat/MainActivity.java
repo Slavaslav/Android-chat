@@ -1,7 +1,6 @@
 package com.slava.chat;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -109,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements
         // Stop service
         stopService(new Intent(this, MyService.class));
 
-        // Update user status (set false)
         //Account.updateUserStatus(false);
     }
 
@@ -159,12 +157,6 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-    // implement method from fragment
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    // implement method from fragment
     @Override
     public void setTitleToolbar(String s) {
         if (getSupportActionBar() != null) {
