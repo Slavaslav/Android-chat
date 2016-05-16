@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/editText_phone"
+        android:hint="@string/edit_text_phone"
         android:inputType="phone" />
 
     <EditText
@@ -19,15 +19,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/editText_password"
+        android:hint="@string/edit_text_password"
         android:inputType="textPassword" />
 
     <EditText
-        android:id="@+id/txtPwd_re"
+        android:id="@+id/password_text_repeat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/editText_passwordRe"
+        android:hint="@string/edit_text_password_re"
         android:inputType="textPassword" />
 
     <Button

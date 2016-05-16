@@ -14,17 +14,20 @@
     <string name="fragment_main">Recent chats</string>
     <string name="fragment_login">Login</string>
 
-    <string name="editText_phone">Enter phone number</string>
-    <string name="editText_password">Enter password</string>
-    <string name="editText_passwordRe">Re-enter password</string>
+    <string name="edit_text_phone">Enter phone number</string>
+    <string name="edit_text_password">Enter password</string>
+    <string name="edit_text_password_re">Re-enter password</string>
     <string name="button_log_in">Log in</string>
     <string name="button_sign_up">Sign up</string>
     <string name="button_sign_up_reg">Create an account</string>
-    <string name="logOut">Log out</string>
+    <string name="log_out">Log out</string>
     <string name="progress_wait">Loading&#8230;</string>
     <string name="msg">Type message</string>
     <string name="no_messages">no messages yet</string>
     <string name="no_contacts">contacts not found</string>
     <string name="no_dialogs">dialogs not found</string>
     <string name="holder">Мем (англ. meme) — единица культурной информации. Мемом может считаться любая идея, символ, манера или образ действия, осознанно или неосознанно передаваемые от человека к человеку посредством речи, письма, видео, ритуалов, жестов и т. д. Концепция мема и сам термин были предложены эволюционным биологом Ричардом Докинзом в 1976 году в книге «Эгоистичный ген». Докинз предложил идею о том, что вся культурная информация состоит из базовых единиц — мемов, точно так же как биологическая информация состоит из генов; и так же как гены, мемы подвержены естественному отбору, мутации и искусственной селекции. На основе этой идеи Докинза возникла дисциплина меметика, в настоящее время считающаяся псевдонаукой[1]</string>
+    <string name="incorrect_phone_length">Incorrect length</string>
+    <string name="password_not_match">Passwords must match</string>
+    <string name="short_password">Too short password</string>
 </resources>
