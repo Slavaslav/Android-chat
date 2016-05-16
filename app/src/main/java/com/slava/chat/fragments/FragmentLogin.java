@@ -88,7 +88,7 @@ public class FragmentLogin extends Fragment {
                         });
                         break;
                     case R.id.open_registration_button:
-                        mListener.loadFragment(new FragmentRegistration(), false, false);
+                        mListener.loadFragment(new FragmentRegistration(), false, true);
                         break;
                 }
             }

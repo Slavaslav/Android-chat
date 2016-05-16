@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.slava.chat.fragments.FragmentContacts;
 import com.slava.chat.fragments.FragmentLogin;
@@ -173,24 +174,40 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void setUserPhone(String s) {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            View headerView = navigationView.getHeaderView(0);
+            TextView userPhoneMenu = (TextView) headerView.findViewById(R.id.user_phone_number_menu);
+            userPhoneMenu.setText(s);
+        }
+    }
+
+    @Override
     public void setDrawerLockMode(int i) {
         drawer.setDrawerLockMode(i);
     }
 
     @Override
     public void loadFragment(Fragment fragment, boolean showActionBar, boolean addBackStack) {
-        if (showActionBar == true && addBackStack == true) {
+        if (showActionBar && addBackStack) {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-        } else if (showActionBar == true && addBackStack == false) {
+        } else if (showActionBar && !addBackStack) {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
             }
 
             getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
-        } else if (showActionBar == false && addBackStack == false) {
+        } else if (!showActionBar && addBackStack) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().hide();
+            }
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+        } else if (!showActionBar && !addBackStack) {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().hide();
             }

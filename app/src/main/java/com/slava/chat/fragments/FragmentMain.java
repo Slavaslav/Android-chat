@@ -19,6 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 import com.slava.chat.Account;
 import com.slava.chat.MainActivity;
 import com.slava.chat.MyService;
@@ -80,6 +81,7 @@ public class FragmentMain extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mListener.setTitleToolbar(getString(R.string.fragment_main));
+        mListener.setUserPhone(ParseUser.getCurrentUser().getUsername());
 
         //start service
         //getActivity().startService(new Intent(getActivity(), MyService.class).putExtra(MyService.INTENT_MESSAGE, MyService.UPDATE_DIALOGS_LIST));
@@ -165,6 +167,8 @@ public class FragmentMain extends Fragment {
     public interface OnFragmentInteractionListener {
         void setTitleToolbar(String s);
 
+        void setUserPhone(String s);
+
         void setDrawerLockMode(int i);
 
         void loadFragment(Fragment fragment, boolean showActionBar, boolean addBackStack);
@@ -231,6 +235,9 @@ public class FragmentMain extends Fragment {
             ParseObject messageObject = messagesParseObjectsList.get(position);
 
             String nameDialog = Account.contactsDataMap.get(messageObject.getString("recipient"));
+            if (nameDialog == null) {
+                nameDialog = messageObject.getString("recipient");
+            }
             String lastMessage = messageObject.getString("lastMessage");
 
             titleDialog.setText(nameDialog);

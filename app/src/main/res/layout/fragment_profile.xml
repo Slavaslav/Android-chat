@@ -36,7 +36,7 @@
                 android:layout_height="@dimen/_0dp"
                 android:layout_weight="1"
                 android:gravity="bottom"
-                android:text="@string/fragment_profile_name"
+                android:text="@string/profile_name"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/txt_17sp"
                 android:textStyle="bold" />
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_0dp"
                 android:layout_weight="1"
-                android:text="@string/fragment_profile_phone"
+                android:text="@string/profile_phone"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/txt_12sp" />
         </LinearLayout>
