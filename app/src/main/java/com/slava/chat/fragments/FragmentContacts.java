@@ -13,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.parse.ParseUser;
@@ -28,10 +30,12 @@ public class FragmentContacts extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
+    FrameLayout progressContacts;
+    ScrollView emptyList;
+    View visibleView;
     private OnFragmentInteractionListener mListener;
-    private ListView mContactsList;
+    private ListView contactsList;
 
     public FragmentContacts() {
         // Required empty public constructor
@@ -55,12 +59,16 @@ public class FragmentContacts extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
-        mContactsList = (ListView) view.findViewById(R.id.contacts_list);
+        contactsList = (ListView) view.findViewById(R.id.contacts_list);
+        progressContacts = (FrameLayout) view.findViewById(R.id.progress_contacts);
+        emptyList = (ScrollView) view.findViewById(R.id.empty_list);
         return view;
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mListener.setTitleToolbar(getString(R.string.fragment_contacts));
 
         if (ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this.getActivity(),
@@ -69,9 +77,6 @@ public class FragmentContacts extends Fragment {
         } else {
             handleContactsList();
         }
-
-        //set Toolbar title
-        mListener.setTitleToolbar(getString(R.string.fragment_contacts));
     }
 
     @Override
@@ -114,20 +119,33 @@ public class FragmentContacts extends Fragment {
         Account.loadContactsList(new Account.CallbackLoadUser() {
             @Override
             public void success(final List<ParseUser> list) {
-                ContactsAdapter contactsAdapter = new ContactsAdapter(list, Account.contactsDataMap);
-                mContactsList.setAdapter(contactsAdapter);
-                mContactsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                if (list.size() != 0) {
+                    visibleView = contactsList;
+                    ContactsAdapter contactsAdapter = new ContactsAdapter(list, Account.contactsDataMap);
+                    contactsList.setAdapter(contactsAdapter);
+                    contactsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                        final String senderPhoneNumber = ParseUser.getCurrentUser().getUsername();
-                        final String recipientPhoneNumber = list.get(position).getUsername();
-                        String titleActionBar = Account.contactsDataMap.get(recipientPhoneNumber);
+                            final String senderPhoneNumber = ParseUser.getCurrentUser().getUsername();
+                            final String recipientPhoneNumber = list.get(position).getUsername();
+                            String titleActionBar = Account.contactsDataMap.get(recipientPhoneNumber);
 
-                        FragmentMessages fragmentMessages = FragmentMessages.newInstance(senderPhoneNumber, recipientPhoneNumber, titleActionBar);
-                        mListener.loadFragment(fragmentMessages, true, true);
+                            FragmentMessages fragmentMessages = FragmentMessages.newInstance(senderPhoneNumber, recipientPhoneNumber, titleActionBar);
+                            mListener.loadFragment(fragmentMessages, true, true);
+                        }
+                    });
+                } else {
+                    visibleView = emptyList;
+                }
+                View[] views = new View[]{contactsList, progressContacts, emptyList};
+                for (View v : views) {
+                    if (visibleView == v)
+                        v.setVisibility(View.VISIBLE);
+                    else {
+                        v.setVisibility(View.GONE);
                     }
-                });
+                }
             }
 
             @Override

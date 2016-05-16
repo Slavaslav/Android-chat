@@ -6,18 +6,28 @@
     android:orientation="vertical"
     tools:context="com.slava.chat.fragments.FragmentMain">
 
+    <FrameLayout
+        android:id="@+id/progress_dialogs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
     <ListView
         android:id="@+id/dialogs_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@color/color_gray"
         android:dividerHeight="@dimen/_1dp"
-        tools:listitem="@layout/dialog_item">
-
-    </ListView>
+        android:visibility="gone"
+        tools:listitem="@layout/dialog_item" />
 
     <ScrollView
-        android:id="@+id/no_messages"
+        android:id="@+id/empty_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -29,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/no_messages" />
+            android:text="@string/no_dialogs" />
     </ScrollView>
 
 </LinearLayout>

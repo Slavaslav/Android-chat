@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -27,15 +28,16 @@ import java.util.List;
 import java.util.Locale;
 
 public class FragmentMessages extends Fragment {
+    View visibleView;
+    ScrollView emptyList;
+    FrameLayout progressMessages;
     private List<ParseObject> dialogParseObjectsList;
     private List<ParseObject> messagesParseObjectsList;
     private ListView messagesList;
-    private ScrollView viewNoMessages;
     private OnFragmentInteractionListener mListener;
     private String senderPhoneNumber;
     private String recipientPhoneNumber;
     private MessagesListAdapter messagesListAdapter;
-    private boolean showNoMessageView = false;
     private EditText editTextMessage;
 
     public FragmentMessages() {
@@ -67,17 +69,16 @@ public class FragmentMessages extends Fragment {
         recipientPhoneNumber = args.getString("recipientPhoneNumber");
         String titleActionBar = args.getString("titleActionBar");
 
-        messagesList = (ListView) view.findViewById(R.id.list_messages);
-        messagesList.setStackFromBottom(true);
-        editTextMessage = (EditText) view.findViewById(R.id.edit_text_message);
-        viewNoMessages = (ScrollView) view.findViewById(R.id.no_messages);
-        final Button buttonSendMessage = (Button) view.findViewById(R.id.button_message);
-
         mListener.setTitleToolbar(titleActionBar);
 
-        loadCurrentDialog();
+        emptyList = (ScrollView) view.findViewById(R.id.empty_list);
+        progressMessages = (FrameLayout) view.findViewById(R.id.progress_messages);
+        messagesList = (ListView) view.findViewById(R.id.messages_list);
+        messagesList.setStackFromBottom(true);
+        editTextMessage = (EditText) view.findViewById(R.id.edit_text_message);
+        final Button buttonSendMessage = (Button) view.findViewById(R.id.button_message);
 
-        messagesListAdapter = new MessagesListAdapter();
+        loadCurrentDialog();
 
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,11 +158,14 @@ public class FragmentMessages extends Fragment {
             @Override
             public void success(List<ParseObject> list) {
                 if (list.size() != 0) {
+                    visibleView = messagesList;
                     dialogParseObjectsList = list;
                     loadMessages();
                 } else {
-                    showNoMessageView();
+                    visibleView = emptyList;
                 }
+                View[] views = new View[]{messagesList, progressMessages, emptyList};
+                setVisibilityViews(views, visibleView);
             }
 
             @Override
@@ -176,19 +180,21 @@ public class FragmentMessages extends Fragment {
         Account.loadMessages(dialogParseObjectsList, new Account.CallbackLoadObject() {
             @Override
             public void success(List<ParseObject> list) {
-
                 if (list.size() != 0) {
+                    visibleView = messagesList;
                     messagesParseObjectsList = list;
                     if (messagesList.getAdapter() == null) {
+                        messagesListAdapter = new MessagesListAdapter();
                         messagesList.setAdapter(messagesListAdapter);
+                    } else {
+                        messagesListAdapter.notifyDataSetChanged();
                     }
-                    if (showNoMessageView == true) {
-                        hideNoMessageView();
-                    }
-                    messagesListAdapter.notifyDataSetChanged();
+
                 } else {
-                    showNoMessageView();
+                    visibleView = emptyList;
                 }
+                View[] views = new View[]{messagesList, progressMessages, emptyList};
+                setVisibilityViews(views, visibleView);
             }
 
             @Override
@@ -262,22 +268,15 @@ public class FragmentMessages extends Fragment {
 
     }
 
-    private void showNoMessageView() {
-        if (viewNoMessages.getVisibility() == View.GONE && messagesList.getVisibility() == View.VISIBLE) {
-            messagesList.setVisibility(View.GONE);
-            viewNoMessages.setVisibility(View.VISIBLE);
-            showNoMessageView = true;
+    private void setVisibilityViews(View[] views, View visibleView) {
+        for (View v : views) {
+            if (visibleView == v)
+                v.setVisibility(View.VISIBLE);
+            else {
+                v.setVisibility(View.GONE);
+            }
         }
     }
-
-    private void hideNoMessageView() {
-        if (viewNoMessages.getVisibility() == View.VISIBLE && messagesList.getVisibility() == View.GONE) {
-            messagesList.setVisibility(View.VISIBLE);
-            viewNoMessages.setVisibility(View.GONE);
-            showNoMessageView = false;
-        }
-    }
-
 
     public interface OnFragmentInteractionListener {
 
@@ -332,14 +331,8 @@ public class FragmentMessages extends Fragment {
             msgTextView.setText(messagesParseObjectsList.get(position).getString("textMessage"));
             msgTimeView.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(messagesParseObjectsList.get(position).getUpdatedAt()));
 
-            View[] allViews = {sendMessageBox, receiveMessageBox};
-            for (View v : allViews) {
-                if (v == visibleView) {
-                    v.setVisibility(View.VISIBLE);
-                } else {
-                    v.setVisibility(View.GONE);
-                }
-            }
+            View[] views = {sendMessageBox, receiveMessageBox};
+            setVisibilityViews(views, visibleView);
 
             return convertView;
         }

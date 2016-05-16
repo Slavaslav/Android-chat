@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -33,12 +34,13 @@ public class FragmentMain extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private final MessageReceiver mMessageReceiver = new MessageReceiver();
+    FrameLayout progressDialogs;
+    View visibleView;
     private OnFragmentInteractionListener mListener;
     private DialogsListAdapter dialogsListAdapter;
     private ListView dialogsList;
     private List<ParseObject> messagesParseObjectsList;
-    private ScrollView viewNoMessages;
-    private boolean showNoMessageView = false;
+    private ScrollView emptyList;
 
     public FragmentMain() {
         // Required empty public constructor
@@ -67,7 +69,8 @@ public class FragmentMain extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         dialogsList = (ListView) view.findViewById(R.id.dialogs_list);
-        viewNoMessages = (ScrollView) view.findViewById(R.id.no_messages);
+        progressDialogs = (FrameLayout) view.findViewById(R.id.progress_dialogs);
+        emptyList = (ScrollView) view.findViewById(R.id.empty_list);
 
         return view;
     }
@@ -76,12 +79,10 @@ public class FragmentMain extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mListener.setTitleToolbar(getString(R.string.fragment_main));
+
         //start service
         //getActivity().startService(new Intent(getActivity(), MyService.class).putExtra(MyService.INTENT_MESSAGE, MyService.UPDATE_DIALOGS_LIST));
-
-
-        //set Toolbar title
-        mListener.setTitleToolbar(getString(R.string.fragment_main));
 
         findDialogs();
     }
@@ -118,10 +119,11 @@ public class FragmentMain extends Fragment {
 
             @Override
             public void success(final List<ParseObject> list) {
+
                 if (list.size() != 0) {
+                    visibleView = dialogsList;
                     messagesParseObjectsList = list;
                     dialogsListAdapter = new DialogsListAdapter();
-
                     dialogsList.setAdapter(dialogsListAdapter);
                     dialogsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -140,7 +142,15 @@ public class FragmentMain extends Fragment {
                     });
 
                 } else {
-                    showNoMessageView();
+                    visibleView = emptyList;
+                }
+                View[] views = new View[]{dialogsList, progressDialogs, emptyList};
+                for (View v : views) {
+                    if (visibleView == v)
+                        v.setVisibility(View.VISIBLE);
+                    else {
+                        v.setVisibility(View.GONE);
+                    }
                 }
             }
 
@@ -149,23 +159,6 @@ public class FragmentMain extends Fragment {
                 Log.d("LOG", "Error: " + s);
             }
         });
-    }
-
-
-    private void showNoMessageView() {
-        if (viewNoMessages.getVisibility() == View.GONE && dialogsList.getVisibility() == View.VISIBLE) {
-            dialogsList.setVisibility(View.GONE);
-            viewNoMessages.setVisibility(View.VISIBLE);
-            showNoMessageView = true;
-        }
-    }
-
-    private void hideNoMessageView() {
-        if (viewNoMessages.getVisibility() == View.VISIBLE && dialogsList.getVisibility() == View.GONE) {
-            dialogsList.setVisibility(View.VISIBLE);
-            viewNoMessages.setVisibility(View.GONE);
-            showNoMessageView = false;
-        }
     }
 
 
