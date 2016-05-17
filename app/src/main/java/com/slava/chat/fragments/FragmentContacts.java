@@ -63,7 +63,7 @@ public class FragmentContacts extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mListener.setTitleToolbar(getString(R.string.fragment_contacts));
+        mListener.setTitleToolbar(getString(R.string.fragment_contacts), null);
 
         if (ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this.getActivity(),
@@ -151,7 +151,7 @@ public class FragmentContacts extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void setTitleToolbar(String s);
+        void setTitleToolbar(String title, String subTitle);
 
         void setDrawerLockMode(int i);
 

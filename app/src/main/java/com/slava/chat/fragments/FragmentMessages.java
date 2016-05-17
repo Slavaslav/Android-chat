@@ -68,9 +68,9 @@ public class FragmentMessages extends Fragment {
         String titleActionBar = args.getString("titleActionBar");
 
         if (titleActionBar == null) {
-            mListener.setTitleToolbar(recipientPhoneNumber);
+            mListener.setTitleToolbar(recipientPhoneNumber, null);
         } else {
-            mListener.setTitleToolbar(titleActionBar);
+            mListener.setTitleToolbar(titleActionBar, recipientPhoneNumber);
         }
 
 
@@ -322,7 +322,7 @@ public class FragmentMessages extends Fragment {
 
         void setDrawerLockMode(int i);
 
-        void setTitleToolbar(String s);
+        void setTitleToolbar(String title, String subTitle);
     }
 
     private class MessagesListAdapter extends BaseAdapter {

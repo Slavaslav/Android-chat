@@ -158,9 +158,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void setTitleToolbar(String s) {
+    public void setTitleToolbar(String title, String subTitle) {
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(s);
+            getSupportActionBar().setTitle(title);
+            getSupportActionBar().setSubtitle(subTitle);
         }
 
     }

@@ -71,7 +71,7 @@ public class FragmentMain extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mListener.setTitleToolbar(getString(R.string.fragment_main));
+        mListener.setTitleToolbar(getString(R.string.fragment_main), null);
         mListener.setUserPhone(ParseUser.getCurrentUser().getUsername());
 
         //start service
@@ -156,7 +156,7 @@ public class FragmentMain extends Fragment {
 
 
     public interface OnFragmentInteractionListener {
-        void setTitleToolbar(String s);
+        void setTitleToolbar(String title, String subTitle);
 
         void setUserPhone(String s);
 
@@ -179,7 +179,7 @@ public class FragmentMain extends Fragment {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                         if (list != null) {
-                            mListener.setTitleToolbar(list.get(position).get("title").toString());
+                            mListener.setTitleToolbar(list.get(position).get("title").toString(), null);
 
                             Bundle bundle = new Bundle();
                             bundle.putString("dialogId", list.get(position).getObjectId());

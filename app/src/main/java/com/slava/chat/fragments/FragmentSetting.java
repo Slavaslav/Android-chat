@@ -81,7 +81,7 @@ public class FragmentSetting extends Fragment {
             }
         });
         //set Toolbar title
-        mListener.setTitleToolbar(getString(R.string.menu_profile));
+        mListener.setTitleToolbar(getString(R.string.menu_profile), null);
 
         userPhoneNumberTextView.setText(ParseUser.getCurrentUser().getUsername());
 
@@ -111,7 +111,7 @@ public class FragmentSetting extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void setTitleToolbar(String s);
+        void setTitleToolbar(String title, String subTitle);
 
         void setDrawerLockMode(int i);
     }
