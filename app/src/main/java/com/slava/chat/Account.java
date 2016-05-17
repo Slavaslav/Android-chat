@@ -15,6 +15,7 @@ import com.parse.SignUpCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -152,12 +153,35 @@ public class Account {
         });
     }
 
-    public static void loadMessages(List<ParseObject> dialogParseObjectsList, final CallbackLoadObject callback) {
+    public static void loadAllMessages(List<ParseObject> dialogParseObjectsList, final CallbackLoadObject callback) {
         for (int i = 0; i < dialogParseObjectsList.size(); i++) {
             ParseObject dialogObject = dialogParseObjectsList.get(i);
             if (dialogObject.get("sender").equals(ParseUser.getCurrentUser().getUsername())) {
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
                 query.whereEqualTo("parent", dialogObject);
+                query.setLimit(30);
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> list, ParseException e) {
+                        if (e == null) {
+                            callback.success(list);
+                        } else {
+                            callback.e(e.getMessage());
+                        }
+                    }
+                });
+                break;
+            }
+        }
+    }
+
+    public static void loadNewMessages(List<ParseObject> dialogParseObjectsList, Date timeLastMessage, final CallbackLoadObject callback) {
+        for (int i = 0; i < dialogParseObjectsList.size(); i++) {
+            ParseObject dialogObject = dialogParseObjectsList.get(i);
+            if (dialogObject.get("sender").equals(ParseUser.getCurrentUser().getUsername())) {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
+                query.whereEqualTo("parent", dialogObject);
+                query.whereGreaterThan("updatedAt", timeLastMessage);
                 query.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> list, ParseException e) {

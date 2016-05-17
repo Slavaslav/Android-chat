@@ -24,21 +24,24 @@ import com.slava.chat.R;
 import com.slava.chat.Utils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class FragmentMessages extends Fragment {
+    Date timeLastMessage;
     private View visibleView;
     private ScrollView emptyList;
     private FrameLayout progressMessages;
     private List<ParseObject> dialogParseObjectsList;
-    private List<ParseObject> messagesParseObjectsList;
     private ListView messagesList;
     private OnFragmentInteractionListener mListener;
     private String senderPhoneNumber;
     private String recipientPhoneNumber;
     private MessagesListAdapter messagesListAdapter;
     private EditText editTextMessage;
+    private ArrayList<Message> messageArrayList = new ArrayList<>();
 
     public FragmentMessages() {
         // Required empty public constructor
@@ -64,11 +67,17 @@ public class FragmentMessages extends Fragment {
         recipientPhoneNumber = args.getString("recipientPhoneNumber");
         String titleActionBar = args.getString("titleActionBar");
 
-        mListener.setTitleToolbar(titleActionBar);
+        if (titleActionBar == null) {
+            mListener.setTitleToolbar(recipientPhoneNumber);
+        } else {
+            mListener.setTitleToolbar(titleActionBar);
+        }
+
 
         emptyList = (ScrollView) view.findViewById(R.id.empty_list);
         progressMessages = (FrameLayout) view.findViewById(R.id.progress_messages);
         messagesList = (ListView) view.findViewById(R.id.messages_list);
+        messagesList.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         messagesList.setStackFromBottom(true);
         editTextMessage = (EditText) view.findViewById(R.id.edit_text_message);
         final Button buttonSendMessage = (Button) view.findViewById(R.id.button_message);
@@ -80,7 +89,7 @@ public class FragmentMessages extends Fragment {
             public void onClick(View v) {
 
                 if (editTextMessage.getText().length() > 0) {
-
+                    buttonSendMessage.setEnabled(false);
                     if (dialogParseObjectsList == null) {
                         createNewDialog();
                     } else {
@@ -172,32 +181,68 @@ public class FragmentMessages extends Fragment {
 
     private void loadMessages() {
 
-        Account.loadMessages(dialogParseObjectsList, new Account.CallbackLoadObject() {
-            @Override
-            public void success(List<ParseObject> list) {
-                if (list.size() != 0) {
-                    visibleView = messagesList;
-                    messagesParseObjectsList = list;
-                    if (messagesList.getAdapter() == null) {
-                        messagesListAdapter = new MessagesListAdapter();
-                        messagesList.setAdapter(messagesListAdapter);
+        if (messageArrayList.isEmpty()) {
+            Account.loadAllMessages(dialogParseObjectsList, new Account.CallbackLoadObject() {
+                @Override
+                public void success(List<ParseObject> list) {
+                    if (list.size() != 0) {
+                        visibleView = messagesList;
+
+                        for (int i = 0; i < list.size(); i++) {
+                            String senderPhoneNumber = list.get(i).getString("senderPhoneNumber");
+                            String textMessage = list.get(i).getString("textMessage");
+                            Date sendTime = list.get(i).getUpdatedAt();
+                            Message message = new Message(senderPhoneNumber, textMessage, sendTime);
+                            messageArrayList.add(message);
+                        }
+                        int size = messageArrayList.size();
+                        timeLastMessage = messageArrayList.get(size - 1).sendTime;
+
+                        if (messagesList.getAdapter() == null) {
+                            messagesListAdapter = new MessagesListAdapter();
+                            messagesList.setAdapter(messagesListAdapter);
+                        } else {
+                            messagesListAdapter.notifyDataSetChanged();
+                        }
+
                     } else {
+                        visibleView = emptyList;
+                    }
+                    View[] views = new View[]{messagesList, progressMessages, emptyList};
+                    setVisibilityViews(views, visibleView);
+                }
+
+                @Override
+                public void e(String s) {
+                    Log.d("LOG", "Error: " + s);
+                }
+            });
+        } else {
+            Account.loadNewMessages(dialogParseObjectsList, timeLastMessage, new Account.CallbackLoadObject() {
+                @Override
+                public void success(List<ParseObject> list) {
+                    if (list.size() != 0) {
+
+                        for (int i = 0; i < list.size(); i++) {
+                            String senderPhoneNumber = list.get(i).getString("senderPhoneNumber");
+                            String textMessage = list.get(i).getString("textMessage");
+                            Date sendTime = list.get(i).getUpdatedAt();
+                            Message message = new Message(senderPhoneNumber, textMessage, sendTime);
+                            messageArrayList.add(message);
+                        }
+                        int size = messageArrayList.size();
+                        timeLastMessage = messageArrayList.get(size - 1).sendTime;
+
                         messagesListAdapter.notifyDataSetChanged();
                     }
-
-                } else {
-                    visibleView = emptyList;
                 }
-                View[] views = new View[]{messagesList, progressMessages, emptyList};
-                setVisibilityViews(views, visibleView);
-            }
 
-            @Override
-            public void e(String s) {
-                Log.d("LOG", "Error: " + s);
-            }
-        });
-
+                @Override
+                public void e(String s) {
+                    Log.d("LOG", "Error: " + s);
+                }
+            });
+        }
     }
 
     private void createNewDialog() {
@@ -285,7 +330,7 @@ public class FragmentMessages extends Fragment {
 
         @Override
         public int getCount() {
-            return messagesParseObjectsList.size();
+            return messageArrayList.size();
         }
 
         @Override
@@ -309,7 +354,7 @@ public class FragmentMessages extends Fragment {
             View sendMessageBox = convertView.findViewById(R.id.send_message_box);
             View receiveMessageBox = convertView.findViewById(R.id.rcv_message_box);
 
-            String phoneNumber = messagesParseObjectsList.get(position).getString("senderPhoneNumber");
+            String phoneNumber = messageArrayList.get(position).senderPhoneNumber;
 
             View visibleView;
             if (phoneNumber.equals(senderPhoneNumber)) {
@@ -323,13 +368,25 @@ public class FragmentMessages extends Fragment {
 
             }
 
-            msgTextView.setText(messagesParseObjectsList.get(position).getString("textMessage"));
-            msgTimeView.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(messagesParseObjectsList.get(position).getUpdatedAt()));
+            msgTextView.setText(messageArrayList.get(position).textMessage);
+            msgTimeView.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(messageArrayList.get(position).sendTime));
 
             View[] views = {sendMessageBox, receiveMessageBox};
             setVisibilityViews(views, visibleView);
 
             return convertView;
+        }
+    }
+
+    private class Message {
+        String senderPhoneNumber;
+        String textMessage;
+        Date sendTime;
+
+        Message(String senderPhoneNumber, String textMessage, Date sendTime) {
+            this.senderPhoneNumber = senderPhoneNumber;
+            this.textMessage = textMessage;
+            this.sendTime = sendTime;
         }
     }
 }
