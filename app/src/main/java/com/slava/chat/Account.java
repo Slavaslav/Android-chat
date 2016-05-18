@@ -71,9 +71,9 @@ public class Account {
     }
 
     public static void updateUserStatus(boolean b) {
-            ParseUser user = ParseUser.getCurrentUser();
-            user.put("online", b);
-            user.saveEventually();
+        ParseUser user = ParseUser.getCurrentUser();
+        user.put("online", b);
+        user.saveEventually();
     }
 
     public static void logOut(final Callback callback) {
@@ -137,7 +137,7 @@ public class Account {
                 dialog.put("sender", recipientPhoneNumber);
                 dialog.put("recipient", senderPhoneNumber);
             }
-
+            dialog.put("countUnread", 0);
             parseObjects.add(dialog);
         }
 
@@ -208,9 +208,13 @@ public class Account {
             messages.put("parent", ParseObject.createWithoutData("Dialogs", dialogObject.getObjectId()));
             messages.put("textMessage", textMessage);
             messages.put("senderPhoneNumber", senderPhoneNumber);
+            messages.put("isRead", false);
             parseObjects.add(messages);
 
-            // update a row 'lastMessage' in the dialogue table
+            // update table 'Dialogs'
+            if (!(dialogObject.get("sender").equals(ParseUser.getCurrentUser().getUsername()))) {
+                dialogObject.increment("countUnread");
+            }
             dialogObject.put("lastMessage", textMessage);
             parseObjects.add(dialogObject);
         }
@@ -227,7 +231,7 @@ public class Account {
         });
     }
 
-    public static void findDialogs(final CallbackLoadObject callback) {
+    public static void updateDialogsList(final CallbackLoadObject callback) {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Dialogs");
         query.whereEqualTo("sender", ParseUser.getCurrentUser().getUsername());
@@ -263,4 +267,3 @@ public class Account {
         void e(String s);
     }
 }
-

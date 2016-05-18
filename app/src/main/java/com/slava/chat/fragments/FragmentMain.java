@@ -40,7 +40,7 @@ public class FragmentMain extends Fragment {
     private OnFragmentInteractionListener mListener;
     private DialogsListAdapter dialogsListAdapter;
     private ListView dialogsList;
-    private List<ParseObject> messagesParseObjectsList;
+    private List<ParseObject> dialogsParseObjectsList;
     private ScrollView emptyList;
 
     public FragmentMain() {
@@ -76,8 +76,6 @@ public class FragmentMain extends Fragment {
 
         //start service
         //getActivity().startService(new Intent(getActivity(), MyService.class).putExtra(MyService.INTENT_MESSAGE, MyService.UPDATE_DIALOGS_LIST));
-
-        findDialogs();
     }
 
     @Override
@@ -98,6 +96,8 @@ public class FragmentMain extends Fragment {
     public void onResume() {
         super.onResume();
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_UNLOCKED);
+
+        updateDialogsList();
     }
 
     @Override
@@ -107,33 +107,36 @@ public class FragmentMain extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
     }
 
-    private void findDialogs() {
-        Account.findDialogs(new Account.CallbackLoadObject() {
+    private void updateDialogsList() {
+        Account.updateDialogsList(new Account.CallbackLoadObject() {
 
             @Override
             public void success(final List<ParseObject> list) {
 
                 if (list.size() != 0) {
                     visibleView = dialogsList;
-                    messagesParseObjectsList = list;
-                    dialogsListAdapter = new DialogsListAdapter();
-                    dialogsList.setAdapter(dialogsListAdapter);
-                    dialogsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    dialogsParseObjectsList = list;
 
-                            final String senderPhoneNumber = list.get(position).getString("sender");
-                            final String recipientPhoneNumber = list.get(position).getString("recipient");
-                            String titleActionBar = Account.contactsDataMap.get(recipientPhoneNumber);
+                    if (dialogsList.getAdapter() == null) {
+                        dialogsListAdapter = new DialogsListAdapter();
+                        dialogsList.setAdapter(dialogsListAdapter);
+                        dialogsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                                final String senderPhoneNumber = list.get(position).getString("sender");
+                                final String recipientPhoneNumber = list.get(position).getString("recipient");
+                                String titleActionBar = Account.contactsDataMap.get(recipientPhoneNumber);
+
+                                FragmentMessages fragmentMessages = FragmentMessages.newInstance(senderPhoneNumber, recipientPhoneNumber, titleActionBar);
+                                mListener.loadFragment(fragmentMessages, true, true);
 
 
-                            FragmentMessages fragmentMessages = FragmentMessages.newInstance(senderPhoneNumber, recipientPhoneNumber, titleActionBar);
-                            mListener.loadFragment(fragmentMessages, true, true);
-
-
-                        }
-                    });
-
+                            }
+                        });
+                    } else {
+                        dialogsListAdapter.notifyDataSetChanged();
+                    }
                 } else {
                     visibleView = emptyList;
                 }
@@ -200,7 +203,7 @@ public class FragmentMain extends Fragment {
 
         @Override
         public int getCount() {
-            return messagesParseObjectsList.size();
+            return dialogsParseObjectsList.size();
         }
 
         @Override
@@ -219,21 +222,29 @@ public class FragmentMain extends Fragment {
             if (convertView == null)
                 convertView = inflater.inflate(R.layout.dialog_item, parent, false);
 
-            TextView titleDialog = (TextView) convertView.findViewById(R.id.dialog_title);
-            TextView laseMessageDialog = (TextView) convertView.findViewById(R.id.dialog_message);
-            TextView timeDialog = (TextView) convertView.findViewById(R.id.dialog_time);
+            TextView titleDialogView = (TextView) convertView.findViewById(R.id.dialog_title);
+            TextView lastMessageView = (TextView) convertView.findViewById(R.id.dialog_message);
+            TextView timeDialogView = (TextView) convertView.findViewById(R.id.dialog_time);
+            TextView countUnreadView = (TextView) convertView.findViewById(R.id.count_unread);
 
-            ParseObject messageObject = messagesParseObjectsList.get(position);
+            ParseObject messageObject = dialogsParseObjectsList.get(position);
 
-            String nameDialog = Account.contactsDataMap.get(messageObject.getString("recipient"));
-            if (nameDialog == null) {
-                nameDialog = messageObject.getString("recipient");
+            String titleDialog = Account.contactsDataMap.get(messageObject.getString("recipient"));
+            if (titleDialog == null) {
+                titleDialog = messageObject.getString("recipient");
             }
             String lastMessage = messageObject.getString("lastMessage");
+            int countUnread = messageObject.getInt("countUnread");
 
-            titleDialog.setText(nameDialog);
-            laseMessageDialog.setText(lastMessage);
-            timeDialog.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(messageObject.getUpdatedAt()));
+            titleDialogView.setText(titleDialog);
+            lastMessageView.setText(lastMessage);
+            timeDialogView.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(messageObject.getUpdatedAt()));
+            if (countUnread != 0) {
+                countUnreadView.setVisibility(View.VISIBLE);
+                countUnreadView.setText(String.valueOf(countUnread));
+            } else {
+                countUnreadView.setVisibility(View.GONE);
+            }
 
             return convertView;
         }
