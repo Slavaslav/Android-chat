@@ -249,6 +249,47 @@ public class Account {
         });
     }
 
+    public static void readMessages(final List<ParseObject> dialogParseObjectsList, ArrayList<String> unReadMessagesId, final Callback callback) {
+
+        final List<ParseObject> parseObjects = new ArrayList<>();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
+        query.whereContainedIn("objectId", unReadMessagesId);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null) {
+
+                    for (int i = 0; i < list.size(); i++) {
+                        list.get(i).put("isRead", true);
+                        parseObjects.add(list.get(i));
+                    }
+
+                    for (int i = 0; i < dialogParseObjectsList.size(); i++) {
+                        if (dialogParseObjectsList.get(i).get("sender").equals(ParseUser.getCurrentUser().getUsername())) {
+                            dialogParseObjectsList.get(i).put("countUnread", 0);
+                            parseObjects.add(dialogParseObjectsList.get(i));
+                            break;
+                        }
+                    }
+
+                    ParseObject.saveAllInBackground(parseObjects, new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                callback.success();
+                            } else {
+                                callback.e(e.getMessage());
+                            }
+                        }
+                    });
+
+                } else {
+                    callback.e(e.getMessage());
+                }
+            }
+        });
+    }
+
     public interface Callback {
         void success();
 

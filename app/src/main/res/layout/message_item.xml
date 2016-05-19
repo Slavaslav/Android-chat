@@ -3,81 +3,95 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/rcv_message_box"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/_30dp"
-        android:layout_marginLeft="@dimen/_10dp"
-        android:layout_marginRight="@dimen/_30dp"
-        android:layout_marginStart="@dimen/_10dp"
-        android:background="@color/color_gray"
-        android:orientation="vertical"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/rcv_text_message"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/_10dp"
-            android:paddingLeft="@dimen/_10dp"
-            android:paddingRight="@dimen/_10dp"
-            android:paddingStart="@dimen/_10dp"
-            android:paddingTop="@dimen/_5dp"
-            android:text=""
-            android:textSize="@dimen/txt_14sp" />
+            android:layout_marginBottom="@dimen/_4dp"
+            android:layout_marginEnd="@dimen/_30dp"
+            android:layout_marginLeft="@dimen/_10dp"
+            android:layout_marginRight="@dimen/_30dp"
+            android:layout_marginStart="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_4dp"
+            android:background="@color/color_gray"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/rcv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:paddingBottom="@dimen/_5dp"
-            android:paddingEnd="@dimen/_10dp"
-            android:paddingLeft="@dimen/_10dp"
-            android:paddingRight="@dimen/_10dp"
-            android:paddingStart="@dimen/_10dp"
-            android:text="12:35"
-            android:textSize="@dimen/txt_10sp" />
+            <TextView
+                android:id="@+id/rcv_text_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/_10dp"
+                android:paddingLeft="@dimen/_10dp"
+                android:paddingRight="@dimen/_10dp"
+                android:paddingStart="@dimen/_10dp"
+                android:paddingTop="@dimen/_5dp"
+                android:text=""
+                android:textSize="@dimen/txt_14sp" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/rcv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:paddingBottom="@dimen/_5dp"
+                android:paddingEnd="@dimen/_10dp"
+                android:paddingLeft="@dimen/_10dp"
+                android:paddingRight="@dimen/_10dp"
+                android:paddingStart="@dimen/_10dp"
+                android:text="12:35"
+                android:textSize="@dimen/txt_10sp" />
 
-    <LinearLayout
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/send_message_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/_10dp"
-        android:layout_marginLeft="@dimen/_30dp"
-        android:layout_marginRight="@dimen/_10dp"
-        android:layout_marginStart="@dimen/_30dp"
-        android:background="@color/color_blue"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/send_text_message"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/_10dp"
-            android:paddingLeft="@dimen/_10dp"
-            android:paddingRight="@dimen/_10dp"
-            android:paddingStart="@dimen/_10dp"
-            android:paddingTop="@dimen/_5dp"
-            android:text="@string/holder"
-            android:textSize="@dimen/txt_14sp" />
+            android:layout_gravity="end"
+            android:layout_marginBottom="@dimen/_4dp"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:layout_marginLeft="@dimen/_30dp"
+            android:layout_marginRight="@dimen/_10dp"
+            android:layout_marginStart="@dimen/_30dp"
+            android:layout_marginTop="@dimen/_4dp"
+            android:background="@color/color_blue"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/send_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:paddingBottom="@dimen/_5dp"
-            android:paddingEnd="@dimen/_10dp"
-            android:paddingLeft="@dimen/_10dp"
-            android:paddingRight="@dimen/_10dp"
-            android:paddingStart="@dimen/_10dp"
-            android:text="12:35"
-            android:textSize="@dimen/txt_10sp" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/send_text_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/_10dp"
+                android:paddingLeft="@dimen/_10dp"
+                android:paddingRight="@dimen/_10dp"
+                android:paddingStart="@dimen/_10dp"
+                android:paddingTop="@dimen/_5dp"
+                android:text="@string/holder"
+                android:textSize="@dimen/txt_14sp" />
+
+            <TextView
+                android:id="@+id/send_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:paddingBottom="@dimen/_5dp"
+                android:paddingEnd="@dimen/_10dp"
+                android:paddingLeft="@dimen/_10dp"
+                android:paddingRight="@dimen/_10dp"
+                android:paddingStart="@dimen/_10dp"
+                android:text="12:35"
+                android:textSize="@dimen/txt_10sp" />
+        </LinearLayout>
+    </FrameLayout>
 
 </FrameLayout>

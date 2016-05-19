@@ -1,12 +1,14 @@
 package com.slava.chat.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -42,6 +44,7 @@ public class FragmentMessages extends Fragment {
     private MessagesListAdapter messagesListAdapter;
     private EditText editTextMessage;
     private ArrayList<Message> messageArrayList = new ArrayList<>();
+    private ArrayList<String> unReadMessagesId = new ArrayList<>();
 
     public FragmentMessages() {
         // Required empty public constructor
@@ -73,7 +76,6 @@ public class FragmentMessages extends Fragment {
             mListener.setTitleToolbar(titleActionBar, recipientPhoneNumber);
         }
 
-
         emptyList = (ScrollView) view.findViewById(R.id.empty_list);
         progressMessages = (FrameLayout) view.findViewById(R.id.progress_messages);
         messagesList = (ListView) view.findViewById(R.id.messages_list);
@@ -81,6 +83,8 @@ public class FragmentMessages extends Fragment {
         messagesList.setStackFromBottom(true);
         editTextMessage = (EditText) view.findViewById(R.id.edit_text_message);
         final Button buttonSendMessage = (Button) view.findViewById(R.id.button_message);
+
+        messagesListAdapter = new MessagesListAdapter();
 
         loadCurrentDialog();
 
@@ -119,6 +123,16 @@ public class FragmentMessages extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+
+        editTextMessage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (messagesList.getAdapter() != null) {
+                    readMessages();
+                }
+                return false;
             }
         });
 
@@ -189,17 +203,23 @@ public class FragmentMessages extends Fragment {
                         visibleView = messagesList;
 
                         for (int i = 0; i < list.size(); i++) {
-                            String senderPhoneNumber = list.get(i).getString("senderPhoneNumber");
+                            String objectId = list.get(i).getObjectId();
+                            String phoneNumber = list.get(i).getString("senderPhoneNumber");
                             String textMessage = list.get(i).getString("textMessage");
                             Date sendTime = list.get(i).getUpdatedAt();
-                            Message message = new Message(senderPhoneNumber, textMessage, sendTime);
+                            boolean isRead = list.get(i).getBoolean("isRead");
+
+                            if (!isRead && !phoneNumber.equals(senderPhoneNumber)) {
+                                unReadMessagesId.add(objectId);
+                            }
+
+                            Message message = new Message(objectId, phoneNumber, textMessage, sendTime);
                             messageArrayList.add(message);
                         }
                         int size = messageArrayList.size();
                         timeLastMessage = messageArrayList.get(size - 1).sendTime;
 
                         if (messagesList.getAdapter() == null) {
-                            messagesListAdapter = new MessagesListAdapter();
                             messagesList.setAdapter(messagesListAdapter);
                         } else {
                             messagesListAdapter.notifyDataSetChanged();
@@ -224,10 +244,17 @@ public class FragmentMessages extends Fragment {
                     if (list.size() != 0) {
 
                         for (int i = 0; i < list.size(); i++) {
-                            String senderPhoneNumber = list.get(i).getString("senderPhoneNumber");
+                            String objectId = list.get(i).getObjectId();
+                            String phoneNumber = list.get(i).getString("senderPhoneNumber");
                             String textMessage = list.get(i).getString("textMessage");
                             Date sendTime = list.get(i).getUpdatedAt();
-                            Message message = new Message(senderPhoneNumber, textMessage, sendTime);
+                            boolean isRead = list.get(i).getBoolean("isRead");
+
+                            if (!isRead && !phoneNumber.equals(senderPhoneNumber)) {
+                                unReadMessagesId.add(objectId);
+                            }
+
+                            Message message = new Message(objectId, phoneNumber, textMessage, sendTime);
                             messageArrayList.add(message);
                         }
                         int size = messageArrayList.size();
@@ -318,6 +345,21 @@ public class FragmentMessages extends Fragment {
         }
     }
 
+    private void readMessages() {
+        Account.readMessages(dialogParseObjectsList, unReadMessagesId, new Account.Callback() {
+            @Override
+            public void success() {
+                unReadMessagesId.clear();
+                messagesListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void e(String s) {
+                Log.d("LOG", "Error: " + s);
+            }
+        });
+    }
+
     public interface OnFragmentInteractionListener {
 
         void setDrawerLockMode(int i);
@@ -354,6 +396,7 @@ public class FragmentMessages extends Fragment {
             View sendMessageBox = convertView.findViewById(R.id.send_message_box);
             View receiveMessageBox = convertView.findViewById(R.id.rcv_message_box);
 
+            String objectId = messageArrayList.get(position).objectId;
             String phoneNumber = messageArrayList.get(position).senderPhoneNumber;
 
             View visibleView;
@@ -365,7 +408,12 @@ public class FragmentMessages extends Fragment {
                 visibleView = receiveMessageBox;
                 msgTextView = (TextView) convertView.findViewById(R.id.rcv_text_message);
                 msgTimeView = (TextView) convertView.findViewById(R.id.rcv_time);
+            }
 
+            if (unReadMessagesId.contains(objectId)) {
+                visibleView.setBackgroundColor(Color.parseColor("#CAE2FF"));
+            } else {
+                visibleView.setBackgroundColor(0x00000000);
             }
 
             msgTextView.setText(messageArrayList.get(position).textMessage);
@@ -379,11 +427,13 @@ public class FragmentMessages extends Fragment {
     }
 
     private class Message {
+        String objectId;
         String senderPhoneNumber;
         String textMessage;
         Date sendTime;
 
-        Message(String senderPhoneNumber, String textMessage, Date sendTime) {
+        Message(String objectId, String senderPhoneNumber, String textMessage, Date sendTime) {
+            this.objectId = objectId;
             this.senderPhoneNumber = senderPhoneNumber;
             this.textMessage = textMessage;
             this.sendTime = sendTime;
