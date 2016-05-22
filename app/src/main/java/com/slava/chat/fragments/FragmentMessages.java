@@ -47,7 +47,7 @@ public class FragmentMessages extends Fragment {
     private EditText editTextMessage;
     private ArrayList<Message> messageArrayList = new ArrayList<>();
     private ArrayList<String> unReadMessagesId = new ArrayList<>();
-    Runnable loadDialog = new Runnable() {
+    Runnable loadMessages = new Runnable() {
         @Override
         public void run() {
             if (dialogParseObjectsList == null) {
@@ -170,14 +170,14 @@ public class FragmentMessages extends Fragment {
     public void onResume() {
         super.onResume();
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
-        handler.post(loadDialog);
+        handler.post(loadMessages);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         Utils.hideKeyboard(editTextMessage);
-        handler.removeCallbacks(loadDialog);
+        handler.removeCallbacks(loadMessages);
     }
 
     private void loadCurrentDialog() {
@@ -195,7 +195,7 @@ public class FragmentMessages extends Fragment {
                 View[] views = new View[]{messagesList, progressMessages, emptyList};
                 setVisibilityViews(views, visibleView);
 
-                handler.postDelayed(loadDialog, 1000);
+                handler.postDelayed(loadMessages, 1000);
             }
 
             @Override
@@ -222,7 +222,7 @@ public class FragmentMessages extends Fragment {
                     }
                     View[] views = new View[]{messagesList, progressMessages, emptyList};
                     setVisibilityViews(views, visibleView);
-                    handler.postDelayed(loadDialog, 1000);
+                    handler.postDelayed(loadMessages, 1000);
                 }
 
                 @Override
@@ -238,7 +238,7 @@ public class FragmentMessages extends Fragment {
                         handleMessages(list);
                         messagesListAdapter.notifyDataSetChanged();
                     }
-                    handler.postDelayed(loadDialog, 1000);
+                    handler.postDelayed(loadMessages, 1000);
                 }
 
                 @Override

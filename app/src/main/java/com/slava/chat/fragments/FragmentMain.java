@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -35,6 +36,7 @@ public class FragmentMain extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private final MessageReceiver mMessageReceiver = new MessageReceiver();
+    Handler handler = new Handler();
     private FrameLayout progressDialogs;
     private View visibleView;
     private OnFragmentInteractionListener mListener;
@@ -42,6 +44,12 @@ public class FragmentMain extends Fragment {
     private ListView dialogsList;
     private List<ParseObject> dialogsParseObjectsList;
     private ScrollView emptyList;
+    Runnable loadDialogs = new Runnable() {
+        @Override
+        public void run() {
+            updateDialogsList();
+        }
+    };
 
     public FragmentMain() {
         // Required empty public constructor
@@ -96,8 +104,7 @@ public class FragmentMain extends Fragment {
     public void onResume() {
         super.onResume();
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_UNLOCKED);
-
-        updateDialogsList();
+        handler.post(loadDialogs);
     }
 
     @Override
@@ -148,6 +155,7 @@ public class FragmentMain extends Fragment {
                         v.setVisibility(View.GONE);
                     }
                 }
+                handler.postDelayed(loadDialogs, 1000);
             }
 
             @Override
