@@ -181,7 +181,7 @@ public class Account {
             if (dialogObject.get("sender").equals(ParseUser.getCurrentUser().getUsername())) {
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
                 query.whereEqualTo("parent", dialogObject);
-                query.whereGreaterThan("updatedAt", timeLastMessage);
+                query.whereGreaterThan("createdAt", timeLastMessage);
                 query.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> list, ParseException e) {

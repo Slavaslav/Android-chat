@@ -64,14 +64,6 @@ public class FragmentContacts extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mListener.setTitleToolbar(getString(R.string.fragment_contacts), null);
-
-        if (ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this.getActivity(),
-                    new String[]{Manifest.permission.READ_CONTACTS},
-                    MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-        } else {
-            handleContactsList();
-        }
     }
 
     @Override
@@ -107,6 +99,14 @@ public class FragmentContacts extends Fragment {
     public void onResume() {
         super.onResume();
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
+
+        if (ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this.getActivity(),
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+        } else {
+            handleContactsList();
+        }
     }
 
     private void handleContactsList() {

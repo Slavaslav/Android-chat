@@ -3,6 +3,7 @@ package com.slava.chat.fragments;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,6 +34,7 @@ import java.util.Locale;
 
 public class FragmentMessages extends Fragment {
     Date timeLastMessage;
+    Handler handler = new Handler();
     private View visibleView;
     private ScrollView emptyList;
     private FrameLayout progressMessages;
@@ -45,6 +47,16 @@ public class FragmentMessages extends Fragment {
     private EditText editTextMessage;
     private ArrayList<Message> messageArrayList = new ArrayList<>();
     private ArrayList<String> unReadMessagesId = new ArrayList<>();
+    Runnable loadDialog = new Runnable() {
+        @Override
+        public void run() {
+            if (dialogParseObjectsList == null) {
+                loadCurrentDialog();
+            } else {
+                loadMessages();
+            }
+        }
+    };
 
     public FragmentMessages() {
         // Required empty public constructor
@@ -85,8 +97,6 @@ public class FragmentMessages extends Fragment {
         final Button buttonSendMessage = (Button) view.findViewById(R.id.button_message);
 
         messagesListAdapter = new MessagesListAdapter();
-
-        loadCurrentDialog();
 
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,14 +170,15 @@ public class FragmentMessages extends Fragment {
     public void onResume() {
         super.onResume();
         mListener.setDrawerLockMode(MainActivity.LOCK_MODE_LOCKED_CLOSED);
+        handler.post(loadDialog);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         Utils.hideKeyboard(editTextMessage);
+        handler.removeCallbacks(loadDialog);
     }
-
 
     private void loadCurrentDialog() {
 
@@ -176,14 +187,15 @@ public class FragmentMessages extends Fragment {
             @Override
             public void success(List<ParseObject> list) {
                 if (list.size() != 0) {
-                    visibleView = messagesList;
+                    visibleView = progressMessages;
                     dialogParseObjectsList = list;
-                    loadMessages();
                 } else {
                     visibleView = emptyList;
                 }
                 View[] views = new View[]{messagesList, progressMessages, emptyList};
                 setVisibilityViews(views, visibleView);
+
+                handler.postDelayed(loadDialog, 1000);
             }
 
             @Override
@@ -201,35 +213,16 @@ public class FragmentMessages extends Fragment {
                 public void success(List<ParseObject> list) {
                     if (list.size() != 0) {
                         visibleView = messagesList;
-
-                        for (int i = 0; i < list.size(); i++) {
-                            String objectId = list.get(i).getObjectId();
-                            String phoneNumber = list.get(i).getString("senderPhoneNumber");
-                            String textMessage = list.get(i).getString("textMessage");
-                            Date sendTime = list.get(i).getUpdatedAt();
-                            boolean isRead = list.get(i).getBoolean("isRead");
-
-                            if (!isRead && !phoneNumber.equals(senderPhoneNumber)) {
-                                unReadMessagesId.add(objectId);
-                            }
-
-                            Message message = new Message(objectId, phoneNumber, textMessage, sendTime);
-                            messageArrayList.add(message);
-                        }
-                        int size = messageArrayList.size();
-                        timeLastMessage = messageArrayList.get(size - 1).sendTime;
-
+                        handleMessages(list);
                         if (messagesList.getAdapter() == null) {
                             messagesList.setAdapter(messagesListAdapter);
-                        } else {
-                            messagesListAdapter.notifyDataSetChanged();
                         }
-
                     } else {
                         visibleView = emptyList;
                     }
                     View[] views = new View[]{messagesList, progressMessages, emptyList};
                     setVisibilityViews(views, visibleView);
+                    handler.postDelayed(loadDialog, 1000);
                 }
 
                 @Override
@@ -242,26 +235,10 @@ public class FragmentMessages extends Fragment {
                 @Override
                 public void success(List<ParseObject> list) {
                     if (list.size() != 0) {
-
-                        for (int i = 0; i < list.size(); i++) {
-                            String objectId = list.get(i).getObjectId();
-                            String phoneNumber = list.get(i).getString("senderPhoneNumber");
-                            String textMessage = list.get(i).getString("textMessage");
-                            Date sendTime = list.get(i).getUpdatedAt();
-                            boolean isRead = list.get(i).getBoolean("isRead");
-
-                            if (!isRead && !phoneNumber.equals(senderPhoneNumber)) {
-                                unReadMessagesId.add(objectId);
-                            }
-
-                            Message message = new Message(objectId, phoneNumber, textMessage, sendTime);
-                            messageArrayList.add(message);
-                        }
-                        int size = messageArrayList.size();
-                        timeLastMessage = messageArrayList.get(size - 1).sendTime;
-
+                        handleMessages(list);
                         messagesListAdapter.notifyDataSetChanged();
                     }
+                    handler.postDelayed(loadDialog, 1000);
                 }
 
                 @Override
@@ -324,7 +301,6 @@ public class FragmentMessages extends Fragment {
             public void success() {
                 editTextMessage.getText().clear();
                 Utils.hideKeyboard(editTextMessage);
-                loadMessages();
             }
 
             @Override
@@ -358,6 +334,25 @@ public class FragmentMessages extends Fragment {
                 Log.d("LOG", "Error: " + s);
             }
         });
+    }
+
+    private void handleMessages(List<ParseObject> list) {
+        for (int i = 0; i < list.size(); i++) {
+            String objectId = list.get(i).getObjectId();
+            String phoneNumber = list.get(i).getString("senderPhoneNumber");
+            String textMessage = list.get(i).getString("textMessage");
+            Date sendTime = list.get(i).getCreatedAt();
+            boolean isRead = list.get(i).getBoolean("isRead");
+
+            if (!isRead && !phoneNumber.equals(senderPhoneNumber)) {
+                unReadMessagesId.add(objectId);
+            }
+
+            Message message = new Message(objectId, phoneNumber, textMessage, sendTime);
+            messageArrayList.add(message);
+        }
+        int size = messageArrayList.size();
+        timeLastMessage = messageArrayList.get(size - 1).sendTime;
     }
 
     public interface OnFragmentInteractionListener {
