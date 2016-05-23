@@ -384,7 +384,7 @@ public class FragmentMessages extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             if (convertView == null)
-                convertView = inflater.inflate(R.layout.message_item, parent, false);
+                convertView = inflater.inflate(R.layout.item_message, parent, false);
 
             TextView msgTextView, msgTimeView;
 

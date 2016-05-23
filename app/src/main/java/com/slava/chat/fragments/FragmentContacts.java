@@ -190,7 +190,7 @@ public class FragmentContacts extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             if (convertView == null)
-                convertView = inflater.inflate(R.layout.contacts_list_item, parent, false);
+                convertView = inflater.inflate(R.layout.item_contacts_list, parent, false);
 
             phoneNumber = list.get(position).getUsername();
             name = contactsDataMap.get(phoneNumber);

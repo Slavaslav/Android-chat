@@ -236,7 +236,7 @@ public class FragmentMain extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             if (convertView == null)
-                convertView = inflater.inflate(R.layout.dialog_item, parent, false);
+                convertView = inflater.inflate(R.layout.item_dialog, parent, false);
 
             TextView titleDialogView = (TextView) convertView.findViewById(R.id.dialog_title);
             TextView lastMessageView = (TextView) convertView.findViewById(R.id.dialog_message);

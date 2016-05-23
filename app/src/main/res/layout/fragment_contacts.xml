@@ -24,7 +24,7 @@
         android:divider="@color/color_gray"
         android:dividerHeight="@dimen/_1dp"
         android:visibility="gone"
-        tools:listitem="@layout/contacts_list_item" />
+        tools:listitem="@layout/item_contacts_list" />
 
     <ScrollView
         android:id="@+id/empty_list"

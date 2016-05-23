@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/rounded_text_view"
+                android:background="@drawable/unread_message_view"
                 android:paddingEnd="@dimen/_5dp"
                 android:paddingLeft="@dimen/_5dp"
                 android:paddingRight="@dimen/_5dp"

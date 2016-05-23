@@ -18,7 +18,7 @@
             android:layout_marginRight="@dimen/_30dp"
             android:layout_marginStart="@dimen/_10dp"
             android:layout_marginTop="@dimen/_4dp"
-            android:background="@color/color_gray"
+            android:background="@drawable/item_message_rcv"
             android:orientation="vertical">
 
             <TextView
@@ -64,7 +64,7 @@
             android:layout_marginRight="@dimen/_10dp"
             android:layout_marginStart="@dimen/_30dp"
             android:layout_marginTop="@dimen/_4dp"
-            android:background="@color/color_blue"
+            android:background="@drawable/item_message_send"
             android:orientation="vertical">
 
             <TextView

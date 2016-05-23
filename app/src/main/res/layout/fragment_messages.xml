@@ -24,7 +24,7 @@
         android:divider="@color/color_white"
         android:dividerHeight="@dimen/_0dp"
         android:visibility="gone"
-        tools:listitem="@layout/message_item" />
+        tools:listitem="@layout/item_message" />
 
     <ScrollView
         android:id="@+id/empty_list"
