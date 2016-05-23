@@ -21,6 +21,7 @@
             android:id="@+id/dialog_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:textSize="@dimen/txt_18sp" />
 
         <TextView
@@ -28,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
+            android:singleLine="true"
             android:textSize="@dimen/txt_14sp" />
 
     </LinearLayout>
@@ -46,6 +48,7 @@
             android:id="@+id/dialog_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:textSize="@dimen/txt_10sp" />
 
         <FrameLayout
@@ -63,6 +66,7 @@
                 android:paddingLeft="@dimen/_5dp"
                 android:paddingRight="@dimen/_5dp"
                 android:paddingStart="@dimen/_5dp"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/txt_12sp"

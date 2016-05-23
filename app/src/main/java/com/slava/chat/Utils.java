@@ -6,6 +6,9 @@ import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class Utils {
 
     public static void hideKeyboard(View view) {
@@ -26,6 +29,17 @@ public class Utils {
         progressDialog.setCancelable(cancelable);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         return progressDialog;
+    }
+
+    public static boolean isToday(Date date) {
+
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(date);
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTime(Calendar.getInstance().getTime());
+
+        return (calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
+                calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR));
     }
 
 }

@@ -25,9 +25,11 @@ import com.slava.chat.Account;
 import com.slava.chat.MainActivity;
 import com.slava.chat.MyService;
 import com.slava.chat.R;
+import com.slava.chat.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,6 +45,7 @@ public class FragmentMain extends Fragment {
     private DialogsListAdapter dialogsListAdapter;
     private ListView dialogsList;
     private List<ParseObject> dialogsParseObjectsList;
+    private Date updatedAt;
     private ScrollView emptyList;
     Runnable loadDialogs = new Runnable() {
         @Override
@@ -125,6 +128,7 @@ public class FragmentMain extends Fragment {
                     dialogsParseObjectsList = list;
 
                     if (dialogsList.getAdapter() == null) {
+                        updatedAt = list.get(list.size() - 1).getUpdatedAt();
                         dialogsListAdapter = new DialogsListAdapter();
                         dialogsList.setAdapter(dialogsListAdapter);
                         dialogsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -142,7 +146,11 @@ public class FragmentMain extends Fragment {
                             }
                         });
                     } else {
-                        dialogsListAdapter.notifyDataSetChanged();
+                        Date newUpdatedAt = list.get(list.size() - 1).getUpdatedAt();
+                        if (!updatedAt.equals(newUpdatedAt)) {
+                            updatedAt = newUpdatedAt;
+                            dialogsListAdapter.notifyDataSetChanged();
+                        }
                     }
                 } else {
                     visibleView = emptyList;
@@ -242,11 +250,18 @@ public class FragmentMain extends Fragment {
                 titleDialog = messageObject.getString("recipient");
             }
             String lastMessage = messageObject.getString("lastMessage");
+            Date updatedAt = messageObject.getUpdatedAt();
             int countUnread = messageObject.getInt("countUnread");
 
             titleDialogView.setText(titleDialog);
             lastMessageView.setText(lastMessage);
-            timeDialogView.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(messageObject.getUpdatedAt()));
+
+            if (Utils.isToday(updatedAt)) {
+                timeDialogView.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(updatedAt));
+            } else {
+                timeDialogView.setText(new SimpleDateFormat("dd.MM.yy", Locale.getDefault()).format(updatedAt));
+            }
+
             if (countUnread != 0) {
                 countUnreadView.setVisibility(View.VISIBLE);
                 countUnreadView.setText(String.valueOf(countUnread));
