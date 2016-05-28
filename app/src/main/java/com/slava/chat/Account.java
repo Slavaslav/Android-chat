@@ -23,17 +23,7 @@ public class Account {
     public static final HashMap<String, String> contactsDataMap = new HashMap<>();
 
     static {
-        Cursor cursor = App.applicationContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                phoneNumber = phoneNumber.replaceAll(" ", "");
-                contactsDataMap.put(phoneNumber, name);
-
-            }
-            cursor.close();
-        }
+        getAllPhoneContacts();
     }
 
     public static void logIn(String login, String password, final Callback callBack) {
@@ -89,7 +79,7 @@ public class Account {
         });
     }
 
-    public static void loadContactsList(final CallbackLoadUser callBack) {
+    public static void getContactsList(final CallbackLoadUser callBack) {
 
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereContainedIn("username", contactsDataMap.keySet());
@@ -231,7 +221,7 @@ public class Account {
         });
     }
 
-    public static void updateDialogsList(final CallbackLoadObject callback) {
+    public static void getDialogsList(final CallbackLoadObject callback) {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Dialogs");
         query.whereEqualTo("sender", ParseUser.getCurrentUser().getUsername());
@@ -288,6 +278,20 @@ public class Account {
                 }
             }
         });
+    }
+
+    public static void getAllPhoneContacts() {
+        contactsDataMap.clear();
+        Cursor cursor = App.applicationContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                phoneNumber = phoneNumber.replaceAll(" ", "");
+                contactsDataMap.put(phoneNumber, name);
+            }
+            cursor.close();
+        }
     }
 
     public interface Callback {

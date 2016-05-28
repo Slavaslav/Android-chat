@@ -393,6 +393,8 @@ public class FragmentMessages extends Fragment {
 
             String objectId = messageArrayList.get(position).objectId;
             String phoneNumber = messageArrayList.get(position).senderPhoneNumber;
+            String textMessage = messageArrayList.get(position).textMessage;
+            Date time = messageArrayList.get(position).sendTime;
 
             View visibleView;
             if (phoneNumber.equals(senderPhoneNumber)) {
@@ -411,8 +413,13 @@ public class FragmentMessages extends Fragment {
                 visibleView.setBackgroundColor(0x00000000);
             }
 
-            msgTextView.setText(messageArrayList.get(position).textMessage);
-            msgTimeView.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(messageArrayList.get(position).sendTime));
+            msgTextView.setText(textMessage);
+
+            if (Utils.isToday(time)) {
+                msgTimeView.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(time));
+            } else {
+                msgTimeView.setText(new SimpleDateFormat("dd.MM.yy", Locale.getDefault()).format(time));
+            }
 
             View[] views = {sendMessageBox, receiveMessageBox};
             setVisibilityViews(views, visibleView);

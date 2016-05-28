@@ -50,7 +50,7 @@ public class FragmentMain extends Fragment {
     Runnable loadDialogs = new Runnable() {
         @Override
         public void run() {
-            updateDialogsList();
+            getDialogsList();
         }
     };
 
@@ -117,8 +117,8 @@ public class FragmentMain extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
     }
 
-    private void updateDialogsList() {
-        Account.updateDialogsList(new Account.CallbackLoadObject() {
+    private void getDialogsList() {
+        Account.getDialogsList(new Account.CallbackLoadObject() {
 
             @Override
             public void success(final List<ParseObject> list) {

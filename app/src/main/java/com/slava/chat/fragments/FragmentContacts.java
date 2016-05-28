@@ -111,7 +111,9 @@ public class FragmentContacts extends Fragment {
 
     private void handleContactsList() {
 
-        Account.loadContactsList(new Account.CallbackLoadUser() {
+        Account.getAllPhoneContacts();
+
+        Account.getContactsList(new Account.CallbackLoadUser() {
             @Override
             public void success(final List<ParseUser> list) {
                 if (list.size() != 0) {
