@@ -117,6 +117,12 @@ public class FragmentMain extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        handler.removeCallbacks(loadDialogs);
+    }
+
     private void getDialogsList() {
         Account.getDialogsList(new Account.CallbackLoadObject() {
 
@@ -172,7 +178,6 @@ public class FragmentMain extends Fragment {
             }
         });
     }
-
 
     public interface OnFragmentInteractionListener {
         void setTitleToolbar(String title, String subTitle);

@@ -177,6 +177,12 @@ public class FragmentMessages extends Fragment {
     public void onStop() {
         super.onStop();
         Utils.hideKeyboard(editTextMessage);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
         handler.removeCallbacks(loadMessages);
     }
 
