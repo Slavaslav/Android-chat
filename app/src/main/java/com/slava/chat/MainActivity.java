@@ -1,10 +1,14 @@
 package com.slava.chat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public static final int LOCK_MODE_LOCKED_CLOSED = 1;
     public static final int LOCK_MODE_UNLOCKED = 0;
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
     private DrawerLayout drawer;
 
     @Override
@@ -89,15 +94,10 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        if (Account.getCurrentUser()) {
-            // Account.updateUserStatus(true);
-            loadFragment(new FragmentMain(), true, false);
-        } else {
-            loadFragment(new FragmentLogin(), false, false);
-        }
+        getPermissionReadContacts();
 
         //start service
-        startService(new Intent(this, MyService.class));
+        //startService(new Intent(this, MyService.class));
 
     }
 
@@ -208,4 +208,39 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    private void getPermissionReadContacts() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+        } else {
+            loadEntryFragment();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    loadEntryFragment();
+                } else {
+                    getPermissionReadContacts();
+                }
+            }
+        }
+    }
+
+    private void loadEntryFragment() {
+        if (Account.getCurrentUser()) {
+            loadFragment(new FragmentMain(), true, false);
+        } else {
+            loadFragment(new FragmentLogin(), false, false);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
 }

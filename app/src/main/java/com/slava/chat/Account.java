@@ -22,10 +22,6 @@ import java.util.List;
 public class Account {
     public static final HashMap<String, String> contactsDataMap = new HashMap<>();
 
-    static {
-        getAllPhoneContacts();
-    }
-
     public static void logIn(String login, String password, final Callback callBack) {
 
         ParseUser.logInInBackground(login, password, new LogInCallback() {

@@ -6,7 +6,7 @@ import android.content.Context;
 
 import com.parse.Parse;
 
-class App extends Application {
+public class App extends Application {
 
     public static volatile Context applicationContext;
 
